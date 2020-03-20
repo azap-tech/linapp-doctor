@@ -1,4 +1,4 @@
-# azap_native_manager_app
+# azap_app
 
 A new Flutter project.
 
