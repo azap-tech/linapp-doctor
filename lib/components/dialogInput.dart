@@ -15,7 +15,7 @@ void alertDialog(BuildContext context) {
             inputValue = text;
           },
           decoration: InputDecoration(
-              labelText: 'Entrez un nom pour   la file'
+              labelText: 'Entrez un nom pour la file'
           ),
         ),
         actions: <Widget>[
