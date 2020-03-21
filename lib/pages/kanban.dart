@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import '../main.dart';
 
+final String waitList = "Non trié";
+
 class Item {
   final String id;
   String listId;
@@ -26,11 +28,9 @@ class _KanbanState extends State<Kanban> {
 
   @override
   void initState() {
-    // TODO fusion hash map and workers and init load
+    // TODO fusion hash map and workers
     board = LinkedHashMap();
-    //workers.list.forEach((worker) => {});
-    //tickets.list.forEach((ticket) => {});
-    board["En attente"] = [];
+    board[waitList] = [];
     super.initState();
   }
 
@@ -163,7 +163,9 @@ class _KanbanState extends State<Kanban> {
     buildKanbanList(String listId, List<Item> items) {
       return SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Column(
+        child: Container(
+          color: Color(0xFFAEE1FA),
+          child: Column(
           children: [
             buildHeader(listId),
             ListView.builder(
@@ -203,11 +205,12 @@ class _KanbanState extends State<Kanban> {
             ),
           ],
         ),
+        ),
       );
     }
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+      backgroundColor: Color(0xFFEAF4FB),
       appBar: AppBar(title:Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -236,9 +239,9 @@ class _KanbanState extends State<Kanban> {
                   board["${worker.id}"] = []
                 }
               });
-              board["En attente"] = [];
+              board[waitList] = [];
               tickets.list.forEach((ticket) => {
-                board["En attente"].add(Item(id: "${ticket.id}", listId: "En attente", title: "Ticket ${ticket.name} ${ticket.id}"))
+                board[waitList].add(Item(id: "${ticket.id}", listId: waitList, title: "Ticket ${ticket.name} ${ticket.id}"))
               });
               return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,7 +266,7 @@ class HeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.teal,
+      color: Color(0xff055D87),
       child: ListTile(
         dense: true,
         contentPadding: EdgeInsets.symmetric(
@@ -273,12 +276,14 @@ class HeaderWidget extends StatelessWidget {
         title: Text(
           title,
           style: TextStyle(
-            color: Colors.white,
+            color: Color(0xffFFCC09),
+            fontSize: 25,
+            fontWeight: FontWeight.bold
           ),
         ),
         trailing: Icon(
           Icons.sort,
-          color: Colors.white,
+          color: Color(0xffFFCC09),
           size: 30.0,
         ),
         onTap: () {},
@@ -300,13 +305,20 @@ class ItemWidget extends StatelessWidget {
     title: Text(
       item.title,
       style: TextStyle(
-        color: Colors.white,
+        color: Color(0xFF049BE5),
+        fontWeight: FontWeight.bold,
+        fontSize: 20
       ),
     ),
-    subtitle: Text("listId: ${item.listId}"),
+    subtitle: Text(
+        "listId: ${item.listId}",
+        style: TextStyle(
+          color: Color(0xFF049BE5),
+        ),
+    ),
     trailing: Icon(
       Icons.sort,
-      color: Colors.white,
+      color: Color(0xFF049BE5),
       size: 30.0,
     ),
     onTap: () {},
@@ -319,7 +331,7 @@ class ItemWidget extends StatelessWidget {
       margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Color.fromRGBO(64, 75, 96, .9),
+          color: Color(0xFFFFFFFF),
         ),
         child: makeListTile(item),
       ),
