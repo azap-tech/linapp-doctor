@@ -216,16 +216,24 @@ class _KanbanState extends State<Kanban> {
     children: [
       RaisedButton(
         onPressed: HttpService().createWorker,
+        color: Color(0xFFFFCC09),
         child: const Text(
-            'Ajouter un worker',
-            style: TextStyle(fontSize: 20)
+            'Ajouter une file',
+            style: TextStyle(
+                fontSize: 20,
+                color: Colors.white
+            )
         ),
       ),
       RaisedButton(
         onPressed: HttpService().createTicket,
+        color: Color(0xFFFFCC09),
         child: const Text(
-            'Ajouter un ticket',
-            style: TextStyle(fontSize: 20)
+            'Ajouter un patient',
+            style: TextStyle(
+                fontSize: 20,
+                color: Colors.white
+            )
         ),
       ),
       ])),
