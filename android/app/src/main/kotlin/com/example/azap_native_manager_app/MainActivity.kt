@@ -25,10 +25,10 @@ class MainActivity: FlutterActivity() {
                 }
     }
 
-    private fun sendSMS(phoneNumber: String?, msg: String?, result: MethodChannel.Result) {
+    private fun sendSMS(phoneNumber: String?, message: String?, result: MethodChannel.Result) {
         try {
             val smsManager: SmsManager = SmsManager.getDefault()
-            val length: Int = message.length
+            val length: Int = message?.length ?: 0
             val MAX_SMS_MESSAGE_LENGTH = 160
             if (length > MAX_SMS_MESSAGE_LENGTH) {
                 val messagelist: ArrayList<String> = smsManager.divideMessage(message)
