@@ -1,6 +1,6 @@
 import 'dart:collection';
-import 'package:azap_native_manager_app/components/dialogInput.dart';
-import 'package:azap_native_manager_app/services/http.dart';
+import 'package:azap_app/components/dialogInput.dart';
+import 'package:azap_app/services/http.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import '../main.dart';

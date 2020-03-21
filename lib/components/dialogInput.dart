@@ -1,4 +1,4 @@
-import 'package:azap_native_manager_app/services/http.dart';
+import 'package:azap_app/services/http.dart';
 import 'package:flutter/material.dart';
 
 void alertDialog(BuildContext context) {
@@ -15,7 +15,7 @@ void alertDialog(BuildContext context) {
             inputValue = text;
           },
           decoration: InputDecoration(
-              labelText: 'Entrez un nom pour la file'
+              labelText: 'Entrez un nom pour   la file'
           ),
         ),
         actions: <Widget>[

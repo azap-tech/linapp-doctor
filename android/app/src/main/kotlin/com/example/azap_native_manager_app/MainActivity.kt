@@ -1,4 +1,4 @@
-package com.example.azap_native_manager_app
+package com.example.azap_app
 
 import android.telephony.SmsManager
 import androidx.annotation.NonNull

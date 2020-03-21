@@ -1,4 +1,4 @@
-import 'package:azap_native_manager_app/stores/ticket.dart';
+import 'package:azap_app/stores/ticket.dart';
 import 'package:mobx/mobx.dart';
 
 part 'tickets.g.dart';

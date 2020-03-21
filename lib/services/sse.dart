@@ -1,6 +1,7 @@
-import 'package:azap_native_manager_app/classes/genericPayload.dart';
-import 'package:azap_native_manager_app/classes/ticketPayload.dart';
-import 'package:azap_native_manager_app/classes/workerPayload.dart';
+import 'package:async/async.dart';
+import 'package:azap_app/classes/genericPayload.dart';
+import 'package:azap_app/classes/ticketPayload.dart';
+import 'package:azap_app/classes/workerPayload.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:eventsource/eventsource.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -9,6 +10,8 @@ import '../main.dart';
 
 class SseService {
   static final SseService _instance = SseService._internal();
+  final _initEventSource = new AsyncMemoizer<EventSource>();
+  static EventSource eventSource;
 
   factory SseService() {
     return _instance;
@@ -18,7 +21,11 @@ class SseService {
   }
 
   initEventSource (int storeId) async {
-    EventSource eventSource = await EventSource.connect("${DotEnv().env['BASE_URL']}/api/v2/store/$storeId/events");
+    if(eventSource == null){
+      eventSource = await _initEventSource.runOnce(() async {
+        return await EventSource.connect("${DotEnv().env['BASE_URL']}/api/v2/store/$storeId/events");
+      });
+    }
     eventSource.listen((Event event) {
       print("New event:");
       print("  data: ${event.data}");

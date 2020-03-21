@@ -1,4 +1,4 @@
-name: azap_native_manager_app
+name: azap_app
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -28,6 +28,7 @@ dependencies:
   flutter_mobx: ^1.0.1
   dart_json_mapper: ^1.5.2
   dart_json_mapper_mobx: ^1.2.0
+  async: ^2.4.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

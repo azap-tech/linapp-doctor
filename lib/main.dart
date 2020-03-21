@@ -1,8 +1,8 @@
-import 'package:azap_native_manager_app/services/http.dart';
-import 'package:azap_native_manager_app/services/sms.dart';
-import 'package:azap_native_manager_app/services/sse.dart';
-import 'package:azap_native_manager_app/stores/tickets.dart';
-import 'package:azap_native_manager_app/stores/workers.dart';
+import 'package:azap_app/services/http.dart';
+import 'package:azap_app/services/sms.dart';
+import 'package:azap_app/services/sse.dart';
+import 'package:azap_app/stores/tickets.dart';
+import 'package:azap_app/stores/workers.dart';
 import 'package:flutter/material.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart' show JsonMapper;
 import 'package:dart_json_mapper_mobx/dart_json_mapper_mobx.dart' show mobXAdapter;
