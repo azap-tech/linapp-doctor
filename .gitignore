@@ -36,4 +36,5 @@ lib/generated_plugin_registrant.dart
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
-*.reflectable.dart
+# TODO why its says we should comment that in doc of mobx ? breaks codemagick buil
+#*.reflectable.dart
