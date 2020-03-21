@@ -264,6 +264,23 @@ mixin _$Ticket on _Ticket, Store {
     }, _$azapAtom, name: '${_$azapAtom.name}_set');
   }
 
+  final _$regularClientAtom = Atom(name: '_Ticket.regularClient');
+
+  @override
+  bool get regularClient {
+    _$regularClientAtom.context.enforceReadPolicy(_$regularClientAtom);
+    _$regularClientAtom.reportObserved();
+    return super.regularClient;
+  }
+
+  @override
+  set regularClient(bool value) {
+    _$regularClientAtom.context.conditionallyRunInAction(() {
+      super.regularClient = value;
+      _$regularClientAtom.reportChanged();
+    }, _$regularClientAtom, name: '${_$regularClientAtom.name}_set');
+  }
+
   final _$_TicketActionController = ActionController(name: '_Ticket');
 
   @override
@@ -279,7 +296,7 @@ mixin _$Ticket on _Ticket, Store {
   @override
   String toString() {
     final string =
-        'id: ${id.toString()},storeId: ${storeId.toString()},workerId: ${workerId.toString()},age: ${age.toString()},name: ${name.toString()},sex: ${sex.toString()},phone: ${phone.toString()},pathology: ${pathology.toString()},canceledTime: ${canceledTime.toString()},cashedTime: ${cashedTime.toString()},creationTime: ${creationTime.toString()},doneTime: ${doneTime.toString()},expectedTime: ${expectedTime.toString()},startedTime: ${startedTime.toString()},azap: ${azap.toString()}';
+        'id: ${id.toString()},storeId: ${storeId.toString()},workerId: ${workerId.toString()},age: ${age.toString()},name: ${name.toString()},sex: ${sex.toString()},phone: ${phone.toString()},pathology: ${pathology.toString()},canceledTime: ${canceledTime.toString()},cashedTime: ${cashedTime.toString()},creationTime: ${creationTime.toString()},doneTime: ${doneTime.toString()},expectedTime: ${expectedTime.toString()},startedTime: ${startedTime.toString()},azap: ${azap.toString()},regularClient: ${regularClient.toString()}';
     return '{$string}';
   }
 }

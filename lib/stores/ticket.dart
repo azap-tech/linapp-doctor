@@ -54,6 +54,9 @@ abstract class _Ticket with Store {
   @observable
   bool azap = false;
 
+  @observable
+  bool regularClient = false;
+
   @action
   void updateWorker(int newWorkerId) {
     workerId = newWorkerId;

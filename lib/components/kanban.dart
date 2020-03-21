@@ -1,6 +1,8 @@
 import 'dart:collection';
 import 'package:azap_app/components/takeTicket.dart';
 import 'package:azap_app/components/workerInput.dart';
+import 'package:azap_app/stores/worker.dart';
+import 'package:azap_app/stores/ticket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import '../main.dart';
@@ -35,7 +37,7 @@ class _KanbanState extends State<Kanban> {
     super.initState();
   }
 
-  buildItemDragTarget(listId, targetPosition, double height) {
+  buildItemDragTarget(String listId, targetPosition, double height) {
     return DragTarget<Item>(
       // Will accept others, but not himself
       onWillAccept: (Item data) {
@@ -52,6 +54,13 @@ class _KanbanState extends State<Kanban> {
           } else {
             board[listId].add(data);
           }
+          // manual local change, TODO handle with api
+          int indexTicket = tickets.list.indexWhere((ticket) => ticket.id == int.parse(data.id));
+          Ticket ticket = tickets.list.elementAt(indexTicket);
+          tickets.list.removeWhere((ticket) => ticket.id == int.parse(data.id));
+          int index = workers.list.indexWhere((worker) => worker.name == listId);
+          Worker worker = workers.list.elementAt(index);
+          worker.listPatients.add(ticket);
         });
       },
       builder:
