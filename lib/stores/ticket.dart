@@ -25,6 +25,9 @@ abstract class _Ticket with Store {
   String name;
 
   @observable
+  String sex;
+
+  @observable
   String phone;
 
   @observable

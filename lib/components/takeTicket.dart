@@ -3,6 +3,7 @@ import 'package:azap_app/stores/ticket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:grouped_buttons/grouped_buttons.dart';
 
 import 'kanban.dart';
 
@@ -46,7 +47,24 @@ class _TakeTicketState extends State<TakeTicket> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     new Expanded(
+                      child: new RadioButtonGroup(
+                          labels: <String>[
+                            "HOMME",
+                            "FEMME",
+                          ],
+                          onSelected: (String selected) => newTicket.sex = selected
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              new Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Expanded(
                       child: new TextFormField(
+                        autofocus: true,
                         onChanged: (text) {
                           newTicket.name = text;
                         },

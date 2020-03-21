@@ -94,6 +94,23 @@ mixin _$Ticket on _Ticket, Store {
     }, _$nameAtom, name: '${_$nameAtom.name}_set');
   }
 
+  final _$sexAtom = Atom(name: '_Ticket.sex');
+
+  @override
+  String get sex {
+    _$sexAtom.context.enforceReadPolicy(_$sexAtom);
+    _$sexAtom.reportObserved();
+    return super.sex;
+  }
+
+  @override
+  set sex(String value) {
+    _$sexAtom.context.conditionallyRunInAction(() {
+      super.sex = value;
+      _$sexAtom.reportChanged();
+    }, _$sexAtom, name: '${_$sexAtom.name}_set');
+  }
+
   final _$phoneAtom = Atom(name: '_Ticket.phone');
 
   @override
@@ -262,7 +279,7 @@ mixin _$Ticket on _Ticket, Store {
   @override
   String toString() {
     final string =
-        'id: ${id.toString()},storeId: ${storeId.toString()},workerId: ${workerId.toString()},age: ${age.toString()},name: ${name.toString()},phone: ${phone.toString()},pathology: ${pathology.toString()},canceledTime: ${canceledTime.toString()},cashedTime: ${cashedTime.toString()},creationTime: ${creationTime.toString()},doneTime: ${doneTime.toString()},expectedTime: ${expectedTime.toString()},startedTime: ${startedTime.toString()},azap: ${azap.toString()}';
+        'id: ${id.toString()},storeId: ${storeId.toString()},workerId: ${workerId.toString()},age: ${age.toString()},name: ${name.toString()},sex: ${sex.toString()},phone: ${phone.toString()},pathology: ${pathology.toString()},canceledTime: ${canceledTime.toString()},cashedTime: ${cashedTime.toString()},creationTime: ${creationTime.toString()},doneTime: ${doneTime.toString()},expectedTime: ${expectedTime.toString()},startedTime: ${startedTime.toString()},azap: ${azap.toString()}';
     return '{$string}';
   }
 }
