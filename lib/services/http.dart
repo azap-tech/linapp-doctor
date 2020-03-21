@@ -54,15 +54,14 @@ class HttpService {
     print(json);
   }
 
-  createWorker() async {
-    DateFormat dateFormat = DateFormat("dd-HH-mm-ss");
+  createWorker(String name) async {
     var r = await Requests.post(
         "${DotEnv().env['BASE_URL']}/api/v2/worker",
         json: {
           "storeId": 1,
-          "name": "Prio ${dateFormat.format(new DateTime.now())}",
-          "avatar": "/test.png",
-          "phone": "0707070707",
+          "name": name,
+          "avatar": "/doctor.png",
+          "phone": "",
           "isManager": false,
         },
         bodyEncoding: RequestBodyEncoding.JSON);

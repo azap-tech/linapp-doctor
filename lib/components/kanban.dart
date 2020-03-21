@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:azap_native_manager_app/components/dialogInput.dart';
 import 'package:azap_native_manager_app/services/http.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -215,7 +216,7 @@ class _KanbanState extends State<Kanban> {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       RaisedButton(
-        onPressed: HttpService().createWorker,
+        onPressed: () {alertDialog(context);},
         color: Color(0xFFFFCC09),
         child: const Text(
             'Ajouter une file',
@@ -243,8 +244,8 @@ class _KanbanState extends State<Kanban> {
             builder: (_) {
               // TODO fusion hashmap and workers + handle update ticket move sync
               workers.list.forEach((worker) => {
-                if(board["${worker.id}"] == null){
-                  board["${worker.id}"] = []
+                if(board["${worker.name}"] == null){
+                  board["${worker.name}"] = []
                 }
               });
               board[waitList] = [];
