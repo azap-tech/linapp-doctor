@@ -19,10 +19,16 @@ abstract class _Ticket with Store {
   int workerId;
 
   @observable
+  int age;
+
+  @observable
   String name;
 
   @observable
   String phone;
+
+  @observable
+  String pathology;
 
   @observable
   DateTime canceledTime;
@@ -44,9 +50,6 @@ abstract class _Ticket with Store {
 
   @observable
   bool azap = false;
-
-  @observable
-  bool regularClient = false;
 
   @action
   void updateWorker(int newWorkerId) {

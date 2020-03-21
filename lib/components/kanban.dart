@@ -1,6 +1,6 @@
 import 'dart:collection';
-import 'package:azap_app/components/dialogInput.dart';
-import 'package:azap_app/services/http.dart';
+import 'package:azap_app/components/takeTicket.dart';
+import 'package:azap_app/components/workerInput.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import '../main.dart';
@@ -216,7 +216,7 @@ class _KanbanState extends State<Kanban> {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       RaisedButton(
-        onPressed: () {alertDialog(context);},
+        onPressed: () {newWorkerDialog(context);},
         color: Color(0xFFFFCC09),
         child: const Text(
             'Ajouter une file',
@@ -227,7 +227,12 @@ class _KanbanState extends State<Kanban> {
         ),
       ),
       RaisedButton(
-        onPressed: HttpService().createTicket,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TakeTicket()),
+          );
+        },
         color: Color(0xFFFFCC09),
         child: const Text(
             'Ajouter un patient',
