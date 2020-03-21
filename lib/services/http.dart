@@ -1,10 +1,9 @@
-import 'package:azap_native_manager_app/classes/stateTicketPayload.dart';
-import 'package:azap_native_manager_app/classes/stateWorkerPayload.dart';
-import 'package:azap_native_manager_app/stores/ticket.dart';
-import 'package:azap_native_manager_app/stores/worker.dart';
+import 'package:azap_app/classes/stateTicketPayload.dart';
+import 'package:azap_app/classes/stateWorkerPayload.dart';
+import 'package:azap_app/stores/ticket.dart';
+import 'package:azap_app/stores/worker.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:intl/intl.dart';
 import 'package:requests/requests.dart';
 
 import '../main.dart';

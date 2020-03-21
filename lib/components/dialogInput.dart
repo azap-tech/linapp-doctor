@@ -1,4 +1,4 @@
-import 'package:azap_native_manager_app/services/http.dart';
+import 'package:azap_app/services/http.dart';
 import 'package:flutter/material.dart';
 
 void alertDialog(BuildContext context) {
