@@ -60,6 +60,23 @@ mixin _$Ticket on _Ticket, Store {
     }, _$workerIdAtom, name: '${_$workerIdAtom.name}_set');
   }
 
+  final _$ageAtom = Atom(name: '_Ticket.age');
+
+  @override
+  int get age {
+    _$ageAtom.context.enforceReadPolicy(_$ageAtom);
+    _$ageAtom.reportObserved();
+    return super.age;
+  }
+
+  @override
+  set age(int value) {
+    _$ageAtom.context.conditionallyRunInAction(() {
+      super.age = value;
+      _$ageAtom.reportChanged();
+    }, _$ageAtom, name: '${_$ageAtom.name}_set');
+  }
+
   final _$nameAtom = Atom(name: '_Ticket.name');
 
   @override
@@ -77,6 +94,23 @@ mixin _$Ticket on _Ticket, Store {
     }, _$nameAtom, name: '${_$nameAtom.name}_set');
   }
 
+  final _$sexAtom = Atom(name: '_Ticket.sex');
+
+  @override
+  String get sex {
+    _$sexAtom.context.enforceReadPolicy(_$sexAtom);
+    _$sexAtom.reportObserved();
+    return super.sex;
+  }
+
+  @override
+  set sex(String value) {
+    _$sexAtom.context.conditionallyRunInAction(() {
+      super.sex = value;
+      _$sexAtom.reportChanged();
+    }, _$sexAtom, name: '${_$sexAtom.name}_set');
+  }
+
   final _$phoneAtom = Atom(name: '_Ticket.phone');
 
   @override
@@ -92,6 +126,23 @@ mixin _$Ticket on _Ticket, Store {
       super.phone = value;
       _$phoneAtom.reportChanged();
     }, _$phoneAtom, name: '${_$phoneAtom.name}_set');
+  }
+
+  final _$pathologyAtom = Atom(name: '_Ticket.pathology');
+
+  @override
+  String get pathology {
+    _$pathologyAtom.context.enforceReadPolicy(_$pathologyAtom);
+    _$pathologyAtom.reportObserved();
+    return super.pathology;
+  }
+
+  @override
+  set pathology(String value) {
+    _$pathologyAtom.context.conditionallyRunInAction(() {
+      super.pathology = value;
+      _$pathologyAtom.reportChanged();
+    }, _$pathologyAtom, name: '${_$pathologyAtom.name}_set');
   }
 
   final _$canceledTimeAtom = Atom(name: '_Ticket.canceledTime');
@@ -213,23 +264,6 @@ mixin _$Ticket on _Ticket, Store {
     }, _$azapAtom, name: '${_$azapAtom.name}_set');
   }
 
-  final _$regularClientAtom = Atom(name: '_Ticket.regularClient');
-
-  @override
-  bool get regularClient {
-    _$regularClientAtom.context.enforceReadPolicy(_$regularClientAtom);
-    _$regularClientAtom.reportObserved();
-    return super.regularClient;
-  }
-
-  @override
-  set regularClient(bool value) {
-    _$regularClientAtom.context.conditionallyRunInAction(() {
-      super.regularClient = value;
-      _$regularClientAtom.reportChanged();
-    }, _$regularClientAtom, name: '${_$regularClientAtom.name}_set');
-  }
-
   final _$_TicketActionController = ActionController(name: '_Ticket');
 
   @override
@@ -245,7 +279,7 @@ mixin _$Ticket on _Ticket, Store {
   @override
   String toString() {
     final string =
-        'id: ${id.toString()},storeId: ${storeId.toString()},workerId: ${workerId.toString()},name: ${name.toString()},phone: ${phone.toString()},canceledTime: ${canceledTime.toString()},cashedTime: ${cashedTime.toString()},creationTime: ${creationTime.toString()},doneTime: ${doneTime.toString()},expectedTime: ${expectedTime.toString()},startedTime: ${startedTime.toString()},azap: ${azap.toString()},regularClient: ${regularClient.toString()}';
+        'id: ${id.toString()},storeId: ${storeId.toString()},workerId: ${workerId.toString()},age: ${age.toString()},name: ${name.toString()},sex: ${sex.toString()},phone: ${phone.toString()},pathology: ${pathology.toString()},canceledTime: ${canceledTime.toString()},cashedTime: ${cashedTime.toString()},creationTime: ${creationTime.toString()},doneTime: ${doneTime.toString()},expectedTime: ${expectedTime.toString()},startedTime: ${startedTime.toString()},azap: ${azap.toString()}';
     return '{$string}';
   }
 }

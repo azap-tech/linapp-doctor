@@ -34,15 +34,15 @@ class HttpService {
   }
 
   // auto store cookie in storage
-  createTicket() async {
+  createTicket(Ticket ticket) async {
     var r = await Requests.post(
         "${DotEnv().env['BASE_URL']}/api/v2/ticket",
         json: {
           "storeId": 1,
           "workerId": 1,
           "prestations": [],
-          "name": "New Patient",
-          "phone": "0707070707",
+          "name": ticket.name,
+          "phone": ticket.phone,
           "azap": true,
         },
         bodyEncoding: RequestBodyEncoding.JSON);

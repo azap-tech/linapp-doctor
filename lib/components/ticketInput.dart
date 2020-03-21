@@ -1,7 +1,6 @@
-import 'package:azap_app/services/http.dart';
 import 'package:flutter/material.dart';
 
-void alertDialog(BuildContext context) {
+void newTicketDialog(BuildContext context) {
   var inputValue = "";
   showDialog(
     context: context,
@@ -23,7 +22,7 @@ void alertDialog(BuildContext context) {
           new FlatButton(
             child: new Text("Valider"),
             onPressed: () {
-              HttpService().createWorker(inputValue);
+              //
               Navigator.of(context).pop();
             },
           ),
