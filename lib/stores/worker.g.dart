@@ -9,6 +9,23 @@ part of 'worker.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$Worker on _Worker, Store {
+  final _$listPatientsAtom = Atom(name: '_Worker.listPatients');
+
+  @override
+  ObservableList<Ticket> get listPatients {
+    _$listPatientsAtom.context.enforceReadPolicy(_$listPatientsAtom);
+    _$listPatientsAtom.reportObserved();
+    return super.listPatients;
+  }
+
+  @override
+  set listPatients(ObservableList<Ticket> value) {
+    _$listPatientsAtom.context.conditionallyRunInAction(() {
+      super.listPatients = value;
+      _$listPatientsAtom.reportChanged();
+    }, _$listPatientsAtom, name: '${_$listPatientsAtom.name}_set');
+  }
+
   final _$nameAtom = Atom(name: '_Worker.name');
 
   @override
@@ -143,7 +160,7 @@ mixin _$Worker on _Worker, Store {
   @override
   String toString() {
     final string =
-        'name: ${name.toString()},avatar: ${avatar.toString()},storeId: ${storeId.toString()},id: ${id.toString()},phone: ${phone.toString()},isManager: ${isManager.toString()},status: ${status.toString()}';
+        'listPatients: ${listPatients.toString()},name: ${name.toString()},avatar: ${avatar.toString()},storeId: ${storeId.toString()},id: ${id.toString()},phone: ${phone.toString()},isManager: ${isManager.toString()},status: ${status.toString()}';
     return '{$string}';
   }
 }
