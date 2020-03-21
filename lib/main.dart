@@ -6,6 +6,7 @@ import 'package:azap_app/stores/workers.dart';
 import 'package:flutter/material.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart' show JsonMapper;
 import 'package:dart_json_mapper_mobx/dart_json_mapper_mobx.dart' show mobXAdapter;
+import 'package:flutter/services.dart';
 import 'main.reflectable.dart' show initializeReflectable;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'components/kanban.dart';
@@ -16,6 +17,7 @@ final tickets = Tickets();
 void main() {
   initializeReflectable();
   JsonMapper().useAdapter(mobXAdapter);
+  SystemChrome.setEnabledSystemUIOverlays([]);
 
   runApp(MyApp());
 }
