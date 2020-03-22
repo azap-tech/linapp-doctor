@@ -17,6 +17,8 @@ class _TakeTicketState extends State<TakeTicket> {
 
   @override
   void initState() {
+    // TODO get id from /me with login
+    newTicket.locationId = 1;
     super.initState();
   }
 

@@ -1,8 +1,8 @@
-import 'package:azap_app/stores/worker.dart';
+import 'package:azap_app/stores/ticket.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 @jsonSerializable
-class StateWorkerPayload {
-  List<Worker> workers;
+class StateTicketPayload {
+  List<Ticket> tickets;
   String status = "";
 }

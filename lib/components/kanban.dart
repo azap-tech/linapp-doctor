@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'package:azap_app/components/takeTicket.dart';
-import 'package:azap_app/components/workerInput.dart';
-import 'package:azap_app/stores/worker.dart';
+import 'package:azap_app/components/doctorInput.dart';
+import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/ticket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -63,9 +63,9 @@ class _KanbanState extends State<Kanban> {
           int indexTicket = tickets.list.indexWhere((ticket) => ticket.id == int.parse(data.id));
           Ticket ticket = tickets.list.elementAt(indexTicket);
           tickets.list.removeWhere((ticket) => ticket.id == int.parse(data.id));
-          int index = workers.list.indexWhere((worker) => worker.name == listId);
-          Worker worker = workers.list.elementAt(index);
-          worker.listPatients.add(ticket);
+          int index = doctors.list.indexWhere((worker) => worker.name == listId);
+          Doctor doctor = doctors.list.elementAt(index);
+          doctor.listPatients.add(ticket);
         });
       },
       builder:
@@ -230,7 +230,7 @@ class _KanbanState extends State<Kanban> {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       RaisedButton(
-        onPressed: () {newWorkerDialog(context);},
+        onPressed: () {newDoctorDialog(context);},
         color: Color(0xFFFFCC09),
         child: const Text(
             'Ajouter une file',
@@ -262,7 +262,7 @@ class _KanbanState extends State<Kanban> {
         child: Observer(
             builder: (_) {
               // TODO fusion hashmap and workers + handle update ticket move sync
-              workers.list.forEach((worker) => {
+              doctors.list.forEach((worker) => {
                 if(board["${worker.name}"] == null){
                   board["${worker.name}"] = []
                 }
