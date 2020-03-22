@@ -5,6 +5,7 @@ import 'package:azap_app/stores/worker.dart';
 import 'package:azap_app/stores/ticket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:intl/intl.dart';
 import '../main.dart';
 
 final String waitList = "Non trié";
@@ -13,8 +14,12 @@ class Item {
   final String id;
   String listId;
   final String title;
+  final String pathology;
+  final String sex;
+  final String time;
+  final int age;
 
-  Item({this.id, this.listId, this.title});
+  Item({this.id, this.listId, this.title, this.pathology, this.sex, this.time, this.age});
 }
 
 class Kanban extends StatefulWidget {
@@ -262,9 +267,11 @@ class _KanbanState extends State<Kanban> {
                   board["${worker.name}"] = []
                 }
               });
+              DateFormat dateFormat = DateFormat("HH:mm");
               board[waitList] = [];
               tickets.list.forEach((ticket) => {
-                board[waitList].add(Item(id: "${ticket.id}", listId: waitList, title: "Ticket ${ticket.name} ${ticket.id}"))
+                board[waitList].add(Item(id: "#${ticket.id}", listId: waitList, title: ticket.name, age: ticket.age, pathology: ticket.pathology, sex: ticket.sex
+                , time: dateFormat.format(ticket.creationTime)))
               });
               return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,16 +340,46 @@ class ItemWidget extends StatelessWidget {
         fontSize: 20
       ),
     ),
-    subtitle: Text(
-        "listId: ${item.listId}",
-        style: TextStyle(
-          color: Color(0xFF049BE5),
+    subtitle: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          item.pathology,
+          style: TextStyle(
+            color: Color(0xFF049BE5),
+          ),
         ),
+        Text(
+          item.sex,
+          style: TextStyle(
+            color: Color(0xFF049BE5),
+          ),
+        ),
+        Text(
+          "${item.age.toString()} ans",
+          style: TextStyle(
+            color: Color(0xFF049BE5),
+          ),
+        )
+      ],
     ),
-    trailing: Icon(
-      Icons.sort,
-      color: Color(0xFF049BE5),
-      size: 30.0,
+    trailing: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Text(
+          item.id,
+          style: TextStyle(
+            color: Color(0xFF049BE5),
+          ),
+        ),
+        Text(
+          item.time,
+          style: TextStyle(
+            color: Color(0xFF049BE5),
+          ),
+        )
+      ],
     ),
     onTap: () {},
   );
