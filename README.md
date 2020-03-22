@@ -1,5 +1,7 @@
 # azap_app
 
+[![Codemagic build status](https://api.codemagic.io/apps/5e76a6c7ec3bd820baa11160/5e76a6c7ec3bd820baa1115f/status_badge.svg)](https://codemagic.io/apps/5e76a6c7ec3bd820baa11160/5e76a6c7ec3bd820baa1115f/latest_build)
+
 A new Flutter project.
 
 ## Getting Started
