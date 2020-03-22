@@ -30,6 +30,7 @@ class HttpService {
           "id": id,
           "secret": secret
         },
+        timeoutSeconds: 30,
         bodyEncoding: RequestBodyEncoding.JSON);
     print("http status from login ${r.statusCode}");
     // throw exception if not 200
@@ -87,7 +88,8 @@ class HttpService {
           "name": doctor.name,
           "phone": doctor.phone
         },
-        bodyEncoding: RequestBodyEncoding.JSON);
+        bodyEncoding: RequestBodyEncoding.JSON,
+        timeoutSeconds: 30);
     print("http status from doctor ${r.statusCode}");
     // throw exception if not 200
     r.raiseForStatus();
@@ -111,6 +113,10 @@ class HttpService {
 
   // call if login return app status with doctors and tickets
   getStatus() async {
+    String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/me");
+    Requests.getStoredCookies(hostname).then((cookie) {
+      print('Session : ' + cookie.toString());
+    });
     var r = await Requests.get("${DotEnv().env['BASE_URL']}/api/v2/me");
     print("http status from get me : ${r.statusCode}");
     // throw exception if not 200

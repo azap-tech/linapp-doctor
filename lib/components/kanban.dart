@@ -270,7 +270,7 @@ class _KanbanState extends State<Kanban> {
               DateFormat dateFormat = DateFormat("HH:mm");
               board[waitList] = [];
               tickets.list.forEach((ticket) => {
-                board[waitList].add(Item(id: "#${ticket.id}", listId: waitList, title: ticket.name, age: ticket.age, pathology: ticket.pathology, sex: ticket.sex
+                board[waitList].add(Item(id: "${ticket.id}", listId: waitList, title: ticket.name, age: ticket.age, pathology: ticket.pathology, sex: ticket.sex
                 , time: dateFormat.format(ticket.creationTime)))
               });
               return Row(
@@ -368,7 +368,7 @@ class ItemWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Text(
-          item.id,
+          "#${item.id}",
           style: TextStyle(
             color: Color(0xFF049BE5),
           ),
