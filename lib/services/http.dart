@@ -41,12 +41,12 @@ class HttpService {
 
   // auto store cookie in storage
   createTicket(Ticket ticket) async {
-    String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/ticket");
+    String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/ticket/new");
     Requests.getStoredCookies(hostname).then((cookie) {
       print('Session : ' + cookie.toString());
     });
     var r = await Requests.post(
-        "${DotEnv().env['BASE_URL']}/api/v2/ticket",
+        "${DotEnv().env['BASE_URL']}/api/v2/ticket/new",
         json: {
           "locationId": ticket.locationId,
           "name": ticket.name,
@@ -63,14 +63,11 @@ class HttpService {
     print(json);
   }
 
-  /*updateTicket(Ticket ticket) async {
+  updateTicket(Ticket ticket) async {
     var r = await Requests.patch(
-        "${DotEnv().env['BASE_URL']}/api/v2/ticket",
+        "${DotEnv().env['BASE_URL']}/api/v2/ticket/${ticket.id}/doctor",
         json: {
-          "name": ticket.name,
-          "phone": ticket.phone,
-          "sex": ticket.sex,
-          "pathology": ticket.pathology,
+          "id": ticket.doctorId
         },
         bodyEncoding: RequestBodyEncoding.JSON);
     print("http status from ticket ${r.statusCode}");
@@ -78,7 +75,7 @@ class HttpService {
     r.raiseForStatus();
     dynamic json = r.json();
     print(json);
-  }*/
+  }
 
   createDoctor(Doctor doctor) async {
     var r = await Requests.post(
