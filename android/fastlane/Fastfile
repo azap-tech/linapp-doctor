@@ -31,7 +31,7 @@ platform :android do
           groups: "azap",
           release_notes: "Lots of amazing new features to test out!",
           apk_path: "../build/app/outputs/apk/release/app-release.apk",
-          service_credentials_file: "./azap-app-4ea4d1db3dc7.json"
+          firebase_cli_token: $firebase_cli_token
       )
   
     # sh "your_script.sh"
