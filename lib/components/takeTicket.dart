@@ -99,8 +99,7 @@ class _TakeTicketState extends State<TakeTicket> {
                         inputFormatters: <TextInputFormatter>[
                           WhitelistingTextInputFormatter.digitsOnly
                         ]),
-                  )
-                  ,
+                  ),
                   new Expanded(
                       child: new TextField(
                           onChanged: (text) {

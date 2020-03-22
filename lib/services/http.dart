@@ -1,5 +1,6 @@
 import 'package:azap_app/classes/stateTicketPayload.dart';
 import 'package:azap_app/classes/stateWorkerPayload.dart';
+import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/ticket.dart';
 import 'package:azap_app/stores/worker.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
@@ -53,13 +54,31 @@ class HttpService {
     print(json);
   }
 
+  createDoctor(Doctor doctor) async {
+    var r = await Requests.post(
+        "${DotEnv().env['BASE_URL']}/api/v2/worker",
+        json: {
+          "storeId": 1,
+          "name": doctor.name,
+          "avatar": "/doctor.png",
+          "phone": "",
+          "isManager": false,
+        },
+        bodyEncoding: RequestBodyEncoding.JSON);
+    print("http status from worker ${r.statusCode}");
+    // throw exception if not 200
+    r.raiseForStatus();
+    dynamic json = r.json();
+    print(json);
+  }
+
   createWorker(String name) async {
     var r = await Requests.post(
         "${DotEnv().env['BASE_URL']}/api/v2/worker",
         json: {
           "storeId": 1,
           "name": name,
-          "avatar": "/doctor.png",
+          "avatar": "/worker.png",
           "phone": "",
           "isManager": false,
         },
