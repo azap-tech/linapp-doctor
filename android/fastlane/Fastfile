@@ -30,7 +30,7 @@ platform :android do
           app: "1:591223998749:android:84ca24a11c167fa50ef9f4",
           groups: "azap",
           release_notes: "Lots of amazing new features to test out!",
-          apk_path: "../build/app/outputs/apk/release/app-release.apk"
+          apk_path: "../build/app/outputs/apk/release/app-release.apk",
           serviceCredentialsFile="./azap-app-4ea4d1db3dc7.json"
       )
   
