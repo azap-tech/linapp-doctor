@@ -3,6 +3,7 @@ import 'package:azap_app/classes/stateWorkerPayload.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/ticket.dart';
 import 'package:azap_app/stores/worker.dart';
+import 'package:azap_app/main.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:requests/requests.dart';
@@ -56,16 +57,14 @@ class HttpService {
 
   createDoctor(Doctor doctor) async {
     var r = await Requests.post(
-        "${DotEnv().env['BASE_URL']}/api/v2/worker",
+        "${DotEnv().env['BASE_URL']}/api/v2/doctor",
         json: {
-          "storeId": 1,
+          "locationId": doctor.locationId,
           "name": doctor.name,
-          "avatar": "/doctor.png",
-          "phone": "",
-          "isManager": false,
+          "phone": doctor.phone
         },
         bodyEncoding: RequestBodyEncoding.JSON);
-    print("http status from worker ${r.statusCode}");
+    print("http status from doctor ${r.statusCode}");
     // throw exception if not 200
     r.raiseForStatus();
     dynamic json = r.json();
@@ -84,6 +83,29 @@ class HttpService {
         },
         bodyEncoding: RequestBodyEncoding.JSON);
     print("http status from worker ${r.statusCode}");
+    // throw exception if not 200
+    r.raiseForStatus();
+    dynamic json = r.json();
+    print(json);
+  }
+
+  createLocation(String name) async {
+    var r = await Requests.post(
+        "${DotEnv().env['BASE_URL']}/api/v2/location",
+        json: {
+          "name": name
+        },
+        bodyEncoding: RequestBodyEncoding.JSON);
+    print("http status from create location : ${r.statusCode}");
+    // throw exception if not 200
+    r.raiseForStatus();
+    dynamic json = r.json();
+    print(json);
+  }
+
+  getLocations() async {
+    var r = await Requests.get("${DotEnv().env['BASE_URL']}/api/v2/location");
+    print("http status from get locations : ${r.statusCode}");
     // throw exception if not 200
     r.raiseForStatus();
     dynamic json = r.json();
