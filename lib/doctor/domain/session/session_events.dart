@@ -20,8 +20,8 @@ class OnSessionExpired extends SessionEvent {
 }
 
 class OnSessionCreated extends SessionEvent {
-  final String token;
-  OnSessionCreated(this.token);
+  final bool isProfileCompleted;
+  OnSessionCreated(this.isProfileCompleted);
 
   @override
   String toString() => 'OnSessionCreated';
