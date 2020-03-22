@@ -2,11 +2,11 @@ import 'package:azap_app/doctor/di/locator.dart';
 import 'package:azap_app/doctor/domain/session/session_events.dart';
 import 'package:azap_app/doctor/domain/session/session_state.dart';
 import 'package:bloc/bloc.dart';
+import 'package:requests/requests.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionBloc extends Bloc<SessionEvent, SessionState> {
   SharedPreferences sharedPreferences;
-  bool isInited = false;
 
   @override
   SessionState get initialState => InitialSessionState();
@@ -14,41 +14,29 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
   @override
   Stream<SessionState> mapEventToState(SessionEvent event) async* {
     if (event is GetSessionState) {
+      var cookies = await Requests.getStoredCookies("https/api");
       sharedPreferences = await SharedPreferences.getInstance();
-      String toekn = sharedPreferences.getString("token");
-      if (toekn == null) {
-        sharedPreferences = await SharedPreferences.getInstance();
-        sharedPreferences.setString("token", null);
-        isInited = false;
+      String isProfileCompleted = sharedPreferences.getString("locationId");
+      if (cookies.isEmpty) {
         onDisconnected();
         yield LoggedOut();
       } else {
-        sharedPreferences = await SharedPreferences.getInstance();
-        sharedPreferences.setString("token", toekn);
-      if (!isInited) {
-        setupConnectedLocator(toekn, this);
-      }
-        isInited = true;
-        yield LoggedIn();
+        if (isProfileCompleted != null) {
+          yield LoggedIn();
+        } else {
+          yield LoggedInProfileNotCompleted();
+        }
       }
     } else if (event is OnSessionExpired) {
-      sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.setString("token", null);
-      isInited = false;
+      Requests.clearStoredCookies("https/api");
+      sharedPreferences.setString("locationId", null);
       onDisconnected();
       yield LoggedOut();
     } else if (event is OnSessionCreated) {
-      sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.setString("token", event.token);
-      if (!isInited) {
-        setupConnectedLocator(event.token, this);
-      }
-      isInited = true;
-      yield LoggedIn();
+      if (event.isProfileCompleted) {
+        yield LoggedIn();
+      } else {}
     } else if (event is LogOutSession) {
-      sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.setString("token", null);
-      isInited = false;
       onDisconnected();
       yield LoggedOut();
     }

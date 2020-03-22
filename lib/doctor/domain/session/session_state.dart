@@ -17,6 +17,14 @@ class LoggedIn extends SessionState {
   String toString() => 'LoggedIn';
 }
 
+class LoggedInProfileNotCompleted extends SessionState {
+
+  LoggedInProfileNotCompleted() : super([]);
+
+  @override
+  String toString() => 'LoggedInProfileNotCompleted';
+}
+
 class LoggedOut extends SessionState {
 
   LoggedOut() : super([]);

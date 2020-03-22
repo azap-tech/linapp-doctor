@@ -17,13 +17,11 @@ class HttpService {
     return _instance;
   }
 
-  HttpService._internal() {
-  }
+  HttpService._internal() {}
 
   // auto store cookie in storage
   Future enterPin(String pincode) async {
-    var r = await Requests.post(
-        "${DotEnv().env['BASE_URL']}/api/v2/store/auth",
+    var r = await Requests.post("${DotEnv().env['BASE_URL']}/api/v2/store/auth",
         json: {
           "pincode": pincode,
         },
@@ -37,8 +35,7 @@ class HttpService {
 
   // auto store cookie in storage
   createTicket(Ticket ticket) async {
-    var r = await Requests.post(
-        "${DotEnv().env['BASE_URL']}/api/v2/ticket",
+    var r = await Requests.post("${DotEnv().env['BASE_URL']}/api/v2/ticket",
         json: {
           "storeId": 1,
           "workerId": 1,
@@ -72,8 +69,7 @@ class HttpService {
   }
 
   createWorker(String name) async {
-    var r = await Requests.post(
-        "${DotEnv().env['BASE_URL']}/api/v2/worker",
+    var r = await Requests.post("${DotEnv().env['BASE_URL']}/api/v2/worker",
         json: {
           "storeId": 1,
           "name": name,
@@ -89,7 +85,7 @@ class HttpService {
     print(json);
   }
 
-  createLocation(String name) async {
+  Future<int> createLocation(String name) async {
     var r = await Requests.post(
         "${DotEnv().env['BASE_URL']}/api/v2/location",
         json: {
@@ -101,6 +97,8 @@ class HttpService {
     r.raiseForStatus();
     dynamic json = r.json();
     print(json);
+        // Todo return locationId of createdlocation
+    return 3;
   }
 
   getLocations() async {
@@ -113,27 +111,26 @@ class HttpService {
   }
 
   syncState(int storeId) async {
-    var r = await Requests.get("${DotEnv().env['BASE_URL']}/api/v2/store/${storeId}/status");
+    var r = await Requests.get(
+        "${DotEnv().env['BASE_URL']}/api/v2/store/${storeId}/status");
     print("http status from get state ${r.statusCode}");
     // throw exception if not 200
     r.raiseForStatus();
 
     // TODO hack to deserialize list
-    JsonMapper().useAdapter(JsonMapperAdapter(
-        valueDecorators: {
-          typeOf<List<Worker>>(): (value) => value.cast<Worker>()
-        })
-    );
+    JsonMapper().useAdapter(JsonMapperAdapter(valueDecorators: {
+      typeOf<List<Worker>>(): (value) => value.cast<Worker>()
+    }));
 
-    final stateWorkerPayload = JsonMapper.deserialize<StateWorkerPayload>(r.content());
+    final stateWorkerPayload =
+        JsonMapper.deserialize<StateWorkerPayload>(r.content());
 
-    JsonMapper().useAdapter(JsonMapperAdapter(
-        valueDecorators: {
-          typeOf<List<Ticket>>(): (value) => value.cast<Ticket>()
-        })
-    );
+    JsonMapper().useAdapter(JsonMapperAdapter(valueDecorators: {
+      typeOf<List<Ticket>>(): (value) => value.cast<Ticket>()
+    }));
 
-    final stateTicketPayload = JsonMapper.deserialize<StateTicketPayload>(r.content());
+    final stateTicketPayload =
+        JsonMapper.deserialize<StateTicketPayload>(r.content());
 
     tickets.addTickets(stateTicketPayload.tickets);
     workers.addWorkers(stateWorkerPayload.workers);
