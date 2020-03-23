@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stetho/flutter_stetho.dart';
 
+import 'di/locator.dart';
 import 'domain/session/session_bloc.dart';
 import 'flavors.dart';
 
@@ -18,6 +19,7 @@ import 'flavors.dart';
 void main() {
   Stetho.initialize();
   DotEnv().load('.env');
+  setupLocator();
   FlavorConfig(
       flavor: Flavor.PRODUCTION,
       color: Colors.deepPurpleAccent,
