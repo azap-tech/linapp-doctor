@@ -18,7 +18,7 @@ class SettingLocation extends LocationState {
 }
 
 class LocationSet extends LocationState {
-  final String locationId;
+  final int locationId;
 
   LocationSet(this.locationId) : super([]);
 

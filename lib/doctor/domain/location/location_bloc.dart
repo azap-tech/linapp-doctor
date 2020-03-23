@@ -1,15 +1,15 @@
+import 'package:azap_app/doctor/data/location/location_repository_contract.dart';
+import 'package:azap_app/doctor/di/locator.dart';
 import 'package:azap_app/doctor/domain/location/location_events.dart';
 import 'package:azap_app/doctor/domain/location/location_state.dart';
 import 'package:azap_app/doctor/domain/session/session_bloc.dart';
 import 'package:azap_app/doctor/domain/session/session_events.dart';
-import 'package:azap_app/services/http.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LocationBloc extends Bloc<LocationEvent, LocationState> {
-  SharedPreferences sharedPreferences;
   final SessionBloc sessionBloc;
+  var locationRepository = locator<LocationRepositoryContract>();
 
   LocationBloc(this.sessionBloc);
 
@@ -19,8 +19,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
   @override
   Stream<LocationState> mapEventToState(LocationEvent event) async* {
     if (event is GetLocationEvent) {
-      sharedPreferences = await SharedPreferences.getInstance();
-      String locationId = sharedPreferences.getString("locationId");
+      int locationId = await locationRepository.getLocation();
       if (locationId != null) {
         yield (LocationSet(locationId));
       } else {
@@ -29,10 +28,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
     } else if (event is SetLocation) {
       yield SettingLocation();
       try {
-        sharedPreferences = await SharedPreferences.getInstance();
-        var locationId = await HttpService()
-            .createLocation(event.name);
-        sharedPreferences.setString("locationId", locationId);
+        var locationId = await locationRepository.setLocation(event.name);
         sessionBloc.dispatch(OnSessionCreated(true));
         yield LocationSet(locationId);
       } catch (e) {

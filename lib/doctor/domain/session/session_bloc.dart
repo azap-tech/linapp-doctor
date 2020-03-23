@@ -1,3 +1,4 @@
+import 'package:azap_app/doctor/data/location/location_repository_contract.dart';
 import 'package:azap_app/doctor/di/locator.dart';
 import 'package:azap_app/doctor/domain/session/session_events.dart';
 import 'package:azap_app/doctor/domain/session/session_state.dart';
@@ -7,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionBloc extends Bloc<SessionEvent, SessionState> {
   SharedPreferences sharedPreferences;
+  var locationRepository = locator<LocationRepositoryContract>();
 
   @override
   SessionState get initialState => InitialSessionState();
@@ -16,12 +18,12 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     if (event is GetSessionState) {
       var cookies = await Requests.getStoredCookies("https/api");
       sharedPreferences = await SharedPreferences.getInstance();
-      String isProfileCompleted = sharedPreferences.getString("locationId");
+      int isProfileCompleted = await locationRepository.getLocation();
       if (cookies.isEmpty) {
         onDisconnected();
         yield LoggedOut();
       } else {
-        if (isProfileCompleted != null) {
+        if (isProfileCompleted != -1) {
           yield LoggedIn();
         } else {
           yield LoggedInProfileNotCompleted();
@@ -29,7 +31,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
       }
     } else if (event is OnSessionExpired) {
       Requests.clearStoredCookies("https/api");
-      sharedPreferences.setString("locationId", null);
+      locationRepository.reset();
       onDisconnected();
       yield LoggedOut();
     } else if (event is OnSessionCreated) {
