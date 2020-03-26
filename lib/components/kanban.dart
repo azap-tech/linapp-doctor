@@ -21,14 +21,7 @@ class Item {
   final String time;
   final int age;
 
-  Item(
-      {this.id,
-      this.listId,
-      this.title,
-      this.pathology,
-      this.sex,
-      this.time,
-      this.age});
+  Item({this.id, this.listId, this.title, this.pathology, this.sex, this.time, this.age});
 }
 
 class Kanban extends StatefulWidget {
@@ -228,14 +221,12 @@ class _KanbanState extends State<Kanban> {
             board[listId].add(data);
           }
           // manual local change, TODO handle with api
-          /*int indexTicket = tickets.list.indexWhere((ticket) => ticket.id == data.id);
+          int indexTicket = tickets.list.indexWhere((ticket) => ticket.id == int.parse(data.id));
           Ticket ticket = tickets.list.elementAt(indexTicket);
-          tickets.list.removeWhere((ticket) => ticket.id == data.id);
+          tickets.list.removeWhere((ticket) => ticket.id == int.parse(data.id));
           int index = doctors.list.indexWhere((worker) => worker.name == listId);
           Doctor doctor = doctors.list.elementAt(index);
-          doctor.listPatients.add(ticket);*/
-          //ticket.doctorId = doctor.id;
-          //HttpService().updateTicket(ticket);
+          doctor.listPatients.add(ticket);
         });
       },
       builder:
@@ -299,9 +290,9 @@ class _KanbanState extends State<Kanban> {
           // Moves the card into the position
           onAccept: (String incomingListId) {
             setState(
-              () {
+                  () {
                 LinkedHashMap<String, List<Item>> reorderedBoard =
-                    LinkedHashMap();
+                LinkedHashMap();
                 for (String key in board.keys) {
                   if (key == incomingListId) {
                     reorderedBoard[listId] = board[listId];
@@ -344,6 +335,7 @@ class _KanbanState extends State<Kanban> {
 
   @override
   Widget build(BuildContext context) {
+
     buildKanbanList(String listId, List<Item> items) {
       return SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -434,17 +426,17 @@ class _KanbanState extends State<Kanban> {
         controller: scrollController,
         child: Observer(builder: (_) {
           // TODO fusion hashmap and workers + handle update ticket move sync
-          /*doctors.list.forEach((worker) => {
+          doctors.list.forEach((worker) => {
                 if(board["${worker.name}"] == null){
                   board["${worker.name}"] = []
                 }
               });
               DateFormat dateFormat = DateFormat("HH:mm");
-              //board[waitList] = [];
+              board[waitList] = [];
               tickets.list.forEach((ticket) => {
                 board[waitList].add(Item(id: "${ticket.id}", listId: waitList, title: ticket.name, age: ticket.age, pathology: ticket.pathology, sex: ticket.sex
                 , time: dateFormat.format(ticket.creationTime)))
-              });*/
+              });
           return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: board.keys.map((String key) {
