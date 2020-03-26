@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'workers.dart';
+part of 'doctors.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,43 +8,43 @@ part of 'workers.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
-mixin _$Workers on _Workers, Store {
-  final _$listAtom = Atom(name: '_Workers.list');
+mixin _$Doctors on _Doctors, Store {
+  final _$listAtom = Atom(name: '_Doctors.list');
 
   @override
-  ObservableList<Worker> get list {
+  ObservableList<Doctor> get list {
     _$listAtom.context.enforceReadPolicy(_$listAtom);
     _$listAtom.reportObserved();
     return super.list;
   }
 
   @override
-  set list(ObservableList<Worker> value) {
+  set list(ObservableList<Doctor> value) {
     _$listAtom.context.conditionallyRunInAction(() {
       super.list = value;
       _$listAtom.reportChanged();
     }, _$listAtom, name: '${_$listAtom.name}_set');
   }
 
-  final _$_WorkersActionController = ActionController(name: '_Workers');
+  final _$_DoctorsActionController = ActionController(name: '_Doctors');
 
   @override
-  void addWorker(Worker worker) {
-    final _$actionInfo = _$_WorkersActionController.startAction();
+  void addDoctor(Doctor doctor) {
+    final _$actionInfo = _$_DoctorsActionController.startAction();
     try {
-      return super.addWorker(worker);
+      return super.addDoctor(doctor);
     } finally {
-      _$_WorkersActionController.endAction(_$actionInfo);
+      _$_DoctorsActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void addWorkers(List<Worker> workers) {
-    final _$actionInfo = _$_WorkersActionController.startAction();
+  void addDoctors(List<Doctor> doctors) {
+    final _$actionInfo = _$_DoctorsActionController.startAction();
     try {
-      return super.addWorkers(workers);
+      return super.addDoctors(doctors);
     } finally {
-      _$_WorkersActionController.endAction(_$actionInfo);
+      _$_DoctorsActionController.endAction(_$actionInfo);
     }
   }
 

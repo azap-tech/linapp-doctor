@@ -26,38 +26,38 @@ mixin _$Ticket on _Ticket, Store {
     }, _$idAtom, name: '${_$idAtom.name}_set');
   }
 
-  final _$storeIdAtom = Atom(name: '_Ticket.storeId');
+  final _$locationIdAtom = Atom(name: '_Ticket.locationId');
 
   @override
-  int get storeId {
-    _$storeIdAtom.context.enforceReadPolicy(_$storeIdAtom);
-    _$storeIdAtom.reportObserved();
-    return super.storeId;
+  int get locationId {
+    _$locationIdAtom.context.enforceReadPolicy(_$locationIdAtom);
+    _$locationIdAtom.reportObserved();
+    return super.locationId;
   }
 
   @override
-  set storeId(int value) {
-    _$storeIdAtom.context.conditionallyRunInAction(() {
-      super.storeId = value;
-      _$storeIdAtom.reportChanged();
-    }, _$storeIdAtom, name: '${_$storeIdAtom.name}_set');
+  set locationId(int value) {
+    _$locationIdAtom.context.conditionallyRunInAction(() {
+      super.locationId = value;
+      _$locationIdAtom.reportChanged();
+    }, _$locationIdAtom, name: '${_$locationIdAtom.name}_set');
   }
 
-  final _$workerIdAtom = Atom(name: '_Ticket.workerId');
+  final _$doctorIdAtom = Atom(name: '_Ticket.doctorId');
 
   @override
-  int get workerId {
-    _$workerIdAtom.context.enforceReadPolicy(_$workerIdAtom);
-    _$workerIdAtom.reportObserved();
-    return super.workerId;
+  int get doctorId {
+    _$doctorIdAtom.context.enforceReadPolicy(_$doctorIdAtom);
+    _$doctorIdAtom.reportObserved();
+    return super.doctorId;
   }
 
   @override
-  set workerId(int value) {
-    _$workerIdAtom.context.conditionallyRunInAction(() {
-      super.workerId = value;
-      _$workerIdAtom.reportChanged();
-    }, _$workerIdAtom, name: '${_$workerIdAtom.name}_set');
+  set doctorId(int value) {
+    _$doctorIdAtom.context.conditionallyRunInAction(() {
+      super.doctorId = value;
+      _$doctorIdAtom.reportChanged();
+    }, _$doctorIdAtom, name: '${_$doctorIdAtom.name}_set');
   }
 
   final _$ageAtom = Atom(name: '_Ticket.age');
@@ -162,23 +162,6 @@ mixin _$Ticket on _Ticket, Store {
     }, _$canceledTimeAtom, name: '${_$canceledTimeAtom.name}_set');
   }
 
-  final _$cashedTimeAtom = Atom(name: '_Ticket.cashedTime');
-
-  @override
-  DateTime get cashedTime {
-    _$cashedTimeAtom.context.enforceReadPolicy(_$cashedTimeAtom);
-    _$cashedTimeAtom.reportObserved();
-    return super.cashedTime;
-  }
-
-  @override
-  set cashedTime(DateTime value) {
-    _$cashedTimeAtom.context.conditionallyRunInAction(() {
-      super.cashedTime = value;
-      _$cashedTimeAtom.reportChanged();
-    }, _$cashedTimeAtom, name: '${_$cashedTimeAtom.name}_set');
-  }
-
   final _$creationTimeAtom = Atom(name: '_Ticket.creationTime');
 
   @override
@@ -247,47 +230,13 @@ mixin _$Ticket on _Ticket, Store {
     }, _$startedTimeAtom, name: '${_$startedTimeAtom.name}_set');
   }
 
-  final _$azapAtom = Atom(name: '_Ticket.azap');
-
-  @override
-  bool get azap {
-    _$azapAtom.context.enforceReadPolicy(_$azapAtom);
-    _$azapAtom.reportObserved();
-    return super.azap;
-  }
-
-  @override
-  set azap(bool value) {
-    _$azapAtom.context.conditionallyRunInAction(() {
-      super.azap = value;
-      _$azapAtom.reportChanged();
-    }, _$azapAtom, name: '${_$azapAtom.name}_set');
-  }
-
-  final _$regularClientAtom = Atom(name: '_Ticket.regularClient');
-
-  @override
-  bool get regularClient {
-    _$regularClientAtom.context.enforceReadPolicy(_$regularClientAtom);
-    _$regularClientAtom.reportObserved();
-    return super.regularClient;
-  }
-
-  @override
-  set regularClient(bool value) {
-    _$regularClientAtom.context.conditionallyRunInAction(() {
-      super.regularClient = value;
-      _$regularClientAtom.reportChanged();
-    }, _$regularClientAtom, name: '${_$regularClientAtom.name}_set');
-  }
-
   final _$_TicketActionController = ActionController(name: '_Ticket');
 
   @override
-  void updateWorker(int newWorkerId) {
+  void updateDoctor(int newDoctorId) {
     final _$actionInfo = _$_TicketActionController.startAction();
     try {
-      return super.updateWorker(newWorkerId);
+      return super.updateDoctor(newDoctorId);
     } finally {
       _$_TicketActionController.endAction(_$actionInfo);
     }
@@ -296,7 +245,7 @@ mixin _$Ticket on _Ticket, Store {
   @override
   String toString() {
     final string =
-        'id: ${id.toString()},storeId: ${storeId.toString()},workerId: ${workerId.toString()},age: ${age.toString()},name: ${name.toString()},sex: ${sex.toString()},phone: ${phone.toString()},pathology: ${pathology.toString()},canceledTime: ${canceledTime.toString()},cashedTime: ${cashedTime.toString()},creationTime: ${creationTime.toString()},doneTime: ${doneTime.toString()},expectedTime: ${expectedTime.toString()},startedTime: ${startedTime.toString()},azap: ${azap.toString()},regularClient: ${regularClient.toString()}';
+        'id: ${id.toString()},locationId: ${locationId.toString()},doctorId: ${doctorId.toString()},age: ${age.toString()},name: ${name.toString()},sex: ${sex.toString()},phone: ${phone.toString()},pathology: ${pathology.toString()},canceledTime: ${canceledTime.toString()},creationTime: ${creationTime.toString()},doneTime: ${doneTime.toString()},expectedTime: ${expectedTime.toString()},startedTime: ${startedTime.toString()}';
     return '{$string}';
   }
 }

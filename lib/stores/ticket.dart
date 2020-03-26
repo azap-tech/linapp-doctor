@@ -13,10 +13,10 @@ abstract class _Ticket with Store {
   int id;
 
   @observable
-  int storeId;
+  int locationId;
 
   @observable
-  int workerId;
+  int doctorId;
 
   @observable
   int age;
@@ -37,9 +37,6 @@ abstract class _Ticket with Store {
   DateTime canceledTime;
 
   @observable
-  DateTime cashedTime;
-
-  @observable
   DateTime creationTime;
 
   @observable
@@ -51,14 +48,8 @@ abstract class _Ticket with Store {
   @observable
   DateTime startedTime;
 
-  @observable
-  bool azap = false;
-
-  @observable
-  bool regularClient = false;
-
   @action
-  void updateWorker(int newWorkerId) {
-    workerId = newWorkerId;
+  void updateDoctor(int newDoctorId) {
+    doctorId = newDoctorId;
   }
 }

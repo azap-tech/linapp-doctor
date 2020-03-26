@@ -9,6 +9,23 @@ part of 'doctor.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$Doctor on _Doctor, Store {
+  final _$listPatientsAtom = Atom(name: '_Doctor.listPatients');
+
+  @override
+  ObservableList<Ticket> get listPatients {
+    _$listPatientsAtom.context.enforceReadPolicy(_$listPatientsAtom);
+    _$listPatientsAtom.reportObserved();
+    return super.listPatients;
+  }
+
+  @override
+  set listPatients(ObservableList<Ticket> value) {
+    _$listPatientsAtom.context.conditionallyRunInAction(() {
+      super.listPatients = value;
+      _$listPatientsAtom.reportChanged();
+    }, _$listPatientsAtom, name: '${_$listPatientsAtom.name}_set');
+  }
+
   final _$idAtom = Atom(name: '_Doctor.id');
 
   @override
@@ -80,7 +97,7 @@ mixin _$Doctor on _Doctor, Store {
   @override
   String toString() {
     final string =
-        'id: ${id.toString()},locationId: ${locationId.toString()},name: ${name.toString()},phone: ${phone.toString()}';
+        'listPatients: ${listPatients.toString()},id: ${id.toString()},locationId: ${locationId.toString()},name: ${name.toString()},phone: ${phone.toString()}';
     return '{$string}';
   }
 }

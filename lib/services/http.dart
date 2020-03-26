@@ -1,9 +1,8 @@
-import 'package:azap_app/classes/stateTicketPayload.dart';
-import 'package:azap_app/classes/stateWorkerPayload.dart';
+import 'package:azap_app/classes/stateDoctorPayload.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/ticket.dart';
-import 'package:azap_app/stores/worker.dart';
 import 'package:azap_app/main.dart';
+import 'package:azap_app/classes/stateTicketPayload.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:requests/requests.dart';
@@ -17,14 +16,21 @@ class HttpService {
     return _instance;
   }
 
-  HttpService._internal() {}
+  HttpService._internal() {
+  }
 
   // auto store cookie in storage
-  Future enterPin(String pincode) async {
-    var r = await Requests.post("${DotEnv().env['BASE_URL']}/api/v2/store/auth",
+  Future login(int id, String secret) async {
+    // TODO clear on disconnect
+    String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/login");
+    Requests.clearStoredCookies(hostname);
+    var r = await Requests.post(
+        "${DotEnv().env['BASE_URL']}/api/v2/login",
         json: {
-          "pincode": pincode,
+          "id": id,
+          "secret": secret
         },
+        timeoutSeconds: 30,
         bodyEncoding: RequestBodyEncoding.JSON);
     print("http status from login ${r.statusCode}");
     // throw exception if not 200
@@ -35,14 +41,33 @@ class HttpService {
 
   // auto store cookie in storage
   createTicket(Ticket ticket) async {
-    var r = await Requests.post("${DotEnv().env['BASE_URL']}/api/v2/ticket",
+    String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/ticket/new");
+    Requests.getStoredCookies(hostname).then((cookie) {
+      print('Session : ' + cookie.toString());
+    });
+    var r = await Requests.post(
+        "${DotEnv().env['BASE_URL']}/api/v2/ticket/new",
         json: {
-          "storeId": 1,
-          "workerId": 1,
-          "prestations": [],
+          "locationId": ticket.locationId,
           "name": ticket.name,
           "phone": ticket.phone,
-          "azap": true,
+          "sex": ticket.sex,
+          "pathology": ticket.pathology,
+          "age": ticket.age,
+        },
+        bodyEncoding: RequestBodyEncoding.JSON);
+    print("http status from ticket ${r.statusCode}");
+    // throw exception if not 200
+    r.raiseForStatus();
+    dynamic json = r.json();
+    print(json);
+  }
+
+  updateTicket(Ticket ticket) async {
+    var r = await Requests.patch(
+        "${DotEnv().env['BASE_URL']}/api/v2/ticket/${ticket.id}/doctor",
+        json: {
+          "id": ticket.doctorId
         },
         bodyEncoding: RequestBodyEncoding.JSON);
     print("http status from ticket ${r.statusCode}");
@@ -60,7 +85,8 @@ class HttpService {
           "name": doctor.name,
           "phone": doctor.phone
         },
-        bodyEncoding: RequestBodyEncoding.JSON);
+        bodyEncoding: RequestBodyEncoding.JSON,
+        timeoutSeconds: 30);
     print("http status from doctor ${r.statusCode}");
     // throw exception if not 200
     r.raiseForStatus();
@@ -68,24 +94,7 @@ class HttpService {
     print(json);
   }
 
-  createWorker(String name) async {
-    var r = await Requests.post("${DotEnv().env['BASE_URL']}/api/v2/worker",
-        json: {
-          "storeId": 1,
-          "name": name,
-          "avatar": "/worker.png",
-          "phone": "",
-          "isManager": false,
-        },
-        bodyEncoding: RequestBodyEncoding.JSON);
-    print("http status from worker ${r.statusCode}");
-    // throw exception if not 200
-    r.raiseForStatus();
-    dynamic json = r.json();
-    print(json);
-  }
-
-  Future<int> createLocation(String name) async {
+  createLocation(String name) async {
     var r = await Requests.post(
         "${DotEnv().env['BASE_URL']}/api/v2/location",
         json: {
@@ -97,8 +106,49 @@ class HttpService {
     r.raiseForStatus();
     dynamic json = r.json();
     print(json);
-        // Todo return locationId of createdlocation
-    return 3;
+  }
+
+  // call if login return app status with doctors and tickets
+  getStatus() async {
+    String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/me");
+    Requests.getStoredCookies(hostname).then((cookie) {
+      print('Session : ' + cookie.toString());
+    });
+    var r = await Requests.get("${DotEnv().env['BASE_URL']}/api/v2/me");
+    print("http status from get me : ${r.statusCode}");
+    // throw exception if not 200
+    r.raiseForStatus();
+
+    // TODO hack to deserialize list
+    JsonMapper().useAdapter(JsonMapperAdapter(
+        valueDecorators: {
+          typeOf<List<Doctor>>(): (value) => value.cast<Doctor>()
+        })
+    );
+
+    final stateDoctorPayload = JsonMapper.deserialize<StateDoctorPayload>(r.content());
+
+    JsonMapper().useAdapter(JsonMapperAdapter(
+        valueDecorators: {
+          typeOf<List<Ticket>>(): (value) => value.cast<Ticket>()
+        })
+    );
+
+    final stateTicketPayload = JsonMapper.deserialize<StateTicketPayload>(r.content());
+
+    stateTicketPayload.tickets.forEach((ticket) {
+      if(ticket.doctorId != null){
+        tickets.addTicket(ticket);
+      } else {
+        int doctorIndex = stateDoctorPayload.doctors.indexWhere((doctor) {
+          doctor.id == ticket.doctorId;
+        });
+        stateDoctorPayload.doctors.elementAt(doctorIndex).listPatients.add(ticket);
+      }
+    });
+
+    tickets.addTickets(stateTicketPayload.tickets);
+    doctors.addDoctors(stateDoctorPayload.doctors);
   }
 
   getLocations() async {
@@ -108,31 +158,5 @@ class HttpService {
     r.raiseForStatus();
     dynamic json = r.json();
     print(json);
-  }
-
-  syncState(int storeId) async {
-    var r = await Requests.get(
-        "${DotEnv().env['BASE_URL']}/api/v2/store/${storeId}/status");
-    print("http status from get state ${r.statusCode}");
-    // throw exception if not 200
-    r.raiseForStatus();
-
-    // TODO hack to deserialize list
-    JsonMapper().useAdapter(JsonMapperAdapter(valueDecorators: {
-      typeOf<List<Worker>>(): (value) => value.cast<Worker>()
-    }));
-
-    final stateWorkerPayload =
-        JsonMapper.deserialize<StateWorkerPayload>(r.content());
-
-    JsonMapper().useAdapter(JsonMapperAdapter(valueDecorators: {
-      typeOf<List<Ticket>>(): (value) => value.cast<Ticket>()
-    }));
-
-    final stateTicketPayload =
-        JsonMapper.deserialize<StateTicketPayload>(r.content());
-
-    tickets.addTickets(stateTicketPayload.tickets);
-    workers.addWorkers(stateWorkerPayload.workers);
   }
 }
