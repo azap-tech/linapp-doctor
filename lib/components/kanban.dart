@@ -3,6 +3,8 @@ import 'package:azap_app/components/takeTicket.dart';
 import 'package:azap_app/components/doctorInput.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/ticket.dart';
+import 'package:azap_app/services/http.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
@@ -19,7 +21,14 @@ class Item {
   final String time;
   final int age;
 
-  Item({this.id, this.listId, this.title, this.pathology, this.sex, this.time, this.age});
+  Item(
+      {this.id,
+      this.listId,
+      this.title,
+      this.pathology,
+      this.sex,
+      this.time,
+      this.age});
 }
 
 class Kanban extends StatefulWidget {
@@ -33,12 +42,171 @@ class Kanban extends StatefulWidget {
 
 class _KanbanState extends State<Kanban> {
   LinkedHashMap<String, List<Item>> board;
+  ScrollController scrollController;
 
   @override
   void initState() {
+    scrollController = ScrollController();
     // TODO fusion hash map and workers
     board = LinkedHashMap();
-    board[waitList] = [];
+    board[waitList] = [
+      Item(
+          id: "1",
+          listId: waitList,
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "2",
+          listId: waitList,
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "3",
+          listId: waitList,
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "4",
+          listId: waitList,
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "5",
+          listId: waitList,
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "6",
+          listId: waitList,
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+    ];
+    board["2"] = [
+      Item(
+          id: "1",
+          listId: "2",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "2",
+          listId: "2",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "3",
+          listId: "2",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "4",
+          listId: "2",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "5",
+          listId: "2",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "6",
+          listId: "2",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "7",
+          listId: "2",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+    ];
+    board["3"] = [
+      Item(
+          id: "1",
+          listId: "3",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "2",
+          listId: "3",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "3",
+          listId: "3",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "4",
+          listId: "3",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "5",
+          listId: "3",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+      Item(
+          id: "6",
+          listId: "3",
+          title: "coucou",
+          pathology: "sdf",
+          sex: "sdf",
+          time: "sdf",
+          age: 12),
+    ];
     super.initState();
   }
 
@@ -60,12 +228,14 @@ class _KanbanState extends State<Kanban> {
             board[listId].add(data);
           }
           // manual local change, TODO handle with api
-          int indexTicket = tickets.list.indexWhere((ticket) => ticket.id == int.parse(data.id));
+          /*int indexTicket = tickets.list.indexWhere((ticket) => ticket.id == data.id);
           Ticket ticket = tickets.list.elementAt(indexTicket);
-          tickets.list.removeWhere((ticket) => ticket.id == int.parse(data.id));
+          tickets.list.removeWhere((ticket) => ticket.id == data.id);
           int index = doctors.list.indexWhere((worker) => worker.name == listId);
           Doctor doctor = doctors.list.elementAt(index);
-          doctor.listPatients.add(ticket);
+          doctor.listPatients.add(ticket);*/
+          //ticket.doctorId = doctor.id;
+          //HttpService().updateTicket(ticket);
         });
       },
       builder:
@@ -129,9 +299,9 @@ class _KanbanState extends State<Kanban> {
           // Moves the card into the position
           onAccept: (String incomingListId) {
             setState(
-                  () {
+              () {
                 LinkedHashMap<String, List<Item>> reorderedBoard =
-                LinkedHashMap();
+                    LinkedHashMap();
                 for (String key in board.keys) {
                   if (key == incomingListId) {
                     reorderedBoard[listId] = board[listId];
@@ -174,114 +344,116 @@ class _KanbanState extends State<Kanban> {
 
   @override
   Widget build(BuildContext context) {
-
     buildKanbanList(String listId, List<Item> items) {
       return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
           color: Color(0xFFAEE1FA),
           child: Column(
-          children: [
-            buildHeader(listId),
-            ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: items.length,
-              itemBuilder: (BuildContext context, int index) {
-                // A stack that provides:
-                // * A draggable object
-                // * An area for incoming draggables
-                return Stack(
-                  children: [
-                    Draggable<Item>(
-                      data: items[index],
-                      child: ItemWidget(
-                        item: items[index],
-                      ), // A card waiting to be dragged
-                      childWhenDragging: Opacity(
-                        // The card that's left behind
-                        opacity: 0.2,
-                        child: ItemWidget(item: items[index]),
-                      ),
-                      feedback: Container(
-                        // A card floating around
-                        height: widget.tileHeight,
-                        width: widget.tileWidth,
-                        child: FloatingWidget(
+            //mainAxisSize: MainAxisSize.max,
+            children: [
+              buildHeader(listId),
+              ListView.builder(
+                scrollDirection: Axis.vertical,
+                primary: false,
+                shrinkWrap: true,
+                itemCount: items.length,
+                itemBuilder: (BuildContext context, int index) {
+                  // A stack that provides:
+                  // * A draggable object
+                  // * An area for incoming draggables
+                  return Stack(
+                    children: [
+                      new Listener(
+                          child: LongPressDraggable<Item>(
+                            maxSimultaneousDrags: 1,
+                            data: items[index],
                             child: ItemWidget(
                               item: items[index],
-                            )),
-                      ),
-                    ),
-                    buildItemDragTarget(listId, index, widget.tileHeight),
-                  ],
-                );
-              },
-            ),
-          ],
-        ),
+                            ),
+                            // A card waiting to be dragged
+                            childWhenDragging: Opacity(
+                              // The card that's left behind
+                              opacity: 0.2,
+                              child: ItemWidget(item: items[index]),
+                            ),
+                            feedback: Container(
+                              // A card floating around
+                              height: widget.tileHeight,
+                              width: widget.tileWidth,
+                              child: FloatingWidget(
+                                  child: ItemWidget(
+                                item: items[index],
+                              )),
+                            ),
+                          ),
+                          onPointerMove: (PointerMoveEvent event) {
+                            if (event.position.dx > MediaQuery.of(context).size.width - 20) {
+                              scrollController.jumpTo(scrollController.offset + 10);
+                            } else if(event.position.dx <= 20){
+                              scrollController.jumpTo(scrollController.offset - 10);
+                            }
+                          }),
+                      buildItemDragTarget(listId, index, widget.tileHeight),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       );
     }
 
     return Scaffold(
       backgroundColor: Color(0xFFEAF4FB),
-      appBar: AppBar(title:Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      RaisedButton(
-        onPressed: () {newDoctorDialog(context);},
-        color: Color(0xFFFFCC09),
-        child: const Text(
-            'Ajouter une file',
-            style: TextStyle(
-                fontSize: 20,
-                color: Colors.white
-            )
+      appBar: AppBar(
+          title: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        RaisedButton(
+          onPressed: () {
+            newDoctorDialog(context);
+          },
+          color: Color(0xFFFFCC09),
+          child: const Text('Ajouter une file',
+              style: TextStyle(fontSize: 20, color: Colors.white)),
         ),
-      ),
-      RaisedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => TakeTicket()),
-          );
-        },
-        color: Color(0xFFFFCC09),
-        child: const Text(
-            'Ajouter un patient',
-            style: TextStyle(
-                fontSize: 20,
-                color: Colors.white
-            )
+        RaisedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TakeTicket()),
+            );
+          },
+          color: Color(0xFFFFCC09),
+          child: const Text('Ajouter un patient',
+              style: TextStyle(fontSize: 20, color: Colors.white)),
         ),
-      ),
       ])),
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: Observer(
-            builder: (_) {
-              // TODO fusion hashmap and workers + handle update ticket move sync
-              doctors.list.forEach((worker) => {
+        controller: scrollController,
+        child: Observer(builder: (_) {
+          // TODO fusion hashmap and workers + handle update ticket move sync
+          /*doctors.list.forEach((worker) => {
                 if(board["${worker.name}"] == null){
                   board["${worker.name}"] = []
                 }
               });
               DateFormat dateFormat = DateFormat("HH:mm");
-              board[waitList] = [];
+              //board[waitList] = [];
               tickets.list.forEach((ticket) => {
                 board[waitList].add(Item(id: "${ticket.id}", listId: waitList, title: ticket.name, age: ticket.age, pathology: ticket.pathology, sex: ticket.sex
                 , time: dateFormat.format(ticket.creationTime)))
-              });
-              return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: board.keys.map((String key) {
-                    return Container(
-                      width: widget.tileWidth,
-                      child: buildKanbanList(key, board[key]),
-                    );
-                  }).toList());
-            }),
+              });*/
+          return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: board.keys.map((String key) {
+                return Container(
+                  width: widget.tileWidth,
+                  child: buildKanbanList(key, board[key]),
+                );
+              }).toList());
+        }),
       ),
     );
   }
@@ -306,10 +478,9 @@ class HeaderWidget extends StatelessWidget {
         title: Text(
           title,
           style: TextStyle(
-            color: Color(0xffFFCC09),
-            fontSize: 25,
-            fontWeight: FontWeight.bold
-          ),
+              color: Color(0xffFFCC09),
+              fontSize: 25,
+              fontWeight: FontWeight.bold),
         ),
         trailing: Icon(
           Icons.sort,
@@ -327,62 +498,62 @@ class ItemWidget extends StatelessWidget {
   final Item item;
 
   const ItemWidget({Key key, this.item}) : super(key: key);
+
   ListTile makeListTile(Item item) => ListTile(
-    contentPadding: EdgeInsets.symmetric(
-      horizontal: 20.0,
-      vertical: 10.0,
-    ),
-    title: Text(
-      item.title,
-      style: TextStyle(
-        color: Color(0xFF049BE5),
-        fontWeight: FontWeight.bold,
-        fontSize: 20
-      ),
-    ),
-    subtitle: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          item.pathology,
-          style: TextStyle(
-            color: Color(0xFF049BE5),
-          ),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 10.0,
         ),
-        Text(
-          item.sex,
+        title: Text(
+          item.title,
           style: TextStyle(
-            color: Color(0xFF049BE5),
-          ),
+              color: Color(0xFF049BE5),
+              fontWeight: FontWeight.bold,
+              fontSize: 20),
         ),
-        Text(
-          "${item.age.toString()} ans",
-          style: TextStyle(
-            color: Color(0xFF049BE5),
-          ),
-        )
-      ],
-    ),
-    trailing: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        Text(
-          "#${item.id}",
-          style: TextStyle(
-            color: Color(0xFF049BE5),
-          ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              item.pathology,
+              style: TextStyle(
+                color: Color(0xFF049BE5),
+              ),
+            ),
+            Text(
+              item.sex,
+              style: TextStyle(
+                color: Color(0xFF049BE5),
+              ),
+            ),
+            Text(
+              "${item.age.toString()} ans",
+              style: TextStyle(
+                color: Color(0xFF049BE5),
+              ),
+            )
+          ],
         ),
-        Text(
-          item.time,
-          style: TextStyle(
-            color: Color(0xFF049BE5),
-          ),
-        )
-      ],
-    ),
-    onTap: () {},
-  );
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Text(
+              "#${item.id}",
+              style: TextStyle(
+                color: Color(0xFF049BE5),
+              ),
+            ),
+            Text(
+              item.time,
+              style: TextStyle(
+                color: Color(0xFF049BE5),
+              ),
+            )
+          ],
+        ),
+        onTap: () {},
+      );
 
   @override
   Widget build(BuildContext context) {
