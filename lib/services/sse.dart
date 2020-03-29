@@ -30,6 +30,7 @@ class SseService {
       print("New event:");
       print("  data: ${event.data}");
       final genericPayload = JsonMapper.deserialize<GenericPayload>(event.data);
+      // TODO new lists copy ?
       switch(genericPayload.type) {
         case "newdoctor": {
           final doctorPayload = JsonMapper.deserialize<DoctorPayload>(event.data);
@@ -43,11 +44,39 @@ class SseService {
         }
         case "updateticket": {
           final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
-          int indexTicket = tickets.list.indexWhere((ticket) {
-            ticket.id == ticketPayload.payload.id;
-          });
-          // TODO check working
-          tickets.list.replaceRange(indexTicket, indexTicket, [ticketPayload.payload]);
+          // TODO manual update vs call get list on back ?
+          // TODO keep position in list. Back will keep position
+
+          //remove old ticket.
+          // TODO do nothing if vue already ok ?
+          if(ticketPayload.payload.doctorId != null){
+            doctors.list.forEach((doctor) {
+              int indexTicket = doctor.listPatients.indexWhere((ticket) {
+                return ticket.id == ticketPayload.payload.id;
+              });
+              if(indexTicket > -1){
+                doctor.listPatients.removeAt(indexTicket);
+              }
+            });
+          } else {
+            int indexTicket = tickets.list.indexWhere((ticket) {
+              return ticket.id == ticketPayload.payload.id;
+            });
+            if(indexTicket > -1){
+              tickets.list.removeAt(indexTicket);
+            }
+          }
+
+          // add new ticket
+          if(ticketPayload.payload.doctorId != null){
+            int indexDoctor = doctors.list.indexWhere((doctor) {
+              return doctor.id == ticketPayload.payload.doctorId;
+            });
+            doctors.list.elementAt(indexDoctor).listPatients.add(ticketPayload.payload);
+          } else {
+            tickets.addTicket(ticketPayload.payload);
+          }
+
           break;
         }
       }

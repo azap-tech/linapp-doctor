@@ -29,12 +29,11 @@ class MyApp extends StatelessWidget {
     DotEnv().load('.env').then((callback) {
       // TODO create location or login on location
       HttpService().login(1, DotEnv().env['STORE_PIN']).then((callback) {
-        //HttpService().getStatus();
+        HttpService().getStatus();
       });
       //TODO select location in an interface
       SseService().initEventSource(1);
     });
-    SmsService();
     return MaterialApp(
       title: 'Azap',
       theme: ThemeData(
