@@ -27,6 +27,9 @@ abstract class _Doctor with Store {
   @observable
   String phone;
 
+  @observable
+  bool rgpd = false;
+
   @action
   void addPatient(Ticket ticket) {
     listPatients.add(ticket);
