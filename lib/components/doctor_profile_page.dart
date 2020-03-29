@@ -17,14 +17,14 @@ class DoctorProfilePage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 5, 82, 136),
           title: Image.asset(
-              'assets/logo.png',
-              fit: BoxFit.contain,
-              height: 32
-            )
+            'assets/logo.png',
+            fit: BoxFit.contain,
+            height: 32
+          )
         ),
         body: Container(
-            color: const Color(0xFFF0F8FF),
-            padding: EdgeInsets.all(16.0),
+          color: const Color(0xFFF0F8FF),
+          padding: EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(children: <Widget>[
