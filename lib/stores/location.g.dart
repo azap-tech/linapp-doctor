@@ -43,9 +43,61 @@ mixin _$Location on _Location, Store {
     }, _$nameAtom, name: '${_$nameAtom.name}_set');
   }
 
+  final _$addressAtom = Atom(name: '_Location.address');
+
+  @override
+  String get address {
+    _$addressAtom.context.enforceReadPolicy(_$addressAtom);
+    _$addressAtom.reportObserved();
+    return super.address;
+  }
+
+  @override
+  set address(String value) {
+    _$addressAtom.context.conditionallyRunInAction(() {
+      super.address = value;
+      _$addressAtom.reportChanged();
+    }, _$addressAtom, name: '${_$addressAtom.name}_set');
+  }
+
+  final _$zipCodeAtom = Atom(name: '_Location.zipCode');
+
+  @override
+  String get zipCode {
+    _$zipCodeAtom.context.enforceReadPolicy(_$zipCodeAtom);
+    _$zipCodeAtom.reportObserved();
+    return super.zipCode;
+  }
+
+  @override
+  set zipCode(String value) {
+    _$zipCodeAtom.context.conditionallyRunInAction(() {
+      super.zipCode = value;
+      _$zipCodeAtom.reportChanged();
+    }, _$zipCodeAtom, name: '${_$zipCodeAtom.name}_set');
+  }
+
+  final _$cityAtom = Atom(name: '_Location.city');
+
+  @override
+  String get city {
+    _$cityAtom.context.enforceReadPolicy(_$cityAtom);
+    _$cityAtom.reportObserved();
+    return super.city;
+  }
+
+  @override
+  set city(String value) {
+    _$cityAtom.context.conditionallyRunInAction(() {
+      super.city = value;
+      _$cityAtom.reportChanged();
+    }, _$cityAtom, name: '${_$cityAtom.name}_set');
+  }
+
   @override
   String toString() {
-    final string = 'id: ${id.toString()},name: ${name.toString()}';
+    final string =
+        'id: ${id.toString()},name: ${name.toString()},address: ${address.toString()},zipCode: ${zipCode.toString()},city: ${city.toString()}';
     return '{$string}';
   }
 }

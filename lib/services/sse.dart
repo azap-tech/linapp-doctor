@@ -30,24 +30,55 @@ class SseService {
       print("New event:");
       print("  data: ${event.data}");
       final genericPayload = JsonMapper.deserialize<GenericPayload>(event.data);
+      // TODO new lists copy ?
       switch(genericPayload.type) {
         case "newdoctor": {
           final doctorPayload = JsonMapper.deserialize<DoctorPayload>(event.data);
-          doctors.addDoctor(doctorPayload.payload);
+          doctor.setDoctor(doctorPayload.payload);
           break;
         }
         case "newticket": {
           final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
-          tickets.addTicket(ticketPayload.payload);
+          // add new ticket
+          // TODO API change
+          ticketPayload.payload.doctorId = doctor.id;
+          if(ticketPayload.payload.doctorId != null){
+            doctor.addPatient(ticketPayload.payload);
+          } else {
+            tickets.addTicket(ticketPayload.payload);
+          }
           break;
         }
         case "updateticket": {
           final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
-          int indexTicket = tickets.list.indexWhere((ticket) {
-            ticket.id == ticketPayload.payload.id;
-          });
-          // TODO check working
-          tickets.list.replaceRange(indexTicket, indexTicket, [ticketPayload.payload]);
+          // TODO manual update vs call get list on back ?
+          // TODO keep position in list. Back will keep position
+
+          //remove old ticket.
+          // TODO do nothing if vue already ok ?
+          if(ticketPayload.payload.doctorId != null){
+            int indexTicket = doctor.listPatients.indexWhere((ticket) {
+              return ticket.id == ticketPayload.payload.id;
+            });
+            if(indexTicket > -1){
+              doctor.listPatients.removeAt(indexTicket);
+            }
+          } else {
+            int indexTicket = tickets.list.indexWhere((ticket) {
+              return ticket.id == ticketPayload.payload.id;
+            });
+            if(indexTicket > -1){
+              tickets.list.removeAt(indexTicket);
+            }
+          }
+
+          // add new ticket
+          if(ticketPayload.payload.doctorId != null){
+            doctor.addPatient(ticketPayload.payload);
+          } else {
+            tickets.addTicket(ticketPayload.payload);
+          }
+
           break;
         }
       }

@@ -94,6 +94,28 @@ mixin _$Doctor on _Doctor, Store {
     }, _$phoneAtom, name: '${_$phoneAtom.name}_set');
   }
 
+  final _$_DoctorActionController = ActionController(name: '_Doctor');
+
+  @override
+  void addPatient(Ticket ticket) {
+    final _$actionInfo = _$_DoctorActionController.startAction();
+    try {
+      return super.addPatient(ticket);
+    } finally {
+      _$_DoctorActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setDoctor(Doctor doctor) {
+    final _$actionInfo = _$_DoctorActionController.startAction();
+    try {
+      return super.setDoctor(doctor);
+    } finally {
+      _$_DoctorActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     final string =

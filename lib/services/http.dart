@@ -37,6 +37,9 @@ class HttpService {
     r.raiseForStatus();
     dynamic json = r.json();
     print(json);
+    Requests.getStoredCookies(hostname).then((cookie) {
+      print('Session : ' + cookie.toString());
+    });
   }
 
   // auto store cookie in storage
@@ -55,6 +58,7 @@ class HttpService {
           "pathology": ticket.pathology,
           "age": ticket.age,
         },
+        timeoutSeconds: 30,
         bodyEncoding: RequestBodyEncoding.JSON);
     print("http status from ticket ${r.statusCode}");
     // throw exception if not 200
@@ -136,19 +140,23 @@ class HttpService {
 
     final stateTicketPayload = JsonMapper.deserialize<StateTicketPayload>(r.content());
 
+    // TODO build new lists ?
+    // TODO order by date / position
+    // Doctors only ?
+    tickets.list.clear();
+
     stateTicketPayload.tickets.forEach((ticket) {
-      if(ticket.doctorId != null){
+      if(ticket.doctorId == null){
         tickets.addTicket(ticket);
       } else {
         int doctorIndex = stateDoctorPayload.doctors.indexWhere((doctor) {
-          doctor.id == ticket.doctorId;
+          return doctor.id == ticket.doctorId;
         });
-        stateDoctorPayload.doctors.elementAt(doctorIndex).listPatients.add(ticket);
+        stateDoctorPayload.doctors.elementAt(doctorIndex).addPatient(ticket);
       }
     });
 
-    tickets.addTickets(stateTicketPayload.tickets);
-    doctors.addDoctors(stateDoctorPayload.doctors);
+    doctor.setDoctor(stateDoctorPayload.doctors.elementAt(0));
   }
 
   getLocations() async {

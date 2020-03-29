@@ -24,4 +24,18 @@ abstract class _Doctor with Store {
 
   @observable
   String phone;
+
+  @action
+  void addPatient(Ticket ticket) {
+    listPatients.add(ticket);
+  }
+
+  @action
+  void setDoctor(Doctor doctor) {
+    id = doctor.id;
+    locationId = doctor.locationId;
+    name = doctor.name;
+    phone = doctor.phone;
+    listPatients = ObservableList<Ticket>();
+  }
 }
