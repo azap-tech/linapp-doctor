@@ -1,5 +1,4 @@
 import 'package:azap_app/components/kanban.dart';
-import 'package:azap_app/design_system/theme.dart';
 import 'package:azap_app/services/http.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:flutter/material.dart';
