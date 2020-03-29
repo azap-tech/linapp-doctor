@@ -1,3 +1,4 @@
+import 'package:azap_app/components/doctor_profile_page.dart';
 import 'package:azap_app/components/login.dart';
 import 'package:azap_app/services/http.dart';
 import 'package:azap_app/services/sms.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: DoctorProfilePage(),
     );
   }
 }
