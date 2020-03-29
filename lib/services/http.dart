@@ -144,7 +144,6 @@ class HttpService {
     // TODO order by date / position
     // Doctors only ?
     tickets.list.clear();
-    doctors.list.clear();
 
     stateTicketPayload.tickets.forEach((ticket) {
       if(ticket.doctorId == null){
@@ -153,11 +152,11 @@ class HttpService {
         int doctorIndex = stateDoctorPayload.doctors.indexWhere((doctor) {
           return doctor.id == ticket.doctorId;
         });
-        stateDoctorPayload.doctors.elementAt(doctorIndex).listPatients.add(ticket);
+        stateDoctorPayload.doctors.elementAt(doctorIndex).addPatient(ticket);
       }
     });
 
-    doctors.addDoctors(stateDoctorPayload.doctors);
+    doctor.setDoctor(stateDoctorPayload.doctors.elementAt(0));
   }
 
   getLocations() async {

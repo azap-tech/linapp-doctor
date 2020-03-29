@@ -1,4 +1,4 @@
-import 'package:azap_app/doctor/flavors.dart';
+import 'package:azap_app/design_system/flavors.dart';
 import 'package:flutter/material.dart';
 
 class FlavorBanner extends StatelessWidget {

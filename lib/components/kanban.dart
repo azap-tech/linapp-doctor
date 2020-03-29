@@ -23,90 +23,12 @@ class Kanban extends StatefulWidget {
 }
 
 class _KanbanState extends State<Kanban> {
-  Doctor waitList;
   List<Doctor> board;
-  ScrollController scrollController;
 
   @override
   void initState() {
     board = List<Doctor>();
-    scrollController = ScrollController();
-    waitList = new Doctor();
-    waitList.name = "A trier";
-    waitList.id = -1;
     super.initState();
-  }
-
-  buildItemDragTarget(Doctor doctor, targetPosition, double height) {
-    return DragTarget<Ticket>(
-      // Will accept others, but not himself
-      onWillAccept: (Ticket ticket) {
-        return doctor.listPatients.isEmpty || !doctor.listPatients.contains(ticket);
-      },
-      // Moves the card into the position
-      onAccept: (Ticket ticket) {
-        setState(() {
-        });
-        if(ticket.doctorId != doctor.id){
-
-          // TODO manual vs sse sync ? actual both
-          // default waiting list
-          int previousIndex = -1;
-          if(ticket.doctorId != null){
-            previousIndex = doctors.list.indexWhere((doctor) => doctor.id == ticket.doctorId);
-          }
-          // remove old position
-          if(previousIndex > -1){
-            Doctor previousDoctor = doctors.list.elementAt(previousIndex);
-            previousDoctor.listPatients.remove(ticket);
-          } else {
-            tickets.list.remove(ticket);
-          }
-          // set new position
-          ticket.doctorId = doctor.id;
-          if(doctor.id > 0){
-            int newDoctorIndex = doctors.list.indexOf(doctor);
-            Doctor newDoctor = doctors.list.elementAt(newDoctorIndex);
-            newDoctor.listPatients.add(ticket);
-          } else {
-            tickets.list.add(ticket);
-          }
-
-          // TODO handle position in back
-          /*if (doctor.listPatients.length > targetPosition) {
-              doctor.listPatients.insert(targetPosition + 1, ticket);
-            } else {
-              doctor.listPatients.add(ticket);
-            }*/
-
-          HttpService().updateTicket(ticket);
-        }
-      },
-      builder:
-          (BuildContext context, List<Ticket> tickets, List<dynamic> rejectedData) {
-        if (tickets.isEmpty) {
-          // The area that accepts the draggable
-          return Container(
-            height: height,
-          );
-        } else {
-          return Column(
-            // What's shown when hovering on it
-            children: [
-              Container(
-                height: height,
-              ),
-              ...tickets.map((Ticket ticket) {
-                return Opacity(
-                  opacity: 0.5,
-                  child: ItemWidget(ticket: ticket),
-                );
-              }).toList()
-            ],
-          );
-        }
-      },
-    );
   }
 
   buildHeader(Doctor doctor) {
@@ -118,8 +40,7 @@ class _KanbanState extends State<Kanban> {
     return Stack(
       // The header
       children: [
-        header,
-        buildItemDragTarget(doctor, 0, widget.headerHeight),
+        header
       ],
     );
   }
@@ -147,38 +68,9 @@ class _KanbanState extends State<Kanban> {
                   // * An area for incoming draggables
                   return Stack(
                     children: [
-                      new Listener(
-                          child: LongPressDraggable<Ticket>(
-                            maxSimultaneousDrags: 1,
-                            data: doctor.listPatients.elementAt(index),
-                            child: ItemWidget(
-                              ticket: doctor.listPatients.elementAt(index),
-                            ),
-                            // A card waiting to be dragged
-                            childWhenDragging: Opacity(
-                              // The card that's left behind
-                              opacity: 0.2,
-                              child: ItemWidget(ticket: doctor.listPatients.elementAt(index)),
-                            ),
-                            feedback: Container(
-                              // A card floating around
-                              height: widget.tileHeight,
-                              width: widget.tileWidth,
-                              child: FloatingWidget(
-                                  child: ItemWidget(
-                                ticket: doctor.listPatients.elementAt(index),
-                              )),
-                            ),
-                          ),
-                          onPointerMove: (PointerMoveEvent event) {
-                            // TODO smooth animation
-                            if (event.position.dx > MediaQuery.of(context).size.width - 20) {
-                              scrollController.jumpTo(scrollController.offset + 10);
-                            } else if(event.position.dx <= 20){
-                              scrollController.jumpTo(scrollController.offset - 10);
-                            }
-                          }),
-                      buildItemDragTarget(doctor, index, widget.tileHeight),
+                      ItemWidget(
+                        ticket: doctor.listPatients.elementAt(index),
+                      ),
                     ],
                   );
                 },
@@ -215,17 +107,11 @@ class _KanbanState extends State<Kanban> {
       ])),
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        controller: scrollController,
         child: Observer(builder: (_) {
           board.clear();
-          waitList.listPatients.clear();
-          tickets.list.forEach((ticket) => {
-            waitList.listPatients.add(ticket)
-          });
-          board.add(waitList);
-          doctors.list.forEach((doctor) => {
-            board.add(doctor)
-          });
+          if(doctor.id != null){
+            board.add(doctor);
+          }
           return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: board.map((doctor) {
@@ -262,11 +148,6 @@ class HeaderWidget extends StatelessWidget {
               color: Color(0xffFFCC09),
               fontSize: 25,
               fontWeight: FontWeight.bold),
-        ),
-        trailing: Icon(
-          Icons.sort,
-          color: Color(0xffFFCC09),
-          size: 30.0,
         ),
         onTap: () {},
       ),

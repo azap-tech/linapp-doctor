@@ -34,12 +34,19 @@ class SseService {
       switch(genericPayload.type) {
         case "newdoctor": {
           final doctorPayload = JsonMapper.deserialize<DoctorPayload>(event.data);
-          doctors.addDoctor(doctorPayload.payload);
+          doctor.setDoctor(doctorPayload.payload);
           break;
         }
         case "newticket": {
           final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
-          tickets.addTicket(ticketPayload.payload);
+          // add new ticket
+          // TODO API change
+          ticketPayload.payload.doctorId = doctor.id;
+          if(ticketPayload.payload.doctorId != null){
+            doctor.addPatient(ticketPayload.payload);
+          } else {
+            tickets.addTicket(ticketPayload.payload);
+          }
           break;
         }
         case "updateticket": {
@@ -50,14 +57,12 @@ class SseService {
           //remove old ticket.
           // TODO do nothing if vue already ok ?
           if(ticketPayload.payload.doctorId != null){
-            doctors.list.forEach((doctor) {
-              int indexTicket = doctor.listPatients.indexWhere((ticket) {
-                return ticket.id == ticketPayload.payload.id;
-              });
-              if(indexTicket > -1){
-                doctor.listPatients.removeAt(indexTicket);
-              }
+            int indexTicket = doctor.listPatients.indexWhere((ticket) {
+              return ticket.id == ticketPayload.payload.id;
             });
+            if(indexTicket > -1){
+              doctor.listPatients.removeAt(indexTicket);
+            }
           } else {
             int indexTicket = tickets.list.indexWhere((ticket) {
               return ticket.id == ticketPayload.payload.id;
@@ -69,10 +74,7 @@ class SseService {
 
           // add new ticket
           if(ticketPayload.payload.doctorId != null){
-            int indexDoctor = doctors.list.indexWhere((doctor) {
-              return doctor.id == ticketPayload.payload.doctorId;
-            });
-            doctors.list.elementAt(indexDoctor).listPatients.add(ticketPayload.payload);
+            doctor.addPatient(ticketPayload.payload);
           } else {
             tickets.addTicket(ticketPayload.payload);
           }

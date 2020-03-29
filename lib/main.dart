@@ -1,3 +1,4 @@
+import 'package:azap_app/components/login.dart';
 import 'package:azap_app/services/http.dart';
 import 'package:azap_app/services/sms.dart';
 import 'package:azap_app/services/sse.dart';
@@ -12,7 +13,7 @@ import 'main.reflectable.dart' show initializeReflectable;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'components/kanban.dart';
 
-final doctors = Doctors();
+final doctor = Doctor();
 final tickets = Tickets();
 
 void main() {
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Kanban(),
+      home: LoginPage(),
     );
   }
 }
