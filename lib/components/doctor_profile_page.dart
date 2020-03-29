@@ -179,7 +179,20 @@ class DoctorProfilePage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(10),
               ),
-
+              Row(
+                children: <Widget>[
+                  Checkbox(
+                    value: doctor.rgpd,
+                    onChanged: (bool value) {
+                      doctor.rgpd = true;
+                    },
+                  ),
+                  Expanded(child: Text('Rgpd')),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+              ),
               RaisedButton(
               onPressed: () {
                 if (_formKey.currentState.validate()) {
