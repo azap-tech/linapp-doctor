@@ -154,12 +154,12 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                         Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
                         RegExp regex = new RegExp(pattern);
 
-                        if (!regex.hasMatch(value)) {
-                          return 'Veuillez entrer une adresse email valide';
-                        }
-
                         if (value.isEmpty) {
                           return 'Veuillez entrer une adresse email';
+                        }
+
+                        if (!regex.hasMatch(value)) {
+                          return 'Veuillez entrer une adresse email valide';
                         }
 
                         doctor.email = value;
@@ -214,8 +214,15 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                           ),
                         ),
                         validator: (value) {
+                          Pattern pattern = r'^((\+)33|0)[1-9](\d{2}){4}$';
+                          RegExp regex = new RegExp(pattern);
+
                           if (value.isEmpty) {
                             return 'Veuillez entrer un numéro de téléphone';
+                          }
+
+                          if (!regex.hasMatch(value)) {
+                            return 'Veuillez entrer un téléphone valide';
                           }
 
                           doctor.phone = value;
@@ -235,7 +242,6 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                         width: 30,
                         onSelect: (value) {
                           doctor.rgpd = value;
-                          print(doctor);
                         },
                       ),
                       Padding(
@@ -271,33 +277,33 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                     padding: EdgeInsets.all(10),
                   ),
                   Observer(
-                  builder: (_) => 
-                    Opacity(
-                      opacity: doctor.rgpd == true ? 1 : 0.5,
-                      child:
-                        RaisedButton(
-                          color: Color.fromARGB(255, 5, 82, 136),
-                          onPressed: () {
-                            if (_formKey.currentState.validate() && doctor.rgpd) {
-                              HttpService().createDoctor(doctor);
+                    builder: (_) => 
+                      Opacity(
+                        opacity: doctor.rgpd == true ? 1 : 0.5,
+                        child:
+                          RaisedButton(
+                            color: Color.fromARGB(255, 5, 82, 136),
+                            onPressed: () {
+                              if (_formKey.currentState.validate() && doctor.rgpd) {
+                                HttpService().createDoctor(doctor);
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Kanban()
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Kanban()
+                                  ),
+                                );
+                              }
+                            },
+                            child: 
+                              Text(
+                                'Créer mon compte',
+                                style: TextStyle(
+                                  color: Colors.white
                                 ),
-                              );
-                            }
-                          },
-                          child: 
-                            Text(
-                              'Créer mon compte',
-                              style: TextStyle(
-                                color: Colors.white
-                              ),
-                            )
-                        )
-                    )
+                              )
+                          )
+                      )
                   )
                 ]
               )
