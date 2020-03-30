@@ -16,7 +16,8 @@ import 'components/kanban.dart';
 final doctor = Doctor();
 final tickets = Tickets();
 
-void main() {
+Future main() async {
+  await DotEnv().load('.env');
   initializeReflectable();
   JsonMapper().useAdapter(mobXAdapter);
 
@@ -27,14 +28,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    DotEnv().load('.env').then((callback) {
-      // TODO create location or login on location
-      HttpService().login(1, DotEnv().env['STORE_PIN']).then((callback) {
-        HttpService().getStatus();
-      });
-      //TODO select location in an interface
-      SseService().initEventSource(1);
+    // TODO create location or login on location
+    HttpService().login(1, DotEnv().env['STORE_PIN']).then((callback) {
+      //HttpService().getStatus();
     });
+    //TODO select location in an interface
+    SseService().initEventSource(1);
     return MaterialApp(
       title: 'Azap',
       theme: ThemeData(
