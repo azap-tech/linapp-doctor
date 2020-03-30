@@ -1,4 +1,5 @@
 import 'package:azap_app/components/kanban.dart';
+import 'package:azap_app/design_system/form/checkbox.dart';
 import 'package:azap_app/services/http.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ class DoctorProfilePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 5, 82, 136),
+        backgroundColor: Color.fromARGB(255, 5, 82, 136),
         title: Image.asset(
           'assets/logo.png',
           fit: BoxFit.contain,
@@ -23,7 +24,7 @@ class DoctorProfilePage extends StatelessWidget {
         )
       ),
       body: Container(
-        color: const Color(0xFFF0F8FF),
+        color: Color(0xFFF0F8FF),
         padding: EdgeInsets.all(38),
         child: Form(
           key: _formKey,
@@ -34,7 +35,7 @@ class DoctorProfilePage extends StatelessWidget {
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  color: const Color.fromARGB(255, 5, 82, 136),
+                  color: Color.fromARGB(255, 5, 82, 136),
                   fontSize: 25,
                 ),
               ),
@@ -47,7 +48,7 @@ class DoctorProfilePage extends StatelessWidget {
                     'Nom',
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: const Color.fromARGB(255, 5, 82, 136),
+                      color: Color.fromARGB(255, 5, 82, 136),
                       fontSize: 18,
                     ),
                   ),
@@ -64,10 +65,10 @@ class DoctorProfilePage extends StatelessWidget {
                   filled: true,
                   fillColor: Colors.white,
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: const Color.fromARGB(255, 5, 82, 136), width: 2.0),
+                    borderSide: BorderSide(color: Color.fromARGB(255, 5, 82, 136), width: 2.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: const Color.fromARGB(35, 5, 82, 136), width: 2.0),
+                    borderSide: BorderSide(color: Color.fromARGB(35, 5, 82, 136), width: 2.0),
                   ),
                 ),
                 validator: (value) {
@@ -90,7 +91,7 @@ class DoctorProfilePage extends StatelessWidget {
                     'Email',
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: const Color.fromARGB(255, 5, 82, 136),
+                      color: Color.fromARGB(255, 5, 82, 136),
                       fontSize: 18,
                     ),
                   ),
@@ -107,10 +108,10 @@ class DoctorProfilePage extends StatelessWidget {
                   filled: true,
                   fillColor: Colors.white,
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: const Color.fromARGB(255, 5, 82, 136), width: 2.0),
+                    borderSide: BorderSide(color: Color.fromARGB(255, 5, 82, 136), width: 2.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: const Color.fromARGB(35, 5, 82, 136), width: 2.0),
+                    borderSide: BorderSide(color: Color.fromARGB(35, 5, 82, 136), width: 2.0),
                   ),
                 ),
                 keyboardType: TextInputType.emailAddress,
@@ -141,7 +142,7 @@ class DoctorProfilePage extends StatelessWidget {
                     'Numéro de téléphone',
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: const Color.fromARGB(255, 5, 82, 136),
+                      color: Color.fromARGB(255, 5, 82, 136),
                       fontSize: 18,
                     ),
                   ),
@@ -159,10 +160,10 @@ class DoctorProfilePage extends StatelessWidget {
                         filled: true,
                         fillColor: Colors.white,
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: const Color.fromARGB(255, 5, 82, 136), width: 2.0),
+                          borderSide: BorderSide(color: Color.fromARGB(255, 5, 82, 136), width: 2.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: const Color.fromARGB(35, 5, 82, 136), width: 2.0),
+                          borderSide: BorderSide(color: Color.fromARGB(35, 5, 82, 136), width: 2.0),
                         ),
                       ),
                       validator: (value) {
@@ -181,13 +182,26 @@ class DoctorProfilePage extends StatelessWidget {
               ),
               Row(
                 children: <Widget>[
-                  Checkbox(
-                    value: doctor.rgpd,
-                    onChanged: (bool value) {
-                      doctor.rgpd = true;
+                  CustomCheckBox(
+                    IconData(58826, fontFamily: 'MaterialIcons'),
+                    height: 30,
+                    width: 30,
+                    onSelect: (value) => {
+                      // doctor.rgpd = value;
                     },
                   ),
-                  Expanded(child: Text('Rgpd')),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Rgpd',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 5, 82, 136),
+                        fontSize: 18,
+                      ),
+                    )
+                  ),
                 ],
               ),
               Padding(
