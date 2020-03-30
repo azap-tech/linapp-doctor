@@ -94,6 +94,40 @@ mixin _$Doctor on _Doctor, Store {
     }, _$phoneAtom, name: '${_$phoneAtom.name}_set');
   }
 
+  final _$rgpdAtom = Atom(name: '_Doctor.rgpd');
+
+  @override
+  bool get rgpd {
+    _$rgpdAtom.context.enforceReadPolicy(_$rgpdAtom);
+    _$rgpdAtom.reportObserved();
+    return super.rgpd;
+  }
+
+  @override
+  set rgpd(bool value) {
+    _$rgpdAtom.context.conditionallyRunInAction(() {
+      super.rgpd = value;
+      _$rgpdAtom.reportChanged();
+    }, _$rgpdAtom, name: '${_$rgpdAtom.name}_set');
+  }
+   
+  final _$emailAtom = Atom(name: '_Doctor.email');
+
+  @override
+  String get email {
+    _$emailAtom.context.enforceReadPolicy(_$emailAtom);
+    _$emailAtom.reportObserved();
+    return super.email;
+  }
+
+  @override
+  set email(String value) {
+    _$emailAtom.context.conditionallyRunInAction(() {
+      super.email = value;
+      _$emailAtom.reportChanged();
+    }, _$emailAtom, name: '${_$emailAtom.name}_set');
+  }
+
   final _$_DoctorActionController = ActionController(name: '_Doctor');
 
   @override
@@ -119,7 +153,7 @@ mixin _$Doctor on _Doctor, Store {
   @override
   String toString() {
     final string =
-        'listPatients: ${listPatients.toString()},id: ${id.toString()},locationId: ${locationId.toString()},name: ${name.toString()},phone: ${phone.toString()}';
+        'listPatients: ${listPatients.toString()},id: ${id.toString()},locationId: ${locationId.toString()},name: ${name.toString()},phone: ${phone.toString()},email: ${email.toString()},rgpd: ${rgpd.toString()}';
     return '{$string}';
   }
 }

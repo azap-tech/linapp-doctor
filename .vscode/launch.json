@@ -8,7 +8,7 @@
             "name": "Doctor",
             "type": "dart",
             "request": "launch",
-            "program": "lib/doctor/main_doctor.dart"
+            "program": "lib/main.dart"
         }
     ]
 }
