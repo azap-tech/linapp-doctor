@@ -1,12 +1,9 @@
 import 'package:azap_app/components/doctor_profile_page.dart';
-import 'package:azap_app/components/login.dart';
+import 'package:azap_app/design_system/themeData.dart';
 import 'package:azap_app/services/http.dart';
-import 'package:azap_app/services/sms.dart';
 import 'package:azap_app/services/sse.dart';
 import 'package:azap_app/stores/doctor.dart';
-import 'package:azap_app/stores/doctors.dart';
 import 'package:azap_app/stores/tickets.dart';
-import 'package:azap_app/services/http.dart';
 import 'package:flutter/material.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart' show JsonMapper;
 import 'package:dart_json_mapper_mobx/dart_json_mapper_mobx.dart' show mobXAdapter;
@@ -37,9 +34,10 @@ class MyApp extends StatelessWidget {
     SseService().initEventSource(1);
     return MaterialApp(
       title: 'Azap',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+
+      // TODO sert à quoi ?
+      debugShowCheckedModeBanner: false,
+      theme: themeData(),
       home: DoctorProfilePage(),
     );
   }

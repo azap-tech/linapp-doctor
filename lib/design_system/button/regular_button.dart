@@ -1,4 +1,4 @@
-import 'package:azap_app/design_system/theme.dart';
+import 'package:azap_app/design_system/azapColor.dart';
 import 'package:flutter/material.dart';
 
 Widget buildRegularButton(String text, Function onPressed) {
@@ -6,9 +6,9 @@ Widget buildRegularButton(String text, Function onPressed) {
     onPressed: () {
       onPressed();
     },
-    color: accentColor,
-    textColor: mainColor,
-    child: Text(text,
-    style: TextStyle(fontWeight: FontWeight.bold),),
+    child: Text(
+      text,
+      style: TextStyle(fontWeight: FontWeight.bold),
+    ),
   );
 }
