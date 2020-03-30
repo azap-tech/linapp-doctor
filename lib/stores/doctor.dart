@@ -36,6 +36,6 @@ abstract class _Doctor with Store {
     locationId = doctor.locationId;
     name = doctor.name;
     phone = doctor.phone;
-    listPatients = ObservableList<Ticket>();
+    listPatients = doctor.listPatients;
   }
 }
