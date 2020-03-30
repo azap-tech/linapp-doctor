@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 class CustomCheckBox extends StatefulWidget {
-  const CustomCheckBox(this.icon,
-      {Key key,
-        @required this.onSelect,
-        this.height,
-        this.width})
-      : super(key: key);
+  const CustomCheckBox(
+    this.icon,
+    {
+      Key key,
+      @required this.onSelect,
+      this.height,
+      this.width
+    }
+  ): super(key: key);
 
   final IconData icon;
   final ValueChanged<bool> onSelect;

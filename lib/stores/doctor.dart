@@ -28,7 +28,7 @@ abstract class _Doctor with Store {
   String phone;
 
   @observable
-  bool rgpd = false;
+  bool rgpd;
 
   @action
   void addPatient(Ticket ticket) {
@@ -42,6 +42,7 @@ abstract class _Doctor with Store {
     name = doctor.name;
     phone = doctor.phone;
     email = doctor.email;
+    rgpd = doctor.rgpd;
     listPatients = ObservableList<Ticket>();
   }
 }
