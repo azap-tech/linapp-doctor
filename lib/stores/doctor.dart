@@ -36,6 +36,11 @@ abstract class _Doctor with Store {
   }
 
   @action
+  void removePatient(Ticket ticket) {
+    listPatients.remove(ticket);
+  }
+
+  @action
   void setDoctor(Doctor doctor) {
     id = doctor.id;
     locationId = doctor.locationId;
@@ -43,6 +48,6 @@ abstract class _Doctor with Store {
     phone = doctor.phone;
     email = doctor.email;
     rgpd = doctor.rgpd;
-    listPatients = ObservableList<Ticket>();
+    listPatients = doctor.listPatients;
   }
 }

@@ -38,3 +38,5 @@ lib/generated_plugin_registrant.dart
 
 # TODO why its says we should comment that in doc of mobx ? breaks codemagick buil
 #*.reflectable.dart
+
+android/fastlane/report.xml

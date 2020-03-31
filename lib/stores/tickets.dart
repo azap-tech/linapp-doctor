@@ -16,6 +16,11 @@ abstract class _Tickets with Store {
   }
 
   @action
+  void removeTicket(Ticket ticket) {
+    list.remove(ticket);
+  }
+
+  @action
   void addTickets(List<Ticket> tickets) {
     list.addAll(tickets);
   }
