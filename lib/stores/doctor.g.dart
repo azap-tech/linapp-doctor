@@ -77,6 +77,23 @@ mixin _$Doctor on _Doctor, Store {
     }, _$nameAtom, name: '${_$nameAtom.name}_set');
   }
 
+  final _$emailAtom = Atom(name: '_Doctor.email');
+
+  @override
+  String get email {
+    _$emailAtom.context.enforceReadPolicy(_$emailAtom);
+    _$emailAtom.reportObserved();
+    return super.email;
+  }
+
+  @override
+  set email(String value) {
+    _$emailAtom.context.conditionallyRunInAction(() {
+      super.email = value;
+      _$emailAtom.reportChanged();
+    }, _$emailAtom, name: '${_$emailAtom.name}_set');
+  }
+
   final _$phoneAtom = Atom(name: '_Doctor.phone');
 
   @override
@@ -94,6 +111,23 @@ mixin _$Doctor on _Doctor, Store {
     }, _$phoneAtom, name: '${_$phoneAtom.name}_set');
   }
 
+  final _$rgpdAtom = Atom(name: '_Doctor.rgpd');
+
+  @override
+  bool get rgpd {
+    _$rgpdAtom.context.enforceReadPolicy(_$rgpdAtom);
+    _$rgpdAtom.reportObserved();
+    return super.rgpd;
+  }
+
+  @override
+  set rgpd(bool value) {
+    _$rgpdAtom.context.conditionallyRunInAction(() {
+      super.rgpd = value;
+      _$rgpdAtom.reportChanged();
+    }, _$rgpdAtom, name: '${_$rgpdAtom.name}_set');
+  }
+
   final _$_DoctorActionController = ActionController(name: '_Doctor');
 
   @override
@@ -101,6 +135,16 @@ mixin _$Doctor on _Doctor, Store {
     final _$actionInfo = _$_DoctorActionController.startAction();
     try {
       return super.addPatient(ticket);
+    } finally {
+      _$_DoctorActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removePatient(Ticket ticket) {
+    final _$actionInfo = _$_DoctorActionController.startAction();
+    try {
+      return super.removePatient(ticket);
     } finally {
       _$_DoctorActionController.endAction(_$actionInfo);
     }
@@ -119,7 +163,7 @@ mixin _$Doctor on _Doctor, Store {
   @override
   String toString() {
     final string =
-        'listPatients: ${listPatients.toString()},id: ${id.toString()},locationId: ${locationId.toString()},name: ${name.toString()},phone: ${phone.toString()}';
+        'listPatients: ${listPatients.toString()},id: ${id.toString()},locationId: ${locationId.toString()},name: ${name.toString()},email: ${email.toString()},phone: ${phone.toString()},rgpd: ${rgpd.toString()}';
     return '{$string}';
   }
 }

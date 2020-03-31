@@ -39,6 +39,16 @@ mixin _$Tickets on _Tickets, Store {
   }
 
   @override
+  void removeTicket(Ticket ticket) {
+    final _$actionInfo = _$_TicketsActionController.startAction();
+    try {
+      return super.removeTicket(ticket);
+    } finally {
+      _$_TicketsActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void addTickets(List<Ticket> tickets) {
     final _$actionInfo = _$_TicketsActionController.startAction();
     try {
