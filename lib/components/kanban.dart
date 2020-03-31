@@ -1,11 +1,8 @@
 import 'dart:collection';
 import 'package:azap_app/components/takeTicket.dart';
-import 'package:azap_app/components/doctorInput.dart';
+import 'package:azap_app/design_system/theme.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/ticket.dart';
-import 'package:azap_app/services/http.dart';
-import 'package:dart_json_mapper_mobx/dart_json_mapper_mobx.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
@@ -16,7 +13,7 @@ final DateFormat dateFormat = DateFormat("HH:mm");
 class Kanban extends StatefulWidget {
   final double tileHeight = 100;
   final double headerHeight = 80;
-  final double tileWidth = 300;
+  final double tileWidth = 350;
 
   @override
   _KanbanState createState() => _KanbanState();
@@ -24,10 +21,37 @@ class Kanban extends StatefulWidget {
 
 class _KanbanState extends State<Kanban> {
   List<Doctor> board;
+  bool foldCards;
+
+  buildPatient(String name, int id) {
+    Ticket testTicket = new Ticket();
+    testTicket.name = name;
+    testTicket.id = id;
+    testTicket.age = 99;
+    testTicket.pathology = "Covid 19";
+    testTicket.sex = "FEMME";
+    testTicket.doctorId = 999;
+    testTicket.creationTime = DateTime.now();
+    return testTicket;
+  }
 
   @override
   void initState() {
     board = List<Doctor>();
+    foldCards = true;
+
+    // TODO delete
+    Doctor testDoctor = new Doctor();
+    testDoctor.name = "Doctor Strange";
+    testDoctor.id = 999;
+    testDoctor.addPatient(buildPatient("Mme Michu", 999));
+    testDoctor.addPatient(buildPatient("Mme Michu 2", 998));
+    testDoctor.addPatient(buildPatient("Mme Michu 3", 997));
+    testDoctor.addPatient(buildPatient("Mme Michu 4", 996));
+    testDoctor.addPatient(buildPatient("Mme Michu 5", 995));
+    testDoctor.addPatient(buildPatient("Mme Michu 6", 994));
+    doctor.setDoctor(testDoctor);
+
     super.initState();
   }
 
@@ -52,9 +76,9 @@ class _KanbanState extends State<Kanban> {
       return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
-          color: Color(0xFFAEE1FA),
+          color: backgroundColor,
           child: Column(
-            //mainAxisSize: MainAxisSize.max,
+            mainAxisSize: MainAxisSize.max,
             children: [
               buildHeader(doctor),
               ListView.builder(
@@ -70,11 +94,24 @@ class _KanbanState extends State<Kanban> {
                     children: [
                       ItemWidget(
                         ticket: doctor.listPatients.elementAt(index),
+                        index: index,
+                        foldCard: foldCards,
                       ),
                     ],
                   );
                 },
               ),
+              new FlatButton(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 110),
+                child: new Text(
+                    "Suivant",
+                    style: TextStyle(fontSize: 20, color: Colors.white)
+                ),
+                color: accentColor,
+                onPressed: () {
+                  // TODO next ticket doctor
+                },
+              )
             ],
           ),
         ),
@@ -84,15 +121,11 @@ class _KanbanState extends State<Kanban> {
     return Scaffold(
       backgroundColor: Color(0xFFEAF4FB),
       appBar: AppBar(
-          title: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        RaisedButton(
-          onPressed: () {
-            newDoctorDialog(context);
-          },
-          color: Color(0xFFFFCC09),
-          child: const Text('Ajouter une file',
-              style: TextStyle(fontSize: 20, color: Colors.white)),
-        ),
+          backgroundColor: mainColor,
+          title: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
         RaisedButton(
           onPressed: () {
             Navigator.push(
@@ -100,10 +133,21 @@ class _KanbanState extends State<Kanban> {
               MaterialPageRoute(builder: (context) => TakeTicket()),
             );
           },
-          color: Color(0xFFFFCC09),
+          color: accentColor,
           child: const Text('Ajouter un patient',
               style: TextStyle(fontSize: 20, color: Colors.white)),
         ),
+                RaisedButton(
+                  onPressed: () {
+                    setState(() {
+                      foldCards = !foldCards;
+                    });
+                  },
+                  color: accentColor,
+                  child: Text (
+                      (foldCards == true ? 'Déplier' : 'Plier'),
+                      style: TextStyle(fontSize: 20, color: Colors.white)),
+                ),
       ])),
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -114,8 +158,11 @@ class _KanbanState extends State<Kanban> {
           }
           return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: board.map((doctor) {
                 return Container(
+                  // TODO center no margin
+                  margin: EdgeInsets.only(left: 30, top: 10),
                   width: widget.tileWidth,
                   child: buildKanbanList(doctor),
                 );
@@ -135,7 +182,10 @@ class HeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color(0xff055D87),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0.0),
+      ),
+      color: mainColor,
       child: ListTile(
         dense: true,
         contentPadding: EdgeInsets.symmetric(
@@ -145,7 +195,7 @@ class HeaderWidget extends StatelessWidget {
         title: Text(
           title,
           style: TextStyle(
-              color: Color(0xffFFCC09),
+              color: accentColor,
               fontSize: 25,
               fontWeight: FontWeight.bold),
         ),
@@ -158,40 +208,42 @@ class HeaderWidget extends StatelessWidget {
 // The card (static)
 class ItemWidget extends StatelessWidget {
   final Ticket ticket;
+  final int index;
+  final bool foldCard;
 
-  const ItemWidget({Key key, this.ticket}) : super(key: key);
+  const ItemWidget({Key key, this.ticket, this.index, this.foldCard}) : super(key: key);
 
   ListTile makeListTile(Ticket ticket) => ListTile(
         contentPadding: EdgeInsets.symmetric(
           horizontal: 20.0,
-          vertical: 10.0,
+          vertical: foldCard == true ? 0 : 10.0,
         ),
         title: Text(
-          ticket.name,
+          index == 0 ? "${ticket.name} - En cours" : ticket.name,
           style: TextStyle(
-              color: Color(0xFF049BE5),
+              color: index == 0 ? Colors.white : secondColor,
               fontWeight: FontWeight.bold,
               fontSize: 20),
         ),
-        subtitle: Column(
+        subtitle: foldCard == true ? Container(width: 0, height: 0,) : Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
               ticket.pathology,
               style: TextStyle(
-                color: Color(0xFF049BE5),
+                color: index == 0 ? Colors.white : secondColor,
               ),
             ),
             Text(
               ticket.sex,
               style: TextStyle(
-                color: Color(0xFF049BE5),
+                color: index == 0 ? Colors.white : secondColor,
               ),
             ),
             Text(
               "${ticket.age.toString()} ans",
               style: TextStyle(
-                color: Color(0xFF049BE5),
+                color: index == 0 ? Colors.white : secondColor,
               ),
             )
           ],
@@ -203,13 +255,13 @@ class ItemWidget extends StatelessWidget {
             Text(
               "#${ticket.id}",
               style: TextStyle(
-                color: Color(0xFF049BE5),
+                color: index == 0 ? Colors.white : secondColor,
               ),
             ),
-            Text(
+            foldCard == true ? Container(width: 0, height: 0,) : Text(
               dateFormat.format(ticket.creationTime),
               style: TextStyle(
-                color: Color(0xFF049BE5),
+                color: index == 0 ? Colors.white : secondColor,
               ),
             )
           ],
@@ -219,16 +271,22 @@ class ItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
+      height: foldCard == true ? 60 : 110,
+      child:Card(
       elevation: 8.0,
       margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       child: Container(
-        decoration: BoxDecoration(
-          color: Color(0xFFFFFFFF),
-        ),
+          decoration: new BoxDecoration(
+              color: index == 0 ? firstListColor : Colors.white,
+              borderRadius: new BorderRadius.all(Radius.circular(8.0))
+          ),
         child: makeListTile(ticket),
       ),
-    );
+    ));
   }
 }
 
