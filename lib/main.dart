@@ -9,7 +9,6 @@ import 'package:dart_json_mapper/dart_json_mapper.dart' show JsonMapper;
 import 'package:dart_json_mapper_mobx/dart_json_mapper_mobx.dart' show mobXAdapter;
 import 'main.reflectable.dart' show initializeReflectable;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'components/kanban.dart';
 
 final doctor = Doctor();
 final tickets = Tickets();

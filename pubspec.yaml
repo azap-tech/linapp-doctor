@@ -67,6 +67,7 @@ flutter:
     - assets/images/sms.png
     - assets/images/error.png
     - assets/logo.png
+    - assets/images/valid.png
 
   fonts:
     - family: Avenir

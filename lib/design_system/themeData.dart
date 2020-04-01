@@ -14,6 +14,11 @@ ThemeData themeData() {
             MaterialColor(AzapColor.yellow[50].value, AzapColor.yellow),
         textTheme: ButtonTextTheme.normal),
     textTheme: ThemeData.light().textTheme.copyWith(
+        display1: TextStyle(
+            fontFamily: 'Avenir',
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: AzapColor.blue[50]),
         title: TextStyle(
             fontFamily: 'Avenir',
             fontSize: 18,

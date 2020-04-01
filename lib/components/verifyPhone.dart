@@ -1,3 +1,4 @@
+import 'package:azap_app/components/codeValid.dart';
 import 'package:azap_app/design_system/azapColor.dart';
 import 'package:flutter/material.dart';
 
@@ -14,10 +15,17 @@ class _VerifyPhoneState extends State<VerifyPhone> {
     if (_codeSMSController.text.isEmpty) {
       return;
     }
-
     // TODO : A changer par la vrai vérification du code
     setState(() {
-      _codeSMSController.text.length < 4 ? errorCode = true : errorCode = false;
+      if (_codeSMSController.text.length < 5) {
+        errorCode = true;
+      } else {
+        errorCode = false;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => CodeValid()),
+        );
+      }
     });
   }
 
@@ -25,6 +33,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
+      // TODO : à remplacer par la app bar générqiue
       appBar: AppBar(title: Text("Azap"), centerTitle: true),
       body: SingleChildScrollView(
         child: Padding(
@@ -33,11 +42,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
             children: <Widget>[
               Text(
                 errorCode ? "Code invalide ..." : "Code de vérification",
-                style: TextStyle(
-                    fontSize: 24,
-                    fontFamily: Theme.of(context).textTheme.title.fontFamily,
-                    color: Theme.of(context).textTheme.title.color,
-                    fontWeight: Theme.of(context).textTheme.title.fontWeight),
+                style: Theme.of(context).textTheme.display1,
               ),
               Text(
                 errorCode
@@ -71,6 +76,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                 ),
               ),
               TextField(
+                maxLength: 5,
                 controller: _codeSMSController,
                 textAlign: TextAlign.center,
                 keyboardType: TextInputType.number,
