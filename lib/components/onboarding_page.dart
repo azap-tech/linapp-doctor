@@ -1,4 +1,4 @@
-import 'package:azap_app/components/doctor_profile_page.dart';
+import 'package:azap_app/components/register_login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
@@ -12,7 +12,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   void _onIntroEnd(context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => DoctorProfilePage()),
+      MaterialPageRoute(builder: (_) => RegisterLoginPage()),
     );
   }
 

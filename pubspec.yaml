@@ -73,6 +73,7 @@ flutter:
     - assets/onboard-2.png
     - assets/onboard-3.png
     - assets/onboard-4.png
+    - assets/register.png
     - assets/images/sms.png
     - assets/images/error.png
     - assets/images/valid.png
