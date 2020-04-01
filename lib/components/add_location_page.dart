@@ -1,5 +1,5 @@
 import 'package:azap_app/components/kanban.dart';
-import 'package:azap_app/design_system/theme.dart';
+import 'package:azap_app/design_system/azapColor.dart';
 import 'package:azap_app/services/http.dart';
 import 'package:azap_app/stores/location.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddLocationPage extends StatelessWidget {
-
   const AddLocationPage({Key key}) : super(key: key);
 
   @override
@@ -18,10 +17,8 @@ class AddLocationPage extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("AddLocationPage",
-              style: TextStyle(
-                color: accentColor,
-              )),
+          title:
+              Text("AddLocationPage", style: Theme.of(context).textTheme.title),
         ),
         body: Padding(
             padding: EdgeInsets.all(16.0),
@@ -51,8 +48,7 @@ class AddLocationPage extends StatelessWidget {
                     },
                   ),
                   TextFormField(
-                    decoration:
-                        InputDecoration(labelText: 'Code postal'),
+                    decoration: InputDecoration(labelText: 'Code postal'),
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly
@@ -67,8 +63,7 @@ class AddLocationPage extends StatelessWidget {
                     },
                   ),
                   TextFormField(
-                    decoration:
-                    InputDecoration(labelText: 'Ville'),
+                    decoration: InputDecoration(labelText: 'Ville'),
                     // The validator receives the text that the user has entered.
                     validator: (value) {
                       if (value.isEmpty) {
