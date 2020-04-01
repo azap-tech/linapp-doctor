@@ -1,16 +1,22 @@
+import 'package:azap_app/classes/doctorPayload.dart';
+import 'package:azap_app/classes/genericPayload.dart';
+import 'package:azap_app/classes/locationPayload.dart';
 import 'package:azap_app/classes/stateDoctorPayload.dart';
 import 'package:azap_app/stores/doctor.dart';
+import 'package:azap_app/stores/location.dart';
 import 'package:azap_app/stores/ticket.dart';
 import 'package:azap_app/main.dart';
 import 'package:azap_app/classes/stateTicketPayload.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:logger/logger.dart';
 import 'package:requests/requests.dart';
 
 import '../main.dart';
 
 class HttpService {
   static final HttpService _instance = HttpService._internal();
+  var logger = Logger();
 
   factory HttpService() {
     return _instance;
@@ -20,26 +26,38 @@ class HttpService {
   }
 
   // auto store cookie in storage
-  Future login(int id, String secret) async {
-    // TODO clear on disconnect
-    String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/login");
-    Requests.clearStoredCookies(hostname);
-    var r = await Requests.post(
-        "${DotEnv().env['BASE_URL']}/api/v2/login",
-        json: {
-          "id": id,
-          "secret": secret
-        },
-        timeoutSeconds: 30,
-        bodyEncoding: RequestBodyEncoding.JSON);
-    print("http status from login ${r.statusCode}");
-    // throw exception if not 200
-    r.raiseForStatus();
-    dynamic json = r.json();
-    print(json);
-    Requests.getStoredCookies(hostname).then((cookie) {
-      print('Session : ' + cookie.toString());
-    });
+  Future<GenericPayload> login(int id, String secret) async {
+    var genericPayload = GenericPayload();
+    if(DotEnv().env['MODE_MOCK'] == 'false'){
+      try {
+        // TODO clear on disconnect
+        String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/login");
+        await Requests.clearStoredCookies(hostname);
+        var r = await Requests.post(
+            "${DotEnv().env['BASE_URL']}/api/v2/login",
+            json: {
+              "id": id,
+              "secret": secret
+            },
+            timeoutSeconds: 30,
+            bodyEncoding: RequestBodyEncoding.JSON);
+        print("http status from login ${r.statusCode}");
+        // throw exception if not 200
+        r.raiseForStatus();
+        genericPayload = JsonMapper.deserialize<GenericPayload>(r.content());
+        Requests.getStoredCookies(hostname).then((cookie) {
+          print('Session : ' + cookie.toString());
+        });
+        return genericPayload;
+      } on Exception catch (e) {
+        logger.e(e);
+        genericPayload.status = 'error';
+        return genericPayload;
+      }
+    } else {
+      genericPayload.status = 'ok';
+      return genericPayload;
+    }
   }
 
   // auto store cookie in storage
@@ -81,35 +99,93 @@ class HttpService {
     print(json);
   }
 
-  createDoctor(Doctor doctor) async {
-    var r = await Requests.post(
-        "${DotEnv().env['BASE_URL']}/api/v2/doctor",
-        json: {
-          "locationId": doctor.locationId,
-          "name": doctor.name,
-          "phone": doctor.phone
-        },
-        bodyEncoding: RequestBodyEncoding.JSON,
-        timeoutSeconds: 30);
-    print("http status from doctor ${r.statusCode}");
-    // throw exception if not 200
-    r.raiseForStatus();
-    dynamic json = r.json();
-    print(json);
+  Future<DoctorPayload> createDoctor(Doctor newDoctor) async {
+    var doctorPayload = DoctorPayload();
+    if(DotEnv().env['MODE_MOCK'] == 'false'){
+      try {
+        var r = await Requests.post(
+            "${DotEnv().env['BASE_URL']}/api/v2/doctor",
+            json: {
+              "locationId": newDoctor.locationId,
+              "name": newDoctor.name,
+              "phone": newDoctor.phone,
+              "email": newDoctor.email,
+            },
+            bodyEncoding: RequestBodyEncoding.JSON,
+            timeoutSeconds: 30);
+        print("http status from doctor ${r.statusCode}");
+        // throw exception if not 200
+        r.raiseForStatus();
+        doctorPayload = JsonMapper.deserialize<DoctorPayload>(r.content());
+        doctor.setDoctor(doctorPayload.payload);
+        return doctorPayload;
+      } on Exception catch (e) {
+        logger.e(e);
+        doctorPayload.status = 'error';
+        return doctorPayload;
+      }
+    } else {
+      newDoctor.id = 1;
+      doctor.setDoctor(newDoctor);
+      doctorPayload.status = 'ok';
+      return doctorPayload;
+    }
   }
 
-  createLocation(String name) async {
-    var r = await Requests.post(
-        "${DotEnv().env['BASE_URL']}/api/v2/location",
-        json: {
-          "name": name
-        },
-        bodyEncoding: RequestBodyEncoding.JSON);
-    print("http status from create location : ${r.statusCode}");
-    // throw exception if not 200
-    r.raiseForStatus();
-    dynamic json = r.json();
-    print(json);
+  Future<LocationPayload> createLocation(Location location) async {
+    var locationPayload = LocationPayload();
+    if(DotEnv().env['MODE_MOCK'] == 'false'){
+      try {
+        var r = await Requests.post(
+            "${DotEnv().env['BASE_URL']}/api/v2/location",
+            json: {
+              "name": location.name,
+              "address": location.address,
+              "zipCode": location.zipCode,
+              "city": location.city
+            },
+            bodyEncoding: RequestBodyEncoding.JSON);
+        print("http status from create location : ${r.statusCode}");
+        // throw exception if not 200
+        r.raiseForStatus();
+        locationPayload = JsonMapper.deserialize<LocationPayload>(r.content());
+        return locationPayload;
+      } on Exception catch (e) {
+        logger.e(e);
+        locationPayload.status = 'error';
+        return locationPayload;
+      }
+    } else {
+      locationPayload.status = 'ok';
+      return locationPayload;
+    }
+  }
+
+  Future<DoctorPayload> linkDoctorToLocation(int doctorId, int locationId) async {
+    var linkDoctorLocationPayload = DoctorPayload();
+    if(DotEnv().env['MODE_MOCK'] == 'false'){
+      try {
+        var r = await Requests.patch(
+            "${DotEnv().env['BASE_URL']}/api/v2/doctors/$doctorId/location",
+            json: {
+              "locationId": locationId
+            },
+            bodyEncoding: RequestBodyEncoding.JSON);
+        print("http status from link doctor to location : ${r.statusCode}");
+        // throw exception if not 200
+        r.raiseForStatus();
+        linkDoctorLocationPayload = JsonMapper.deserialize<DoctorPayload>(r.content());
+        doctor.setDoctor(linkDoctorLocationPayload.payload);
+        return linkDoctorLocationPayload;
+      } on Exception catch (e) {
+        logger.e(e);
+        linkDoctorLocationPayload.status = 'error';
+        return linkDoctorLocationPayload;
+      }
+    } else {
+      linkDoctorLocationPayload.status = 'ok';
+      return linkDoctorLocationPayload;
+    }
   }
 
   // call if login return app status with doctors and tickets
@@ -157,14 +233,5 @@ class HttpService {
     });
 
     doctor.setDoctor(stateDoctorPayload.doctors.elementAt(0));
-  }
-
-  getLocations() async {
-    var r = await Requests.get("${DotEnv().env['BASE_URL']}/api/v2/location");
-    print("http status from get locations : ${r.statusCode}");
-    // throw exception if not 200
-    r.raiseForStatus();
-    dynamic json = r.json();
-    print(json);
   }
 }

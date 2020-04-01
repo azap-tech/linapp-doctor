@@ -19,7 +19,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  requests: ^3.1.0
+  requests:
+    git:
+      url: git@github.com:azap-tech/requests.git
   flutter_dotenv: ^2.1.0
   eventsource: ^0.2.2
   intl: ^0.16.1
@@ -38,6 +40,7 @@ dependencies:
   get_it: ^1.0.3
   firebase_core: ^0.4.0+9
   url_launcher: ^5.4.2
+  logger: ^0.8.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
