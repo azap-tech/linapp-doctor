@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:azap_app/components/login.dart';
+import 'package:azap_app/components/add_location_page.dart';
 import 'package:azap_app/design_system/azapColor.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +11,7 @@ class CodeValid extends StatefulWidget {
 class _CodeValidState extends State<CodeValid> {
   int _counter = 3;
   double _progressValue = 0.0;
+  Timer timer;
 
   void remove() {
     setState(() {
@@ -18,15 +19,16 @@ class _CodeValidState extends State<CodeValid> {
       _progressValue += 1 / 3;
     });
     if (_counter <= 0) {
+      timer.cancel();
       // TODO : change redirection
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginPage()));
+          context, MaterialPageRoute(builder: (context) => AddLocationPage()));
     }
   }
 
   waitRedirect() {
     // TODO : je ne comprend pas pourquoi il faut je me donne 1500 pour avoir un timer de 3 secondes ...
-    Timer.periodic(Duration(milliseconds: 1500), (timer) {
+    timer = Timer.periodic(Duration(milliseconds: 1500), (timer) {
       remove();
     });
   }
@@ -41,7 +43,7 @@ class _CodeValidState extends State<CodeValid> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
-        // TODO : à remplacer par la app bar générqiue
+        // TODO : à remplacer par la app bar générique
         appBar: AppBar(title: Text("Azap"), centerTitle: true),
         body: Padding(
             padding: const EdgeInsets.all(38.0),

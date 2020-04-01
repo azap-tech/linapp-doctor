@@ -1,4 +1,4 @@
-import 'package:azap_app/components/add_location_page.dart';
+import 'package:azap_app/components/codeValid.dart';
 import 'package:azap_app/design_system/error/snackbar.dart';
 import 'package:azap_app/design_system/form/checkbox.dart';
 import 'package:azap_app/services/http.dart';
@@ -55,7 +55,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                 context,
                 MaterialPageRoute(
                   // TODO go sms validation, then create place, then doctor status, then kanban
-                    builder: (context) => AddLocationPage()
+                    builder: (context) => CodeValid()
                 ),
               );
             } else {

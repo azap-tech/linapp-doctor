@@ -1,7 +1,6 @@
 import 'package:azap_app/components/kanban.dart';
 import 'package:azap_app/design_system/azapColor.dart';
 import 'package:azap_app/design_system/error/snackbar.dart';
-import 'package:azap_app/design_system/theme.dart';
 import 'package:azap_app/main.dart';
 import 'package:azap_app/services/http.dart';
 import 'package:azap_app/services/sse.dart';
@@ -81,14 +80,14 @@ class _AddLocationPageState extends State<AddLocationPage> {
 
     return Scaffold(
         appBar: AppBar(
-            backgroundColor: mainColor,
+            backgroundColor: AzapColor.mainColor,
             title: Image.asset(
                 'assets/logo.png',
                 fit: BoxFit.contain,
                 height: 32
             )
         ),
-        backgroundColor: backgroundColor,
+        backgroundColor: AzapColor.backgroundColor,
         body: SingleChildScrollView(
             child:
             Container(
@@ -102,7 +101,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      color: mainColor,
+                      color: AzapColor.mainColor,
                       fontSize: 25,
                     ),
                   ),
@@ -372,7 +371,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
                   ),
                   RaisedButton(
                       padding: EdgeInsets.symmetric(vertical: 0, horizontal: (MediaQuery.of(context).size.width * 0.35)),
-                      color: accentColor,
+                      color: AzapColor.accentColor,
                       onPressed: createLocation,
                       child:
                       Text(
