@@ -1,8 +1,5 @@
-import 'package:azap_app/components/add_location_page.dart';
-import 'package:azap_app/components/doctor_profile_page.dart';
 import 'package:azap_app/design_system/themeData.dart';
-import 'package:azap_app/services/http.dart';
-import 'package:azap_app/services/sse.dart';
+import 'package:azap_app/components/onboarding_page.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/tickets.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +34,7 @@ class MyApp extends StatelessWidget {
     } else {
 
     }
-    return DoctorProfilePage();
+    return OnBoardingPage();
   }
 
   @override
