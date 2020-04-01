@@ -1,3 +1,4 @@
+import 'package:azap_app/classes/doctorPayload.dart';
 import 'package:azap_app/classes/stateDoctorPayload.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/ticket.dart';
@@ -5,12 +6,14 @@ import 'package:azap_app/main.dart';
 import 'package:azap_app/classes/stateTicketPayload.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:logger/logger.dart';
 import 'package:requests/requests.dart';
 
 import '../main.dart';
 
 class HttpService {
   static final HttpService _instance = HttpService._internal();
+  var logger = Logger();
 
   factory HttpService() {
     return _instance;
@@ -81,21 +84,37 @@ class HttpService {
     print(json);
   }
 
-  createDoctor(Doctor doctor) async {
-    var r = await Requests.post(
-        "${DotEnv().env['BASE_URL']}/api/v2/doctor",
-        json: {
-          "locationId": doctor.locationId,
-          "name": doctor.name,
-          "phone": doctor.phone
-        },
-        bodyEncoding: RequestBodyEncoding.JSON,
-        timeoutSeconds: 30);
-    print("http status from doctor ${r.statusCode}");
-    // throw exception if not 200
-    r.raiseForStatus();
-    dynamic json = r.json();
-    print(json);
+  Future<DoctorPayload> createDoctor(Doctor newDoctor) async {
+    if(DotEnv().env['MODE_MOCK'] == 'false'){
+      var doctorPayload;
+      try {
+        var r = await Requests.post(
+            "${DotEnv().env['BASE_URL']}/api/v2/doctor",
+            json: {
+              "locationId": newDoctor.locationId,
+              "name": newDoctor.name,
+              "phone": newDoctor.phone,
+              "email": newDoctor.email,
+            },
+            bodyEncoding: RequestBodyEncoding.JSON,
+            timeoutSeconds: 30);
+        print("http status from doctor ${r.statusCode}");
+        // throw exception if not 200
+        r.raiseForStatus();
+        doctorPayload = JsonMapper.deserialize<DoctorPayload>(r.content());
+        doctor.setDoctor(doctorPayload.payload);
+        return doctorPayload;
+      } on Exception catch (e) {
+        logger.e(e);
+        return doctorPayload;
+      }
+    } else {
+      newDoctor.id = 1;
+      doctor.setDoctor(newDoctor);
+      final doctorPayload = DoctorPayload();
+      doctorPayload.status = 'ok';
+      return doctorPayload;
+    }
   }
 
   createLocation(String name) async {

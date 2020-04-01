@@ -373,6 +373,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  logger:
+    dependency: "direct main"
+    description:
+      name: logger
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.3"
   logging:
     dependency: transitive
     description:
@@ -523,9 +530,11 @@ packages:
   requests:
     dependency: "direct main"
     description:
-      name: requests
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "4ce80e34857184f4b3dde7b7c72c37d53c8ddbb3"
+      url: "git@github.com:azap-tech/requests.git"
+    source: git
     version: "3.1.0"
   rxdart:
     dependency: transitive

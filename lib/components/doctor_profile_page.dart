@@ -1,4 +1,5 @@
 import 'package:azap_app/components/kanban.dart';
+import 'package:azap_app/design_system/error/snackbar.dart';
 import 'package:azap_app/design_system/form/checkbox.dart';
 import 'package:azap_app/services/http.dart';
 import 'package:azap_app/stores/doctor.dart';
@@ -15,12 +16,54 @@ class DoctorProfilePage extends StatefulWidget {
 }
 
 class _DoctorProfilePageState extends State<DoctorProfilePage> {
+  bool httpError;
+  Doctor doctor;
+
+  @override
+  void initState() {
+    super.initState();
+    httpError = false;
+    doctor = new Doctor();
+  }
+
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
-    ScrollController _scroll;
 
-    Doctor doctor = new Doctor();
+    buildBottomNavBar() {
+      if (httpError) {
+        Future.delayed(const Duration(milliseconds: 1500), () {
+          setState(() {
+            httpError = false;
+          });
+        });
+        return buildSnackbarError("Une erreur est survenue");
+      } else {
+        return SizedBox.shrink();
+      }
+    }
+
+    createDoctor(){
+      // TODO loader and lock button on long http call
+      if (_formKey.currentState.validate() && doctor.rgpd && !httpError) {
+        HttpService().createDoctor(doctor).then((payload){
+          if(payload != null && payload.status == "ok"){
+            // TODO move login on sms validation + send pincode sms ? or display
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                // TODO go sms validation, then create place, then doctor status, then kanban
+                  builder: (context) => Kanban()
+              ),
+            );
+          } else {
+            setState(() {
+              httpError = true;
+            });
+          }
+        });
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -283,18 +326,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                         child:
                           RaisedButton(
                             color: Color.fromARGB(255, 5, 82, 136),
-                            onPressed: () {
-                              if (_formKey.currentState.validate() && doctor.rgpd) {
-                                HttpService().createDoctor(doctor);
-
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Kanban()
-                                  ),
-                                );
-                              }
-                            },
+                            onPressed: createDoctor,
                             child: 
                               Text(
                                 'Créer mon compte',
@@ -309,7 +341,8 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
               )
             )
         )
-      )
+      ),
+        bottomNavigationBar: buildBottomNavBar()
     );
   }
 }

@@ -4,5 +4,6 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 @jsonSerializable
 class DoctorPayload {
   Doctor payload;
-  String type = "";
+  String status = "";
+  String pincode = "";
 }
