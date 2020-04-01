@@ -1,4 +1,4 @@
-import 'package:azap_app/components/kanban.dart';
+import 'package:azap_app/components/add_location_page.dart';
 import 'package:azap_app/design_system/error/snackbar.dart';
 import 'package:azap_app/design_system/form/checkbox.dart';
 import 'package:azap_app/services/http.dart';
@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../main.dart';
 
 class DoctorProfilePage extends StatefulWidget {
   DoctorProfilePage({Key key}) : super(key: key);
@@ -17,53 +19,62 @@ class DoctorProfilePage extends StatefulWidget {
 
 class _DoctorProfilePageState extends State<DoctorProfilePage> {
   bool httpError;
-  Doctor doctor;
+  Doctor newDoctor;
+  GlobalKey<FormState> _formKey;
 
   @override
   void initState() {
     super.initState();
     httpError = false;
-    doctor = new Doctor();
+    newDoctor = new Doctor();
+    _formKey = GlobalKey<FormState>();
+  }
+
+  buildBottomNavBar() {
+    if (httpError) {
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        setState(() {
+          httpError = false;
+        });
+      });
+      return buildSnackbarError("Une erreur est survenue");
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
+  createDoctor(){
+    // TODO loader and lock button on long http call
+    if (_formKey.currentState.validate() && newDoctor.rgpd && !httpError) {
+      HttpService().createDoctor(newDoctor).then((payload){
+        if(payload != null && payload.status == "ok"){
+          // TODO move login on sms validation + send pincode sms ? or display
+          HttpService().login(doctor.id, payload.pincode).then((payload) {
+            if(payload != null && payload.status == "ok"){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  // TODO go sms validation, then create place, then doctor status, then kanban
+                    builder: (context) => AddLocationPage()
+                ),
+              );
+            } else {
+              setState(() {
+                httpError = true;
+              });
+            }
+          });
+        } else {
+          setState(() {
+            httpError = true;
+          });
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-
-    buildBottomNavBar() {
-      if (httpError) {
-        Future.delayed(const Duration(milliseconds: 1500), () {
-          setState(() {
-            httpError = false;
-          });
-        });
-        return buildSnackbarError("Une erreur est survenue");
-      } else {
-        return SizedBox.shrink();
-      }
-    }
-
-    createDoctor(){
-      // TODO loader and lock button on long http call
-      if (_formKey.currentState.validate() && doctor.rgpd && !httpError) {
-        HttpService().createDoctor(doctor).then((payload){
-          if(payload != null && payload.status == "ok"){
-            // TODO move login on sms validation + send pincode sms ? or display
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                // TODO go sms validation, then create place, then doctor status, then kanban
-                  builder: (context) => Kanban()
-              ),
-            );
-          } else {
-            setState(() {
-              httpError = true;
-            });
-          }
-        });
-      }
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -142,7 +153,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                           return 'Veuillez entrer votre nom';
                         }
 
-                        doctor.name = value;
+                        newDoctor.name = value;
 
                         return null;
                       }
@@ -205,7 +216,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                           return 'Veuillez entrer une adresse email valide';
                         }
 
-                        doctor.email = value;
+                        newDoctor.email = value;
 
                         return null;
                       }
@@ -268,7 +279,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                             return 'Veuillez entrer un téléphone valide';
                           }
 
-                          doctor.phone = value;
+                          newDoctor.phone = value;
 
                           return null;
                         }
@@ -284,7 +295,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                         height: 30,
                         width: 30,
                         onSelect: (value) {
-                          doctor.rgpd = value;
+                          newDoctor.rgpd = value;
                         },
                       ),
                       Padding(
@@ -322,7 +333,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                   Observer(
                     builder: (_) => 
                       Opacity(
-                        opacity: doctor.rgpd == true ? 1 : 0.5,
+                        opacity: newDoctor.rgpd == true ? 1 : 0.5,
                         child:
                           RaisedButton(
                             color: Color.fromARGB(255, 5, 82, 136),

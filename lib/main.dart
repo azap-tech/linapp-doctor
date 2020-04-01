@@ -1,3 +1,4 @@
+import 'package:azap_app/components/add_location_page.dart';
 import 'package:azap_app/components/doctor_profile_page.dart';
 import 'package:azap_app/design_system/themeData.dart';
 import 'package:azap_app/services/http.dart';
