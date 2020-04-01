@@ -41,16 +41,12 @@ class _KanbanState extends State<Kanban> {
     foldCards = true;
 
     // TODO delete
-    Doctor testDoctor = new Doctor();
-    testDoctor.name = "Doctor Strange";
-    testDoctor.id = 999;
-    testDoctor.addPatient(buildPatient("Mme Michu", 999));
-    testDoctor.addPatient(buildPatient("Mme Michu 2", 998));
-    testDoctor.addPatient(buildPatient("Mme Michu 3", 997));
-    testDoctor.addPatient(buildPatient("Mme Michu 4", 996));
-    testDoctor.addPatient(buildPatient("Mme Michu 5", 995));
-    testDoctor.addPatient(buildPatient("Mme Michu 6", 994));
-    doctor.setDoctor(testDoctor);
+    doctor.addPatient(buildPatient("Mme Michu", 999));
+    doctor.addPatient(buildPatient("Mme Michu 2", 998));
+    doctor.addPatient(buildPatient("Mme Michu 3", 997));
+    doctor.addPatient(buildPatient("Mme Michu 4", 996));
+    doctor.addPatient(buildPatient("Mme Michu 5", 995));
+    doctor.addPatient(buildPatient("Mme Michu 6", 994));
 
     super.initState();
   }
