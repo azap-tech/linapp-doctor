@@ -1,4 +1,5 @@
-import 'package:azap_app/components/codeValid.dart';
+import 'package:azap_app/components/verifyPhone.dart';
+import 'package:azap_app/design_system/azapColor.dart';
 import 'package:azap_app/design_system/error/snackbar.dart';
 import 'package:azap_app/design_system/form/checkbox.dart';
 import 'package:azap_app/services/http.dart';
@@ -55,7 +56,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                 context,
                 MaterialPageRoute(
                   // TODO go sms validation, then create place, then doctor status, then kanban
-                    builder: (context) => CodeValid()
+                    builder: (context) => VerifyPhone()
                 ),
               );
             } else {
@@ -78,12 +79,13 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 5, 82, 136),
-        title: Image.asset(
-          'assets/logo.png',
-          fit: BoxFit.contain,
-          height: 32
-        )
+          backgroundColor: AzapColor.mainColor,
+          title: Image.asset(
+              'assets/logo.png',
+              fit: BoxFit.contain,
+              height: 32
+          ),
+          centerTitle: true
       ),
       backgroundColor: Color(0xFFF0F8FF),
       body: 

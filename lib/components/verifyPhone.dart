@@ -33,8 +33,15 @@ class _VerifyPhoneState extends State<VerifyPhone> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      // TODO : à remplacer par la app bar générqiue
-      appBar: AppBar(title: Text("Azap"), centerTitle: true),
+      appBar: AppBar(
+          backgroundColor: AzapColor.mainColor,
+          title: Image.asset(
+              'assets/logo.png',
+              fit: BoxFit.contain,
+              height: 32
+          ),
+        centerTitle: true
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(38.0),

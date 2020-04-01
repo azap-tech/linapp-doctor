@@ -85,7 +85,8 @@ class _AddLocationPageState extends State<AddLocationPage> {
                 'assets/logo.png',
                 fit: BoxFit.contain,
                 height: 32
-            )
+            ),
+            centerTitle: true
         ),
         backgroundColor: AzapColor.backgroundColor,
         body: SingleChildScrollView(

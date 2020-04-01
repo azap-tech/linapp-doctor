@@ -1,3 +1,4 @@
+import 'package:azap_app/design_system/azapColor.dart';
 import 'package:azap_app/services/http.dart';
 import 'package:azap_app/stores/ticket.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,9 +26,9 @@ class _TakeTicketState extends State<TakeTicket> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFFEAF4FB),
         appBar: AppBar(
-            title: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          backgroundColor: AzapColor.mainColor,
+          title: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           RaisedButton(
             onPressed: () {
               HttpService().createTicket(newTicket);
@@ -36,10 +37,15 @@ class _TakeTicketState extends State<TakeTicket> {
                 MaterialPageRoute(builder: (context) => Kanban()),
               );
             },
-            color: Color(0xFFFFCC09),
+            color: AzapColor.accentColor,
             child: const Text('Valider',
                 style: TextStyle(fontSize: 20, color: Colors.white)),
           ),
+              Image.asset(
+                  'assets/logo.png',
+                  fit: BoxFit.contain,
+                  height: 32
+              ),
         ])),
         body: new Column(
             mainAxisAlignment: MainAxisAlignment.center,

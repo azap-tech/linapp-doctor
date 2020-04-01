@@ -43,8 +43,15 @@ class _CodeValidState extends State<CodeValid> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
-        // TODO : à remplacer par la app bar générique
-        appBar: AppBar(title: Text("Azap"), centerTitle: true),
+        appBar: AppBar(
+            backgroundColor: AzapColor.mainColor,
+            title: Image.asset(
+                'assets/logo.png',
+                fit: BoxFit.contain,
+                height: 32
+            ),
+            centerTitle: true
+        ),
         body: Padding(
             padding: const EdgeInsets.all(38.0),
             child: Column(children: <Widget>[
