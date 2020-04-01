@@ -1,6 +1,6 @@
 import 'dart:collection';
 import 'package:azap_app/components/takeTicket.dart';
-import 'package:azap_app/design_system/theme.dart';
+import 'package:azap_app/design_system/azapColor.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/ticket.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +76,7 @@ class _KanbanState extends State<Kanban> {
       return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
-          color: backgroundColor,
+          color: AzapColor.backgroundColor,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -107,7 +107,7 @@ class _KanbanState extends State<Kanban> {
                     "Suivant",
                     style: TextStyle(fontSize: 20, color: Colors.white)
                 ),
-                color: accentColor,
+                color: AzapColor.accentColor,
                 onPressed: () {
                   // TODO next ticket doctor
                 },
@@ -121,7 +121,7 @@ class _KanbanState extends State<Kanban> {
     return Scaffold(
       backgroundColor: Color(0xFFEAF4FB),
       appBar: AppBar(
-          backgroundColor: mainColor,
+          backgroundColor: AzapColor.mainColor,
           title: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,7 +133,7 @@ class _KanbanState extends State<Kanban> {
               MaterialPageRoute(builder: (context) => TakeTicket()),
             );
           },
-          color: accentColor,
+          color: AzapColor.accentColor,
           child: const Text('Ajouter un patient',
               style: TextStyle(fontSize: 20, color: Colors.white)),
         ),
@@ -143,7 +143,7 @@ class _KanbanState extends State<Kanban> {
                       foldCards = !foldCards;
                     });
                   },
-                  color: accentColor,
+                  color: AzapColor.accentColor,
                   child: Text (
                       (foldCards == true ? 'Déplier' : 'Plier'),
                       style: TextStyle(fontSize: 20, color: Colors.white)),
@@ -185,7 +185,7 @@ class HeaderWidget extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0.0),
       ),
-      color: mainColor,
+      color: AzapColor.mainColor,
       child: ListTile(
         dense: true,
         contentPadding: EdgeInsets.symmetric(
@@ -195,7 +195,7 @@ class HeaderWidget extends StatelessWidget {
         title: Text(
           title,
           style: TextStyle(
-              color: accentColor,
+              color: AzapColor.accentColor,
               fontSize: 25,
               fontWeight: FontWeight.bold),
         ),
@@ -221,7 +221,7 @@ class ItemWidget extends StatelessWidget {
         title: Text(
           index == 0 ? "${ticket.name} - En cours" : ticket.name,
           style: TextStyle(
-              color: index == 0 ? Colors.white : secondColor,
+              color: index == 0 ? Colors.white : AzapColor.secondColor,
               fontWeight: FontWeight.bold,
               fontSize: 20),
         ),
@@ -231,19 +231,19 @@ class ItemWidget extends StatelessWidget {
             Text(
               ticket.pathology,
               style: TextStyle(
-                color: index == 0 ? Colors.white : secondColor,
+                color: index == 0 ? Colors.white : AzapColor.secondColor,
               ),
             ),
             Text(
               ticket.sex,
               style: TextStyle(
-                color: index == 0 ? Colors.white : secondColor,
+                color: index == 0 ? Colors.white : AzapColor.secondColor,
               ),
             ),
             Text(
               "${ticket.age.toString()} ans",
               style: TextStyle(
-                color: index == 0 ? Colors.white : secondColor,
+                color: index == 0 ? Colors.white : AzapColor.secondColor,
               ),
             )
           ],
@@ -255,13 +255,13 @@ class ItemWidget extends StatelessWidget {
             Text(
               "#${ticket.id}",
               style: TextStyle(
-                color: index == 0 ? Colors.white : secondColor,
+                color: index == 0 ? Colors.white : AzapColor.secondColor,
               ),
             ),
             foldCard == true ? Container(width: 0, height: 0,) : Text(
               dateFormat.format(ticket.creationTime),
               style: TextStyle(
-                color: index == 0 ? Colors.white : secondColor,
+                color: index == 0 ? Colors.white : AzapColor.secondColor,
               ),
             )
           ],
@@ -281,7 +281,7 @@ class ItemWidget extends StatelessWidget {
       ),
       child: Container(
           decoration: new BoxDecoration(
-              color: index == 0 ? firstListColor : Colors.white,
+              color: index == 0 ? AzapColor.firstListColor : Colors.white,
               borderRadius: new BorderRadius.all(Radius.circular(8.0))
           ),
         child: makeListTile(ticket),

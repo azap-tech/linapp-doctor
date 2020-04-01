@@ -31,5 +31,9 @@ class AzapColor {
 
   static const errorColor = Colors.red;
 
+  static const mainColor = const Color(0xff055D88);
+  static const secondColor = const Color(0xFF049BE5);
+  static const accentColor = const Color(0xffFFCC09);
+  static const firstListColor = const Color(0xFF2EA64F);
   static const backgroundColor = const Color(0xffEAF4FB);
 }
