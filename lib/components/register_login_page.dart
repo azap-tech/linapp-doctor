@@ -1,4 +1,5 @@
 import 'package:azap_app/components/doctor_profile_page.dart';
+import 'package:azap_app/design_system/azapColor.dart';
 import 'package:flutter/material.dart';
 
 class RegisterLoginPage extends StatelessWidget {
@@ -20,24 +21,29 @@ class RegisterLoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 5, 82, 136),
-          title:
-              Image.asset('assets/logo.png', fit: BoxFit.contain, height: 32)),
-      body: Column(
+          backgroundColor: AzapColor.mainColor,
+          title: Image.asset(
+              'assets/logo.png',
+              fit: BoxFit.contain,
+              height: 32
+          ),
+          centerTitle: true
+      ),
+      body: SingleChildScrollView( scrollDirection: Axis.vertical, child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.all(10),
                 ),
                 Align(
                   child: Image.asset('assets/register.png', height: 300.0),
                   alignment: Alignment.center,
                 ),
                 Padding(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.all(10),
                 ),
                 Container(
                   child: Text(
@@ -51,7 +57,7 @@ class RegisterLoginPage extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(40),
+                  padding: EdgeInsets.all(20),
                   child: Column(children: <Widget>[
                     Row(children: <Widget>[
                       Expanded(
@@ -70,9 +76,6 @@ class RegisterLoginPage extends StatelessWidget {
                   ]),
                 ),
               ],
-            ),
-            Expanded(
-              child: new Container(),
             ),
             Column(children: <Widget>[
               SizedBox(
@@ -124,9 +127,9 @@ class RegisterLoginPage extends StatelessWidget {
                       ))),
             ]),
             Padding(
-              padding: EdgeInsets.all(50),
+              padding: EdgeInsets.all(20),
             ),
-          ]),
+          ])),
     );
   }
 }
