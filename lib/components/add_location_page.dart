@@ -1,5 +1,6 @@
 import 'package:azap_app/components/kanban.dart';
 import 'package:azap_app/design_system/azapColor.dart';
+import 'package:azap_app/design_system/button/regular_button.dart';
 import 'package:azap_app/design_system/error/snackbar.dart';
 import 'package:azap_app/main.dart';
 import 'package:azap_app/services/http.dart';
@@ -370,18 +371,10 @@ class _AddLocationPageState extends State<AddLocationPage> {
                   Padding(
                     padding: EdgeInsets.all(5),
                   ),
-                  RaisedButton(
-                      padding: EdgeInsets.symmetric(vertical: 0, horizontal: (MediaQuery.of(context).size.width * 0.35)),
-                      color: AzapColor.accentColor,
-                      onPressed: createLocation,
-                      child:
-                      Text(
-                        'Valider',
-                        style: TextStyle(
-                            color: Colors.white
-                        ),
-                      )
-                  )
+                  SizedBox(
+                      width: double.infinity,
+                      child: buildRegularButton("Valider", createLocation)
+                  ),
                 ])))
         ),
         bottomNavigationBar: buildBottomNavBar()

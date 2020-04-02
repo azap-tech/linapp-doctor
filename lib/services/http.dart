@@ -2,6 +2,7 @@ import 'package:azap_app/classes/doctorPayload.dart';
 import 'package:azap_app/classes/genericPayload.dart';
 import 'package:azap_app/classes/locationPayload.dart';
 import 'package:azap_app/classes/stateDoctorPayload.dart';
+import 'package:azap_app/classes/ticketPayload.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/location.dart';
 import 'package:azap_app/stores/ticket.dart';
@@ -62,41 +63,41 @@ class HttpService {
 
   // auto store cookie in storage
   createTicket(Ticket ticket) async {
-    String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/ticket/new");
-    Requests.getStoredCookies(hostname).then((cookie) {
-      print('Session : ' + cookie.toString());
-    });
-    var r = await Requests.post(
-        "${DotEnv().env['BASE_URL']}/api/v2/ticket/new",
-        json: {
-          "locationId": ticket.locationId,
-          "name": ticket.name,
-          "phone": ticket.phone,
-          "sex": ticket.sex,
-          "pathology": ticket.pathology,
-          "age": ticket.age,
-        },
-        timeoutSeconds: 30,
-        bodyEncoding: RequestBodyEncoding.JSON);
-    print("http status from ticket ${r.statusCode}");
-    // throw exception if not 200
-    r.raiseForStatus();
-    dynamic json = r.json();
-    print(json);
-  }
-
-  updateTicket(Ticket ticket) async {
-    var r = await Requests.patch(
-        "${DotEnv().env['BASE_URL']}/api/v2/ticket/${ticket.id}/doctor",
-        json: {
-          "id": ticket.doctorId
-        },
-        bodyEncoding: RequestBodyEncoding.JSON);
-    print("http status from ticket ${r.statusCode}");
-    // throw exception if not 200
-    r.raiseForStatus();
-    dynamic json = r.json();
-    print(json);
+    var ticketPayload = TicketPayload();
+    if(DotEnv().env['MODE_MOCK'] == 'false'){
+      try {
+        var r = await Requests.post(
+            "${DotEnv().env['BASE_URL']}/api/v2/ticket",
+            json: {
+              "locationId": ticket.locationId,
+              "name": ticket.name,
+              "phone": ticket.phone,
+              "sex": ticket.sex,
+              "pathology": ticket.pathology,
+              "age": ticket.age,
+            },
+            timeoutSeconds: 30,
+            bodyEncoding: RequestBodyEncoding.JSON);
+        print("http status from ticket ${r.statusCode}");
+        // throw exception if not 200
+        r.raiseForStatus();
+        ticketPayload = JsonMapper.deserialize<TicketPayload>(r.content());
+        // TODO handle in api tickets attribution to doctor if solo doctor on location ?
+        ticketPayload.payload.doctorId = doctor.id;
+        doctor.addPatient(ticketPayload.payload);
+        return ticketPayload;
+      } on Exception catch (e) {
+        logger.e(e);
+        ticketPayload.status = 'error';
+        return ticketPayload;
+      }
+    } else {
+      ticket.id = 1;
+      ticket.doctorId = doctor.id;
+      doctor.addPatient(ticketPayload.payload);
+      ticketPayload.status = 'ok';
+      return ticketPayload;
+    }
   }
 
   Future<DoctorPayload> createDoctor(Doctor newDoctor) async {
@@ -183,55 +184,69 @@ class HttpService {
         return linkDoctorLocationPayload;
       }
     } else {
+      doctor.locationId = locationId;
       linkDoctorLocationPayload.status = 'ok';
       return linkDoctorLocationPayload;
     }
   }
 
   // call if login return app status with doctors and tickets
-  getStatus() async {
-    String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/me");
-    Requests.getStoredCookies(hostname).then((cookie) {
-      print('Session : ' + cookie.toString());
-    });
-    var r = await Requests.get("${DotEnv().env['BASE_URL']}/api/v2/me");
-    print("http status from get me : ${r.statusCode}");
-    // throw exception if not 200
-    r.raiseForStatus();
-
-    // TODO hack to deserialize list
-    JsonMapper().useAdapter(JsonMapperAdapter(
-        valueDecorators: {
-          typeOf<List<Doctor>>(): (value) => value.cast<Doctor>()
-        })
-    );
-
-    final stateDoctorPayload = JsonMapper.deserialize<StateDoctorPayload>(r.content());
-
-    JsonMapper().useAdapter(JsonMapperAdapter(
-        valueDecorators: {
-          typeOf<List<Ticket>>(): (value) => value.cast<Ticket>()
-        })
-    );
-
-    final stateTicketPayload = JsonMapper.deserialize<StateTicketPayload>(r.content());
-
-    // TODO build new lists ?
-    // TODO order by date / position
-    // Doctors only ?
-    tickets.list.clear();
-
-    stateTicketPayload.tickets.forEach((ticket) {
-      if(ticket.doctorId == null){
-        tickets.addTicket(ticket);
-      } else {
-        int doctorIndex = stateDoctorPayload.doctors.indexWhere((doctor) {
-          return doctor.id == ticket.doctorId;
+  Future<StateDoctorPayload> getStatus() async {
+    var stateDoctorPayload = StateDoctorPayload();
+    if(DotEnv().env['MODE_MOCK'] == 'false'){
+      try {
+        String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/me");
+        Requests.getStoredCookies(hostname).then((cookie) {
+          print('Session : ' + cookie.toString());
         });
-        stateDoctorPayload.doctors.elementAt(doctorIndex).addPatient(ticket);
-      }
-    });
+        var r = await Requests.get("${DotEnv().env['BASE_URL']}/api/v2/me");
+        print("http status from get me : ${r.statusCode}");
+        // throw exception if not 200
+        r.raiseForStatus();
 
-    doctor.setDoctor(stateDoctorPayload.doctors.elementAt(0));
+        // TODO hack to deserialize list
+        JsonMapper().useAdapter(JsonMapperAdapter(
+            valueDecorators: {
+              typeOf<List<Doctor>>(): (value) => value.cast<Doctor>()
+            })
+        );
+
+        stateDoctorPayload = JsonMapper.deserialize<StateDoctorPayload>(r.content());
+
+        JsonMapper().useAdapter(JsonMapperAdapter(
+            valueDecorators: {
+              typeOf<List<Ticket>>(): (value) => value.cast<Ticket>()
+            })
+        );
+
+        final stateTicketPayload = JsonMapper.deserialize<StateTicketPayload>(r.content());
+
+        if(stateDoctorPayload.doctors.isNotEmpty){
+          // TODO check endpoint how to handle solo doctors
+          doctor.setDoctor(stateDoctorPayload.doctors.elementAt(0));
+
+          stateTicketPayload.tickets.forEach((ticket) {
+            if(ticket.doctorId == null){
+              ticket.doctorId = doctor.id;
+            }
+            doctor.addPatient(ticket);
+          });
+        } else {
+          logger.e("No doctors for session, clear cookies");
+          // TODO check api. session with no doctor. Clear cookie
+          Requests.clearStoredCookies(hostname);
+          stateDoctorPayload.status = 'error';
+        }
+
+        return stateDoctorPayload;
+      } on Exception catch (e) {
+        logger.e(e);
+        stateDoctorPayload.status = 'error';
+        return stateDoctorPayload;
+      }
+    } else {
+      stateDoctorPayload.status = 'ok';
+      return stateDoctorPayload;
+    }
   }
 }
