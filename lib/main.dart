@@ -21,7 +21,7 @@ Widget startWidget;
 Future<Widget> handleLogin() async {
   // TODO azap or azap-doctor or azap-location ?
   //if(sessionCookie.containsKey('actix-session') && sessionCookie['actix-session'].contains('azap') && sessionCookie['actix-session'].contains('azap-doctor') && sessionCookie['actix-session'].contains('azap-location')){
-  if(sessionCookie.containsKey('actix-session') && sessionCookie['actix-session'].contains('azap') && sessionCookie['actix-session'].contains('azap-doctor')){
+  if(DotEnv().env['MODE_MOCK'] == 'false' && sessionCookie.containsKey('actix-session') && sessionCookie['actix-session'].contains('azap') && sessionCookie['actix-session'].contains('azap-doctor')){
     var payload = await HttpService().getStatus();
     if(payload != null && payload.status == "ok" && doctor.locationId != null){
       SseService().initEventSource(doctor.locationId);
@@ -34,7 +34,7 @@ Future<Widget> handleLogin() async {
       //return VerifyPhone();
       return OnBoardingPage();
     }
-  } else if(sessionCookie.containsKey('actix-session')) {
+  } else if(DotEnv().env['MODE_MOCK'] == 'false' && sessionCookie.containsKey('actix-session')) {
     // TODO verify phone or login ? + logout
     //return VerifyPhone();
     return OnBoardingPage();
