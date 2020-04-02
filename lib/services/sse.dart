@@ -1,7 +1,6 @@
 import 'package:async/async.dart';
 import 'package:azap_app/classes/genericPayload.dart';
 import 'package:azap_app/classes/ticketPayload.dart';
-import 'package:azap_app/classes/doctorPayload.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:eventsource/eventsource.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -30,54 +29,17 @@ class SseService {
       print("New event:");
       print("  data: ${event.data}");
       final genericPayload = JsonMapper.deserialize<GenericPayload>(event.data);
-      // TODO new lists copy ?
       switch(genericPayload.type) {
-        case "newdoctor": {
-          final doctorPayload = JsonMapper.deserialize<DoctorPayload>(event.data);
-          doctor.setDoctor(doctorPayload.payload);
-          break;
-        }
         case "newticket": {
           final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
           // add new ticket
-          // TODO API change
+          // TODO API change, handle solo doctor
           ticketPayload.payload.doctorId = doctor.id;
-          if(ticketPayload.payload.doctorId != null){
-            doctor.addPatient(ticketPayload.payload);
-          } else {
-            tickets.addTicket(ticketPayload.payload);
-          }
+          doctor.addPatient(ticketPayload.payload);
           break;
         }
-        case "updateticket": {
-          final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
-          // TODO manual update vs call get list on back ?
-          // TODO keep position in list. Back will keep position
+        case "nextticket": {
 
-          //remove old ticket.
-          // TODO do nothing if vue already ok ?
-          if(ticketPayload.payload.doctorId != null){
-            int indexTicket = doctor.listPatients.indexWhere((ticket) {
-              return ticket.id == ticketPayload.payload.id;
-            });
-            if(indexTicket > -1){
-              doctor.listPatients.removeAt(indexTicket);
-            }
-          } else {
-            int indexTicket = tickets.list.indexWhere((ticket) {
-              return ticket.id == ticketPayload.payload.id;
-            });
-            if(indexTicket > -1){
-              tickets.list.removeAt(indexTicket);
-            }
-          }
-
-          // add new ticket
-          if(ticketPayload.payload.doctorId != null){
-            doctor.addPatient(ticketPayload.payload);
-          } else {
-            tickets.addTicket(ticketPayload.payload);
-          }
 
           break;
         }

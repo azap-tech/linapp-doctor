@@ -1,6 +1,7 @@
 import 'package:azap_app/components/kanban.dart';
 import 'package:azap_app/design_system/appbar.dart';
 import 'package:azap_app/design_system/azapColor.dart';
+import 'package:azap_app/design_system/button/regular_button.dart';
 import 'package:azap_app/design_system/decoration.dart';
 import 'package:azap_app/design_system/error/snackbar.dart';
 import 'package:azap_app/design_system/input_decoration.dart';
@@ -279,49 +280,45 @@ class _AddLocationPageState extends State<AddLocationPage> {
 
                                 newLocation.city = value;
 
-                                return null;
-                              })),
+                            return null;
+                          }
+                      )
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                  ),
+                  Text(
+                    "En cliquant sur le bouton ci-dessous j’accepte les conditions générales d’utilisation du service",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 5, 82, 136),
+                      fontSize: 12,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                  ),
+                  InkWell(
+                      child:
                       Text(
-                        "En cliquant sur le bouton ci-dessous j’accepte les conditions générales d’utilisation du service",
+                        "Voir les conditions générales d’utilisation du service.",
                         style: TextStyle(
+                          decoration: TextDecoration.underline,
                           color: Color.fromARGB(255, 5, 82, 136),
                           fontSize: 12,
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                      ),
-                      InkWell(
-                          child: Text(
-                            "Voir les conditions générales d’utilisation du service.",
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Color.fromARGB(255, 5, 82, 136),
-                              fontSize: 12,
-                            ),
-                          ),
-                          onTap: () => launch('http://azap.io/cgu')),
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: RaisedButton(
-                            color: AzapColor.accentColor,
-                            onPressed: createLocation,
-                            child: Text(
-                              'Valider',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontFamily: Theme.of(context)
-                                      .textTheme
-                                      .title
-                                      .fontFamily,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                      )
-                    ])))),
-        bottomNavigationBar: buildBottomNavBar());
+                      onTap: () => launch('http://azap.io/cgu')
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                  ),
+                  SizedBox(
+                      width: double.infinity,
+                      child: buildRegularButton("Valider", createLocation)
+                  ),
+                ])))
+        ),
+        bottomNavigationBar: buildBottomNavBar()
+    );
   }
 }
