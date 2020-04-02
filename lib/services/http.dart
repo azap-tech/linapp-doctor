@@ -84,7 +84,8 @@ class HttpService {
         ticketPayload = JsonMapper.deserialize<TicketPayload>(r.content());
         // TODO handle in api tickets attribution to doctor if solo doctor on location ?
         ticketPayload.payload.doctorId = doctor.id;
-        doctor.addPatient(ticketPayload.payload);
+        doctor.updatePatient(ticketPayload.payload);
+        doctor.reorderPatients();
         return ticketPayload;
       } on Exception catch (e) {
         logger.e(e);
@@ -95,6 +96,35 @@ class HttpService {
       ticket.id = 1;
       ticket.doctorId = doctor.id;
       doctor.addPatient(ticketPayload.payload);
+      ticketPayload.status = 'ok';
+      return ticketPayload;
+    }
+  }
+
+  nextTicket() async {
+    var ticketPayload = TicketPayload();
+    if(DotEnv().env['MODE_MOCK'] == 'false'){
+      try {
+        var r = await Requests.patch(
+            "${DotEnv().env['BASE_URL']}/api/v2/doctors/${doctor.id}/next", timeoutSeconds: 30);
+        print("http status from next ticket ${r.statusCode}");
+        // throw exception if not 200
+        r.raiseForStatus();
+        ticketPayload = JsonMapper.deserialize<TicketPayload>(r.content());
+        // TODO handle in api tickets attribution to doctor if solo doctor on location ?
+        ticketPayload.payload.doctorId = doctor.id;
+        doctor.nextPatient(ticketPayload.payload, ticketPayload.oldTicketId);
+        doctor.reorderPatients();
+        return ticketPayload;
+      } on Exception catch (e) {
+        logger.e(e);
+        ticketPayload.status = 'error';
+        return ticketPayload;
+      }
+    } else {
+      if(doctor.listPatients.isNotEmpty){
+        doctor.listPatients.removeAt(0);
+      }
       ticketPayload.status = 'ok';
       return ticketPayload;
     }
@@ -199,7 +229,7 @@ class HttpService {
         Requests.getStoredCookies(hostname).then((cookie) {
           print('Session : ' + cookie.toString());
         });
-        var r = await Requests.get("${DotEnv().env['BASE_URL']}/api/v2/me");
+        var r = await Requests.get("${DotEnv().env['BASE_URL']}/api/v2/me", timeoutSeconds: 30);
         print("http status from get me : ${r.statusCode}");
         // throw exception if not 200
         r.raiseForStatus();
@@ -222,7 +252,7 @@ class HttpService {
         final stateTicketPayload = JsonMapper.deserialize<StateTicketPayload>(r.content());
 
         if(stateDoctorPayload.doctors.isNotEmpty){
-          // TODO check endpoint how to handle solo doctors
+          // TODO check endpoint how to handle solo doctors or loggedDoctor
           doctor.setDoctor(stateDoctorPayload.doctors.elementAt(0));
 
           stateTicketPayload.tickets.forEach((ticket) {
@@ -231,6 +261,9 @@ class HttpService {
             }
             doctor.addPatient(ticket);
           });
+
+          doctor.reorderPatients();
+
         } else {
           logger.e("No doctors for session, clear cookies");
           // TODO check api. session with no doctor. Clear cookie

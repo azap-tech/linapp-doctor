@@ -1,6 +1,8 @@
 import 'dart:collection';
 import 'package:azap_app/components/takeTicket.dart';
 import 'package:azap_app/design_system/azapColor.dart';
+import 'package:azap_app/design_system/error/snackbar.dart';
+import 'package:azap_app/services/http.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/ticket.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,35 @@ class Kanban extends StatefulWidget {
 class _KanbanState extends State<Kanban> {
   List<Doctor> board;
   bool foldCards;
+  bool httpError;
+
+  buildBottomNavBar() {
+    if (httpError) {
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        setState(() {
+          httpError = false;
+        });
+      });
+      return buildSnackbarError("Une erreur est survenue");
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
+  nextPatient(){
+    // TODO loader and lock button on long http call
+    if (!httpError) {
+      HttpService().nextTicket().then((payload){
+        if(payload != null && payload.status == "ok"){
+          // list already updated
+        } else {
+          setState(() {
+            httpError = true;
+          });
+        }
+      });
+    }
+  }
 
   buildPatient(String name, int id) {
     Ticket testTicket = new Ticket();
@@ -39,11 +70,7 @@ class _KanbanState extends State<Kanban> {
   void initState() {
     board = List<Doctor>();
     foldCards = true;
-
-    // TODO delete
-    doctor.addPatient(buildPatient("Mme Michu", 999));
-    doctor.addPatient(buildPatient("Mme Michu 2", 998));
-
+    httpError = false;
     super.initState();
   }
 
@@ -100,9 +127,7 @@ class _KanbanState extends State<Kanban> {
                     style: TextStyle(fontSize: 20, color: Colors.white)
                 ),
                 color: AzapColor.accentColor,
-                onPressed: () {
-                  // TODO next ticket doctor
-                },
+                onPressed: nextPatient,
               )
             ],
           ),
@@ -161,6 +186,7 @@ class _KanbanState extends State<Kanban> {
               }).toList());
         }),
       ),
+        bottomNavigationBar: buildBottomNavBar()
     );
   }
 }

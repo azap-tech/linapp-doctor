@@ -52,7 +52,7 @@ class _TakeTicketState extends State<TakeTicket> {
       newTicket.doctorId = doctor.id;
       HttpService().createTicket(newTicket).then((payload){
         if(payload != null && payload.status == "ok"){
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => Kanban()),
