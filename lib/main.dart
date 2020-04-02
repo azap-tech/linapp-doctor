@@ -1,4 +1,3 @@
-import 'package:azap_app/components/kanban.dart';
 import 'package:azap_app/design_system/themeData.dart';
 import 'package:azap_app/components/onboarding_page.dart';
 import 'package:azap_app/stores/doctor.dart';
@@ -43,7 +42,7 @@ class MyApp extends StatelessWidget {
       title: 'Azap',
       debugShowCheckedModeBanner: false,
       theme: themeData(),
-      home: Kanban(),
+      home: handleLogin(),
     );
   }
 }
