@@ -6,4 +6,6 @@ class TicketPayload {
   Ticket payload;
   String type = "";
   String status = "";
+  int oldTicketId;
+  int doctorId;
 }

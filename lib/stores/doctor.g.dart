@@ -141,10 +141,40 @@ mixin _$Doctor on _Doctor, Store {
   }
 
   @override
+  void updatePatient(Ticket ticket) {
+    final _$actionInfo = _$_DoctorActionController.startAction();
+    try {
+      return super.updatePatient(ticket);
+    } finally {
+      _$_DoctorActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void nextPatient(Ticket newTicket, int oldTicket) {
+    final _$actionInfo = _$_DoctorActionController.startAction();
+    try {
+      return super.nextPatient(newTicket, oldTicket);
+    } finally {
+      _$_DoctorActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void removePatient(Ticket ticket) {
     final _$actionInfo = _$_DoctorActionController.startAction();
     try {
       return super.removePatient(ticket);
+    } finally {
+      _$_DoctorActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void reorderPatients() {
+    final _$actionInfo = _$_DoctorActionController.startAction();
+    try {
+      return super.reorderPatients();
     } finally {
       _$_DoctorActionController.endAction(_$actionInfo);
     }

@@ -36,8 +36,33 @@ abstract class _Doctor with Store {
   }
 
   @action
+  void updatePatient(Ticket ticket) {
+    int index = listPatients.indexWhere((patient) { return patient.id == ticket.id;});
+    if(index > -1){
+      listPatients.removeAt(index);
+      listPatients.insert(index, ticket);
+    } else {
+      listPatients.add(ticket);
+    }
+  }
+
+  @action
+  void nextPatient(Ticket newTicket, int oldTicket) {
+    int indexOld = listPatients.indexWhere((patient) { return patient.id == oldTicket;});
+    if(indexOld > -1){
+      listPatients.removeAt(indexOld);
+    }
+    updatePatient(newTicket);
+  }
+
+  @action
   void removePatient(Ticket ticket) {
     listPatients.remove(ticket);
+  }
+
+  @action
+  void reorderPatients() {
+    listPatients.sort((a,b) => a.creationTime.compareTo(b.creationTime));
   }
 
   @action
