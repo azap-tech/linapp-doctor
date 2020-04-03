@@ -26,105 +26,94 @@ class _TakeTicketState extends State<TakeTicket> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
           backgroundColor: AzapColor.mainColor,
           title: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          RaisedButton(
-            onPressed: () {
-              HttpService().createTicket(newTicket);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Kanban()),
-              );
-            },
-            color: AzapColor.accentColor,
-            child: const Text('Valider',
-                style: TextStyle(fontSize: 20, color: Colors.white)),
+            RaisedButton(
+              onPressed: () {
+                HttpService().createTicket(newTicket);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Kanban()),
+                );
+              },
+              color: AzapColor.accentColor,
+              child: const Text('Valider',
+                  style: TextStyle(fontSize: 20, color: Colors.white)),
+            ),
+            Image.asset('assets/logo.png', fit: BoxFit.contain, height: 32),
+          ])),
+      body: new Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          new Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                new Expanded(
+                  child: new RadioButtonGroup(labels: <String>[
+                    "HOMME",
+                    "FEMME",
+                  ], onSelected: (String selected) => newTicket.sex = selected),
+                ),
+              ],
+            ),
           ),
-              Image.asset(
-                  'assets/logo.png',
-                  fit: BoxFit.contain,
-                  height: 32
-              ),
-        ])),
-        body: new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          new Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                new Expanded(
+                  child: new TextFormField(
+                    autofocus: true,
+                    onChanged: (text) {
+                      newTicket.name = text;
+                    },
+                    decoration: InputDecoration(labelText: 'Entrez votre nom'),
+                  ),
+                ),
+                new Expanded(
+                  child: new TextFormField(
+                    onChanged: (text) {
+                      newTicket.pathology = text;
+                    },
+                    decoration: InputDecoration(labelText: 'Entrez un motif'),
+                  ),
+                )
+              ],
+            ),
+          ),
+          new Expanded(
+              child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               new Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new Expanded(
-                      child: new RadioButtonGroup(
-                          labels: <String>[
-                            "HOMME",
-                            "FEMME",
-                          ],
-                          onSelected: (String selected) => newTicket.sex = selected
-                      ),
-                    ),
-                  ],
-                ),
+                child: new TextField(
+                    onChanged: (text) {
+                      newTicket.phone = text;
+                    },
+                    decoration: InputDecoration(
+                        labelText: 'Entrez un numéro de téléphone'),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ]),
               ),
               new Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new Expanded(
-                      child: new TextFormField(
-                        autofocus: true,
-                        onChanged: (text) {
-                          newTicket.name = text;
-                        },
-                        decoration:
-                            InputDecoration(labelText: 'Entrez votre nom'),
-                      ),
-                    ),
-                    new Expanded(
-                      child: new TextFormField(
-                        onChanged: (text) {
-                          newTicket.pathology = text;
-                        },
-                        decoration:
-                            InputDecoration(labelText: 'Entrez un motif'),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              new Expanded(
-                  child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Expanded(
-                    child: new TextField(
-                        onChanged: (text) {
-                          newTicket.phone = text;
-                        },
-                        decoration: InputDecoration(
-                            labelText: 'Entrez un numéro de téléphone'),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          WhitelistingTextInputFormatter.digitsOnly
-                        ]),
-                  ),
-                  new Expanded(
-                      child: new TextField(
-                          onChanged: (text) {
-                            newTicket.age = int.parse(text);
-                          },
-                          decoration:
+                  child: new TextField(
+                      onChanged: (text) {
+                        newTicket.age = int.parse(text);
+                      },
+                      decoration:
                           InputDecoration(labelText: 'Entrez votre age'),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter.digitsOnly
-                          ])
-                  )
-
-                ],
-              ))
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                    WhitelistingTextInputFormatter.digitsOnly
+                  ]))
             ],
-          ),
-        );
+          ))
+        ],
+      ),
+    );
   }
 }
