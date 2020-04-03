@@ -6,7 +6,7 @@ import 'package:azap_app/components/onboarding_page.dart';
 import 'package:azap_app/services/http.dart';
 import 'package:azap_app/services/sse.dart';
 import 'package:azap_app/stores/doctor.dart';
-import 'package:azap_app/stores/queulines.dart';
+import 'package:azap_app/stores/queue.dart';
 import 'package:flutter/material.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart' show JsonMapper;
 import 'package:dart_json_mapper_mobx/dart_json_mapper_mobx.dart' show mobXAdapter;
@@ -16,7 +16,7 @@ import 'main.reflectable.dart' show initializeReflectable;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 final doctor = Doctor();
-final queuStore = Queulines();
+final queue = Queue();
 Map<String, String> sessionCookie;
 Widget startWidget;
 

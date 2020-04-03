@@ -53,7 +53,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
           // TODO move login on sms validation + send pincode sms ? or display
           HttpService().login(doctor.id, payload.pincode).then((payload) {
             if(payload != null && payload.status == "ok"){
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   // TODO go sms validation, then create place, then doctor status, then kanban

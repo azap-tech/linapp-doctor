@@ -35,9 +35,9 @@ class SseService {
             final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
             // TODO API change, handle solo doctor
             ticketPayload.payload.doctorId = doctor.id;
-            queuStore.queulines.elementAt(0).updateTicket(ticketPayload.payload);
+            queue.updateTicket(ticketPayload.payload);
             // TODO on create ticket send all .
-            queuStore.queulines.elementAt(0).reorderTickets();
+            queue.reorderTickets();
             break;
           }
           case "nextticket": {
@@ -47,8 +47,8 @@ class SseService {
                 })
             );
             final queuePayload = JsonMapper.deserialize<QueuePayload>(event.data);
-            queuStore.queulines.clear();
-            queuStore.queulines.addAll(queuePayload.queulines);
+            queue.tickets.clear();
+            queue.replaceQueue(queuePayload.queulines.elementAt(0));
             break;
           }
         }

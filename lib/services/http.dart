@@ -2,11 +2,9 @@ import 'package:azap_app/classes/doctorPayload.dart';
 import 'package:azap_app/classes/genericPayload.dart';
 import 'package:azap_app/classes/locationPayload.dart';
 import 'package:azap_app/classes/queuePayload.dart';
-import 'package:azap_app/classes/ticketPayload.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/location.dart';
 import 'package:azap_app/stores/queue.dart';
-import 'package:azap_app/stores/ticket.dart';
 import 'package:azap_app/main.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -61,46 +59,6 @@ class HttpService {
     }
   }
 
-  // auto store cookie in storage
-  createTicket(Ticket ticket) async {
-    var ticketPayload = TicketPayload();
-    if(DotEnv().env['MODE_MOCK'] == 'false'){
-      try {
-        var r = await Requests.post(
-            "${DotEnv().env['BASE_URL']}/api/v2/ticket",
-            json: {
-              "locationId": ticket.locationId,
-              "name": ticket.name,
-              "phone": ticket.phone,
-              "sex": ticket.sex,
-              "pathology": ticket.pathology,
-              "age": ticket.age,
-            },
-            timeoutSeconds: 30,
-            bodyEncoding: RequestBodyEncoding.JSON);
-        print("http status from ticket ${r.statusCode}");
-        // throw exception if not 200
-        r.raiseForStatus();
-        ticketPayload = JsonMapper.deserialize<TicketPayload>(r.content());
-        // TODO handle in api tickets attribution to doctor if solo doctor on location ?
-        ticketPayload.payload.doctorId = doctor.id;
-        queuStore.queulines.elementAt(0).updateTicket(ticketPayload.payload);
-        queuStore.queulines.elementAt(0).reorderTickets();
-        return ticketPayload;
-      } on Exception catch (e) {
-        logger.e(e);
-        ticketPayload.status = 'error';
-        return ticketPayload;
-      }
-    } else {
-      ticket.id = 1;
-      ticket.doctorId = doctor.id;
-      queuStore.queulines.elementAt(0).addTicket(ticketPayload.payload);
-      ticketPayload.status = 'ok';
-      return ticketPayload;
-    }
-  }
-
   Future<QueuePayload> nextTicket() async {
     var queuePayload = QueuePayload();
     if(DotEnv().env['MODE_MOCK'] == 'false'){
@@ -119,8 +77,8 @@ class HttpService {
 
         queuePayload = JsonMapper.deserialize<QueuePayload>(r.content());
 
-        queuStore.queulines.clear();
-        queuStore.queulines.addAll(queuePayload.queulines);
+        queue.tickets.clear();
+        queue.replaceQueue(queuePayload.queulines.elementAt(0));
 
         return queuePayload;
       } on Exception catch (e) {
@@ -129,9 +87,6 @@ class HttpService {
         return queuePayload;
       }
     } else {
-      if(queuStore.queulines.elementAt(0).tickets.isNotEmpty){
-        queuStore.queulines.elementAt(0).tickets.removeAt(0);
-      }
       queuePayload.status = 'ok';
       return queuePayload;
     }
@@ -165,6 +120,10 @@ class HttpService {
     } else {
       newDoctor.id = 1;
       doctor.setDoctor(newDoctor);
+      Queue docQueue = new Queue();
+      docQueue.doctorId = newDoctor.id;
+      docQueue.name = newDoctor.name;
+      queue.replaceQueue(docQueue);
       doctorPayload.status = 'ok';
       return doctorPayload;
     }
@@ -231,8 +190,8 @@ class HttpService {
   Future<QueuePayload> getStatus() async {
     var queuePayload = QueuePayload();
     if(DotEnv().env['MODE_MOCK'] == 'false'){
+      String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/me");
       try {
-        String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/me");
         Requests.getStoredCookies(hostname).then((cookie) {
           print('Session : ' + cookie.toString());
         });
@@ -251,8 +210,8 @@ class HttpService {
 
         if(queuePayload.queulines.isNotEmpty){
           doctor.setDoctor(queuePayload.doctor);
-          queuStore.queulines.clear();
-          queuStore.queulines.addAll(queuePayload.queulines);
+          queue.tickets.clear();
+          queue.replaceQueue(queuePayload.queulines.elementAt(0));
         } else {
           logger.e("No doctors for session, clear cookies");
           // TODO check api. session with no doctor. Clear cookie
@@ -263,6 +222,7 @@ class HttpService {
         return queuePayload;
       } on Exception catch (e) {
         logger.e(e);
+        Requests.clearStoredCookies(hostname);
         queuePayload.status = 'error';
         return queuePayload;
       }

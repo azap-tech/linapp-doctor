@@ -46,4 +46,12 @@ abstract class _Queue with Store {
       tickets.add(ticket);
     }
   }
+
+  @action
+  void replaceQueue(Queue queue) {
+    tickets = queue.tickets;
+    doctorId = queue.doctorId;
+    locationId = queue.locationId;
+    name = queue.name;
+  }
 }

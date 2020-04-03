@@ -31,9 +31,6 @@ abstract class _Ticket with Store {
   String phone;
 
   @observable
-  String pathology;
-
-  @observable
   DateTime canceledTime;
 
   @observable

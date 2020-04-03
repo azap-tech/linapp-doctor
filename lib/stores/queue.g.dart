@@ -120,6 +120,16 @@ mixin _$Queue on _Queue, Store {
   }
 
   @override
+  void replaceQueue(Queue queue) {
+    final _$actionInfo = _$_QueueActionController.startAction();
+    try {
+      return super.replaceQueue(queue);
+    } finally {
+      _$_QueueActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     final string =
         'tickets: ${tickets.toString()},doctorId: ${doctorId.toString()},locationId: ${locationId.toString()},name: ${name.toString()}';

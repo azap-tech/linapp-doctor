@@ -1,8 +1,8 @@
-import 'package:azap_app/components/takeTicket.dart';
 import 'package:azap_app/design_system/azapColor.dart';
 import 'package:azap_app/design_system/error/snackbar.dart';
 import 'package:azap_app/services/http.dart';
 import 'package:azap_app/stores/doctor.dart';
+import 'package:azap_app/stores/queue.dart';
 import 'package:azap_app/stores/ticket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -22,7 +22,7 @@ class Kanban extends StatefulWidget {
 }
 
 class _KanbanState extends State<Kanban> {
-  List<Doctor> board;
+  Queue board;
   bool foldCards;
   bool httpError;
 
@@ -44,7 +44,9 @@ class _KanbanState extends State<Kanban> {
     if (!httpError) {
       HttpService().nextTicket().then((payload){
         if(payload != null && payload.status == "ok"){
-          // list already updated
+          setState(() {
+            board.tickets.clear();
+          });
         } else {
           setState(() {
             httpError = true;
@@ -57,7 +59,7 @@ class _KanbanState extends State<Kanban> {
   @override
   void initState() {
     super.initState();
-    board = List<Doctor>();
+    board = Queue();
     foldCards = true;
     httpError = false;
   }
@@ -87,10 +89,10 @@ class _KanbanState extends State<Kanban> {
                 child: ListView.builder(
                   primary: false,
                   shrinkWrap: true,
-                  itemCount: queuStore.queulines.elementAt(0).tickets.length,
+                  itemCount: queue.tickets.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ItemWidget(
-                      ticket: queuStore.queulines.elementAt(0).tickets.elementAt(index),
+                      ticket: queue.tickets.elementAt(index),
                       index: index,
                       foldCard: foldCards,
                     );
@@ -120,20 +122,15 @@ class _KanbanState extends State<Kanban> {
       backgroundColor: Color(0xFFEAF4FB),
       appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
+          centerTitle: true,
           title: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                RaisedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TakeTicket()),
-                    );
-                  },
-                  color: Theme.of(context).accentColor,
-                  child: const Text('Ajouter un patient',
-                      style: TextStyle(fontSize: 20, color: Colors.white)),
+                Image.asset(
+                    'assets/logo.png',
+                    fit: BoxFit.contain,
+                    height: 32
                 ),
                 RaisedButton(
                   onPressed: () {
@@ -149,9 +146,9 @@ class _KanbanState extends State<Kanban> {
       body: Padding(
         padding: EdgeInsets.all(27),
         child: Observer(builder: (_) {
-          board.clear();
+          board.tickets.clear();
           if (doctor.id != null) {
-            board.add(doctor);
+            board = queue;
           }
           return buildKanbanList(doctor);
         }),
@@ -215,12 +212,6 @@ class ItemWidget extends StatelessWidget {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    ticket.pathology,
-                    style: TextStyle(
-                      color: index == 0 ? Colors.white : AzapColor.secondColor,
-                    ),
-                  ),
                   Text(
                     ticket.sex,
                     style: TextStyle(

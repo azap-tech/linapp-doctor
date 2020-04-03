@@ -67,7 +67,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
               .linkDoctorToLocation(doctor.id, payload.id)
               .then((payloadLink) {
             if (payloadLink != null && payloadLink.status == "ok") {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     // TODO go doctor status, then kanban
