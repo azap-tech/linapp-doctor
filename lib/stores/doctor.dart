@@ -9,8 +9,6 @@ class Doctor extends _Doctor with _$Doctor {}
 
 @jsonSerializable
 abstract class _Doctor with Store {
-  @observable
-  ObservableList<Ticket> listPatients = ObservableList<Ticket>();
 
   @observable
   int id;
@@ -30,40 +28,8 @@ abstract class _Doctor with Store {
   @observable
   bool rgpd;
 
-  @action
-  void addPatient(Ticket ticket) {
-    listPatients.add(ticket);
-  }
-
-  @action
-  void updatePatient(Ticket ticket) {
-    int index = listPatients.indexWhere((patient) { return patient.id == ticket.id;});
-    if(index > -1){
-      listPatients.removeAt(index);
-      listPatients.insert(index, ticket);
-    } else {
-      listPatients.add(ticket);
-    }
-  }
-
-  @action
-  void nextPatient(Ticket newTicket, int oldTicket) {
-    int indexOld = listPatients.indexWhere((patient) { return patient.id == oldTicket;});
-    if(indexOld > -1){
-      listPatients.removeAt(indexOld);
-    }
-    updatePatient(newTicket);
-  }
-
-  @action
-  void removePatient(Ticket ticket) {
-    listPatients.remove(ticket);
-  }
-
-  @action
-  void reorderPatients() {
-    listPatients.sort((a,b) => a.creationTime.compareTo(b.creationTime));
-  }
+  @observable
+  bool isManager;
 
   @action
   void setDoctor(Doctor doctor) {
@@ -73,6 +39,5 @@ abstract class _Doctor with Store {
     phone = doctor.phone;
     email = doctor.email;
     rgpd = doctor.rgpd;
-    listPatients = doctor.listPatients;
   }
 }

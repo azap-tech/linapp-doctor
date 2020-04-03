@@ -1,6 +1,8 @@
 import 'package:async/async.dart';
 import 'package:azap_app/classes/genericPayload.dart';
+import 'package:azap_app/classes/queuePayload.dart';
 import 'package:azap_app/classes/ticketPayload.dart';
+import 'package:azap_app/stores/queue.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:eventsource/eventsource.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -33,14 +35,20 @@ class SseService {
             final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
             // TODO API change, handle solo doctor
             ticketPayload.payload.doctorId = doctor.id;
-            doctor.updatePatient(ticketPayload.payload);
-            doctor.reorderPatients();
+            queuStore.queulines.elementAt(0).updateTicket(ticketPayload.payload);
+            // TODO on create ticket send all .
+            queuStore.queulines.elementAt(0).reorderTickets();
             break;
           }
           case "nextticket": {
-            final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
-            doctor.nextPatient(ticketPayload.payload, ticketPayload.oldTicketId);
-            doctor.reorderPatients();
+            JsonMapper().useAdapter(JsonMapperAdapter(
+                valueDecorators: {
+                  typeOf<List<Queue>>(): (value) => value.cast<Queue>()
+                })
+            );
+            final queuePayload = JsonMapper.deserialize<QueuePayload>(event.data);
+            queuStore.queulines.clear();
+            queuStore.queulines.addAll(queuePayload.queulines);
             break;
           }
         }

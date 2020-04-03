@@ -54,18 +54,6 @@ class _KanbanState extends State<Kanban> {
     }
   }
 
-  buildPatient(String name, int id) {
-    Ticket testTicket = new Ticket();
-    testTicket.name = name;
-    testTicket.id = id;
-    testTicket.age = 99;
-    testTicket.pathology = "Covid 19";
-    testTicket.sex = "FEMME";
-    testTicket.doctorId = 999;
-    testTicket.creationTime = DateTime.now();
-    return testTicket;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -99,10 +87,10 @@ class _KanbanState extends State<Kanban> {
                 child: ListView.builder(
                   primary: false,
                   shrinkWrap: true,
-                  itemCount: doctor.listPatients.length,
+                  itemCount: queuStore.queulines.elementAt(0).tickets.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ItemWidget(
-                      ticket: doctor.listPatients.elementAt(index),
+                      ticket: queuStore.queulines.elementAt(0).tickets.elementAt(index),
                       index: index,
                       foldCard: foldCards,
                     );

@@ -9,23 +9,6 @@ part of 'doctor.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$Doctor on _Doctor, Store {
-  final _$listPatientsAtom = Atom(name: '_Doctor.listPatients');
-
-  @override
-  ObservableList<Ticket> get listPatients {
-    _$listPatientsAtom.context.enforceReadPolicy(_$listPatientsAtom);
-    _$listPatientsAtom.reportObserved();
-    return super.listPatients;
-  }
-
-  @override
-  set listPatients(ObservableList<Ticket> value) {
-    _$listPatientsAtom.context.conditionallyRunInAction(() {
-      super.listPatients = value;
-      _$listPatientsAtom.reportChanged();
-    }, _$listPatientsAtom, name: '${_$listPatientsAtom.name}_set');
-  }
-
   final _$idAtom = Atom(name: '_Doctor.id');
 
   @override
@@ -128,57 +111,24 @@ mixin _$Doctor on _Doctor, Store {
     }, _$rgpdAtom, name: '${_$rgpdAtom.name}_set');
   }
 
+  final _$isManagerAtom = Atom(name: '_Doctor.isManager');
+
+  @override
+  bool get isManager {
+    _$isManagerAtom.context.enforceReadPolicy(_$isManagerAtom);
+    _$isManagerAtom.reportObserved();
+    return super.isManager;
+  }
+
+  @override
+  set isManager(bool value) {
+    _$isManagerAtom.context.conditionallyRunInAction(() {
+      super.isManager = value;
+      _$isManagerAtom.reportChanged();
+    }, _$isManagerAtom, name: '${_$isManagerAtom.name}_set');
+  }
+
   final _$_DoctorActionController = ActionController(name: '_Doctor');
-
-  @override
-  void addPatient(Ticket ticket) {
-    final _$actionInfo = _$_DoctorActionController.startAction();
-    try {
-      return super.addPatient(ticket);
-    } finally {
-      _$_DoctorActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void updatePatient(Ticket ticket) {
-    final _$actionInfo = _$_DoctorActionController.startAction();
-    try {
-      return super.updatePatient(ticket);
-    } finally {
-      _$_DoctorActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void nextPatient(Ticket newTicket, int oldTicket) {
-    final _$actionInfo = _$_DoctorActionController.startAction();
-    try {
-      return super.nextPatient(newTicket, oldTicket);
-    } finally {
-      _$_DoctorActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void removePatient(Ticket ticket) {
-    final _$actionInfo = _$_DoctorActionController.startAction();
-    try {
-      return super.removePatient(ticket);
-    } finally {
-      _$_DoctorActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void reorderPatients() {
-    final _$actionInfo = _$_DoctorActionController.startAction();
-    try {
-      return super.reorderPatients();
-    } finally {
-      _$_DoctorActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   void setDoctor(Doctor doctor) {
@@ -193,7 +143,7 @@ mixin _$Doctor on _Doctor, Store {
   @override
   String toString() {
     final string =
-        'listPatients: ${listPatients.toString()},id: ${id.toString()},locationId: ${locationId.toString()},name: ${name.toString()},email: ${email.toString()},phone: ${phone.toString()},rgpd: ${rgpd.toString()}';
+        'id: ${id.toString()},locationId: ${locationId.toString()},name: ${name.toString()},email: ${email.toString()},phone: ${phone.toString()},rgpd: ${rgpd.toString()},isManager: ${isManager.toString()}';
     return '{$string}';
   }
 }

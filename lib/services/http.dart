@@ -1,13 +1,13 @@
 import 'package:azap_app/classes/doctorPayload.dart';
 import 'package:azap_app/classes/genericPayload.dart';
 import 'package:azap_app/classes/locationPayload.dart';
-import 'package:azap_app/classes/stateDoctorPayload.dart';
+import 'package:azap_app/classes/queuePayload.dart';
 import 'package:azap_app/classes/ticketPayload.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:azap_app/stores/location.dart';
+import 'package:azap_app/stores/queue.dart';
 import 'package:azap_app/stores/ticket.dart';
 import 'package:azap_app/main.dart';
-import 'package:azap_app/classes/stateTicketPayload.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
@@ -84,8 +84,8 @@ class HttpService {
         ticketPayload = JsonMapper.deserialize<TicketPayload>(r.content());
         // TODO handle in api tickets attribution to doctor if solo doctor on location ?
         ticketPayload.payload.doctorId = doctor.id;
-        doctor.updatePatient(ticketPayload.payload);
-        doctor.reorderPatients();
+        queuStore.queulines.elementAt(0).updateTicket(ticketPayload.payload);
+        queuStore.queulines.elementAt(0).reorderTickets();
         return ticketPayload;
       } on Exception catch (e) {
         logger.e(e);
@@ -95,14 +95,14 @@ class HttpService {
     } else {
       ticket.id = 1;
       ticket.doctorId = doctor.id;
-      doctor.addPatient(ticketPayload.payload);
+      queuStore.queulines.elementAt(0).addTicket(ticketPayload.payload);
       ticketPayload.status = 'ok';
       return ticketPayload;
     }
   }
 
-  nextTicket() async {
-    var ticketPayload = TicketPayload();
+  Future<QueuePayload> nextTicket() async {
+    var queuePayload = QueuePayload();
     if(DotEnv().env['MODE_MOCK'] == 'false'){
       try {
         var r = await Requests.patch(
@@ -110,23 +110,30 @@ class HttpService {
         print("http status from next ticket ${r.statusCode}");
         // throw exception if not 200
         r.raiseForStatus();
-        ticketPayload = JsonMapper.deserialize<TicketPayload>(r.content());
-        // TODO handle in api tickets attribution to doctor if solo doctor on location ?
-        ticketPayload.payload.doctorId = doctor.id;
-        doctor.nextPatient(ticketPayload.payload, ticketPayload.oldTicketId);
-        doctor.reorderPatients();
-        return ticketPayload;
+
+        JsonMapper().useAdapter(JsonMapperAdapter(
+            valueDecorators: {
+              typeOf<List<Queue>>(): (value) => value.cast<Queue>()
+            })
+        );
+
+        queuePayload = JsonMapper.deserialize<QueuePayload>(r.content());
+
+        queuStore.queulines.clear();
+        queuStore.queulines.addAll(queuePayload.queulines);
+
+        return queuePayload;
       } on Exception catch (e) {
         logger.e(e);
-        ticketPayload.status = 'error';
-        return ticketPayload;
+        queuePayload.status = 'error';
+        return queuePayload;
       }
     } else {
-      if(doctor.listPatients.isNotEmpty){
-        doctor.listPatients.removeAt(0);
+      if(queuStore.queulines.elementAt(0).tickets.isNotEmpty){
+        queuStore.queulines.elementAt(0).tickets.removeAt(0);
       }
-      ticketPayload.status = 'ok';
-      return ticketPayload;
+      queuePayload.status = 'ok';
+      return queuePayload;
     }
   }
 
@@ -221,8 +228,8 @@ class HttpService {
   }
 
   // call if login return app status with doctors and tickets
-  Future<StateDoctorPayload> getStatus() async {
-    var stateDoctorPayload = StateDoctorPayload();
+  Future<QueuePayload> getStatus() async {
+    var queuePayload = QueuePayload();
     if(DotEnv().env['MODE_MOCK'] == 'false'){
       try {
         String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/me");
@@ -234,52 +241,34 @@ class HttpService {
         // throw exception if not 200
         r.raiseForStatus();
 
-        // TODO hack to deserialize list
         JsonMapper().useAdapter(JsonMapperAdapter(
             valueDecorators: {
-              typeOf<List<Doctor>>(): (value) => value.cast<Doctor>()
+              typeOf<List<Queue>>(): (value) => value.cast<Queue>()
             })
         );
 
-        stateDoctorPayload = JsonMapper.deserialize<StateDoctorPayload>(r.content());
+        queuePayload = JsonMapper.deserialize<QueuePayload>(r.content());
 
-        JsonMapper().useAdapter(JsonMapperAdapter(
-            valueDecorators: {
-              typeOf<List<Ticket>>(): (value) => value.cast<Ticket>()
-            })
-        );
-
-        final stateTicketPayload = JsonMapper.deserialize<StateTicketPayload>(r.content());
-
-        if(stateDoctorPayload.doctors.isNotEmpty){
-          // TODO check endpoint how to handle solo doctors or loggedDoctor
-          doctor.setDoctor(stateDoctorPayload.doctors.elementAt(0));
-
-          stateTicketPayload.tickets.forEach((ticket) {
-            if(ticket.doctorId == null){
-              ticket.doctorId = doctor.id;
-            }
-            doctor.addPatient(ticket);
-          });
-
-          doctor.reorderPatients();
-
+        if(queuePayload.queulines.isNotEmpty){
+          doctor.setDoctor(queuePayload.doctor);
+          queuStore.queulines.clear();
+          queuStore.queulines.addAll(queuePayload.queulines);
         } else {
           logger.e("No doctors for session, clear cookies");
           // TODO check api. session with no doctor. Clear cookie
           Requests.clearStoredCookies(hostname);
-          stateDoctorPayload.status = 'error';
+          queuePayload.status = 'error';
         }
 
-        return stateDoctorPayload;
+        return queuePayload;
       } on Exception catch (e) {
         logger.e(e);
-        stateDoctorPayload.status = 'error';
-        return stateDoctorPayload;
+        queuePayload.status = 'error';
+        return queuePayload;
       }
     } else {
-      stateDoctorPayload.status = 'ok';
-      return stateDoctorPayload;
+      queuePayload.status = 'ok';
+      return queuePayload;
     }
   }
 }
