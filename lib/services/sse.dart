@@ -33,10 +33,8 @@ class SseService {
         switch(genericPayload.type) {
           case "newticket": {
             final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
-            // TODO API change, handle solo doctor
             ticketPayload.payload.doctorId = doctor.id;
             queue.updateTicket(ticketPayload.payload);
-            // TODO on create ticket send all .
             queue.reorderTickets();
             break;
           }
@@ -48,7 +46,7 @@ class SseService {
             );
             final queuePayload = JsonMapper.deserialize<QueuePayload>(event.data);
             queue.tickets.clear();
-            queue.replaceQueue(queuePayload.queulines.elementAt(0));
+            queue.replaceQueue(queuePayload.queueLines.elementAt(0));
             break;
           }
         }

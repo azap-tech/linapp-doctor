@@ -63,9 +63,10 @@ class _AddLocationPageState extends State<AddLocationPage> {
           // TODO lock sse fail init ? and move logic in services
           SseService().initEventSource(payload.id);
           // TODO handle case fail link but location created
-          HttpService()
-              .linkDoctorToLocation(doctor.id, payload.id)
-              .then((payloadLink) {
+          Location location = new Location();
+          location.name = payload.name;
+          location.id = payload.id;
+          HttpService().linkDoctorToLocation(doctor.id, location).then((payloadLink) {
             if (payloadLink != null && payloadLink.status == "ok") {
               Navigator.pushReplacement(
                 context,

@@ -6,5 +6,5 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 class QueuePayload {
   Doctor doctor;
   String status = "";
-  List<Queue> queulines;
+  List<Queue> queueLines;
 }

@@ -22,7 +22,7 @@ Widget startWidget;
 
 Future<Widget> handleLogin() async {
   if(DotEnv().env['MODE_MOCK'] == 'false'){
-    var payload = await HttpService().getStatus();
+    /*var payload = await HttpService().getStatus();
     if(payload != null && payload.status == "ok" && doctor.locationId != null){
       SseService().initEventSource(doctor.locationId);
       // TODO go to doctor state
@@ -31,9 +31,9 @@ Future<Widget> handleLogin() async {
       return AddLocationPage();
     } else if(sessionCookie.containsKey('actix-session')) {
       return VerifyPhone();
-    } else {
+    } else {*/
       return OnBoardingPage();
-    }
+    //}
   }else {
     return OnBoardingPage();
   }

@@ -17,6 +17,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
       return;
     }
     // TODO : A changer par la vrai vérification du code
+    // TODO : login + reload state
     setState(() {
       if (_codeSMSController.text.length < 5) {
         errorCode = true;
@@ -33,7 +34,6 @@ class _VerifyPhoneState extends State<VerifyPhone> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
       appBar: buildAppBar(context),
       body: SingleChildScrollView(
         child: Padding(

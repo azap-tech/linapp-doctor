@@ -1,7 +1,10 @@
 import 'package:azap_app/components/doctor_profile_page.dart';
 import 'package:azap_app/design_system/appbar.dart';
+import 'package:azap_app/components/kanban.dart';
 import 'package:azap_app/design_system/azapColor.dart';
 import 'package:flutter/material.dart';
+
+import '../main.dart';
 
 class RegisterLoginPage extends StatelessWidget {
   const RegisterLoginPage({Key key}) : super(key: key);
@@ -14,13 +17,14 @@ class RegisterLoginPage extends StatelessWidget {
 
   void _goRegister(context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => DoctorProfilePage()),
+      MaterialPageRoute(builder: (_) => doctor.id == null ? DoctorProfilePage() : Kanban()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: buildAppBar(context),
       body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
