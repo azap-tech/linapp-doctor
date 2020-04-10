@@ -49,7 +49,8 @@ abstract class _Queue with Store {
 
   @action
   void replaceQueue(Queue queue) {
-    tickets = queue.tickets;
+    tickets.clear();
+    tickets.addAll(queue.tickets);
     doctorId = queue.doctorId;
     locationId = queue.locationId;
     name = queue.name;

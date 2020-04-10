@@ -22,7 +22,6 @@ class Kanban extends StatefulWidget {
 }
 
 class _KanbanState extends State<Kanban> {
-  Queue board;
   bool foldCards;
   bool httpError;
 
@@ -44,9 +43,6 @@ class _KanbanState extends State<Kanban> {
     if (!httpError) {
       HttpService().nextTicket().then((payload){
         if(payload != null && payload.status == "ok"){
-          setState(() {
-            board.tickets.clear();
-          });
         } else {
           setState(() {
             httpError = true;
@@ -59,7 +55,6 @@ class _KanbanState extends State<Kanban> {
   @override
   void initState() {
     super.initState();
-    board = Queue();
     foldCards = true;
     httpError = false;
   }
@@ -145,10 +140,6 @@ class _KanbanState extends State<Kanban> {
       body: Padding(
         padding: EdgeInsets.all(27),
         child: Observer(builder: (_) {
-          board.tickets.clear();
-          if (doctor.id != null) {
-            board = queue;
-          }
           return buildKanbanList(doctor);
         }),
       ),
