@@ -1,10 +1,12 @@
 import 'package:async/async.dart';
 import 'package:azap_app/classes/genericPayload.dart';
+import 'package:azap_app/classes/queuePayload.dart';
 import 'package:azap_app/classes/ticketPayload.dart';
-import 'package:azap_app/classes/doctorPayload.dart';
+import 'package:azap_app/stores/queue.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:eventsource/eventsource.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:logger/logger.dart';
 
 import '../main.dart';
 
@@ -12,6 +14,7 @@ class SseService {
   static final SseService _instance = SseService._internal();
   final _initEventSource = new AsyncMemoizer<EventSource>();
   static EventSource eventSource;
+  var logger = Logger();
 
   factory SseService() {
     return _instance;
@@ -25,63 +28,30 @@ class SseService {
       eventSource = await _initEventSource.runOnce(() async {
         return await EventSource.connect("${DotEnv().env['BASE_URL']}/api/v1/location/events?token=${storeId}");
       });
+      eventSource.listen((Event event) {
+        logger.i("New event data: ${event.data}");
+        final genericPayload = JsonMapper.deserialize<GenericPayload>(event.data);
+        switch(genericPayload.type) {
+          case "newticket": {
+            final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
+            ticketPayload.payload.doctorId = doctor.id;
+            queue.updateTicket(ticketPayload.payload);
+            queue.reorderTickets();
+            break;
+          }
+          case "nextticket": {
+            JsonMapper().useAdapter(JsonMapperAdapter(
+                valueDecorators: {
+                  typeOf<List<Queue>>(): (value) => value.cast<Queue>()
+                })
+            );
+            final queuePayload = JsonMapper.deserialize<QueuePayload>(event.data);
+            queue.tickets.clear();
+            queue.replaceQueue(queuePayload.queueLines.elementAt(0));
+            break;
+          }
+        }
+      });
     }
-    eventSource.listen((Event event) {
-      print("New event:");
-      print("  data: ${event.data}");
-      final genericPayload = JsonMapper.deserialize<GenericPayload>(event.data);
-      // TODO new lists copy ?
-      switch(genericPayload.type) {
-        case "newdoctor": {
-          final doctorPayload = JsonMapper.deserialize<DoctorPayload>(event.data);
-          doctor.setDoctor(doctorPayload.payload);
-          break;
-        }
-        case "newticket": {
-          final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
-          // add new ticket
-          // TODO API change
-          ticketPayload.payload.doctorId = doctor.id;
-          if(ticketPayload.payload.doctorId != null){
-            doctor.addPatient(ticketPayload.payload);
-          } else {
-            tickets.addTicket(ticketPayload.payload);
-          }
-          break;
-        }
-        case "updateticket": {
-          final ticketPayload = JsonMapper.deserialize<TicketPayload>(event.data);
-          // TODO manual update vs call get list on back ?
-          // TODO keep position in list. Back will keep position
-
-          //remove old ticket.
-          // TODO do nothing if vue already ok ?
-          if(ticketPayload.payload.doctorId != null){
-            int indexTicket = doctor.listPatients.indexWhere((ticket) {
-              return ticket.id == ticketPayload.payload.id;
-            });
-            if(indexTicket > -1){
-              doctor.listPatients.removeAt(indexTicket);
-            }
-          } else {
-            int indexTicket = tickets.list.indexWhere((ticket) {
-              return ticket.id == ticketPayload.payload.id;
-            });
-            if(indexTicket > -1){
-              tickets.list.removeAt(indexTicket);
-            }
-          }
-
-          // add new ticket
-          if(ticketPayload.payload.doctorId != null){
-            doctor.addPatient(ticketPayload.payload);
-          } else {
-            tickets.addTicket(ticketPayload.payload);
-          }
-
-          break;
-        }
-      }
-    });
   }
 }

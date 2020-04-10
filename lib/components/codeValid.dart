@@ -43,7 +43,6 @@ class _CodeValidState extends State<CodeValid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
         appBar: buildAppBar(context),
         body: Padding(
             padding: const EdgeInsets.all(38.0),

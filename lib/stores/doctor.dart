@@ -9,8 +9,6 @@ class Doctor extends _Doctor with _$Doctor {}
 
 @jsonSerializable
 abstract class _Doctor with Store {
-  @observable
-  ObservableList<Ticket> listPatients = ObservableList<Ticket>();
 
   @observable
   int id;
@@ -30,15 +28,8 @@ abstract class _Doctor with Store {
   @observable
   bool rgpd;
 
-  @action
-  void addPatient(Ticket ticket) {
-    listPatients.add(ticket);
-  }
-
-  @action
-  void removePatient(Ticket ticket) {
-    listPatients.remove(ticket);
-  }
+  @observable
+  bool isManager;
 
   @action
   void setDoctor(Doctor doctor) {
@@ -48,6 +39,5 @@ abstract class _Doctor with Store {
     phone = doctor.phone;
     email = doctor.email;
     rgpd = doctor.rgpd;
-    listPatients = doctor.listPatients;
   }
 }

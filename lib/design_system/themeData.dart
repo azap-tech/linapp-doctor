@@ -6,7 +6,8 @@ ThemeData themeData() {
     primarySwatch: MaterialColor(AzapColor.blue[50].value, AzapColor.blue),
     accentColor: MaterialColor(AzapColor.yellow[50].value, AzapColor.yellow),
     fontFamily: 'Avenir',
-    backgroundColor: AzapColor.backgroundColor,
+    backgroundColor: AzapColor.backgroundAccentColor,
+    scaffoldBackgroundColor: AzapColor.backgroundColor,
     errorColor: Colors.red,
     hintColor: MaterialColor(AzapColor.blue[50].value, AzapColor.blue),
     buttonTheme: ButtonThemeData(

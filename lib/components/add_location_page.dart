@@ -1,6 +1,7 @@
 import 'package:azap_app/components/kanban.dart';
 import 'package:azap_app/design_system/appbar.dart';
 import 'package:azap_app/design_system/azapColor.dart';
+import 'package:azap_app/design_system/button/regular_button.dart';
 import 'package:azap_app/design_system/decoration.dart';
 import 'package:azap_app/design_system/error/snackbar.dart';
 import 'package:azap_app/design_system/input_decoration.dart';
@@ -24,14 +25,8 @@ class _AddLocationPageState extends State<AddLocationPage> {
   bool httpError;
   Location newLocation;
   GlobalKey<FormState> _formKey;
-  var dropdownValue = '';
-  final _typeList = <String>[
-    'Centre ambulatoire',
-    'Centre de dépistage',
-    'Cabinet médical',
-    'Centre hospitalier',
-    'Urgences'
-  ];
+  var dropdownValue;
+  var _typeList = <String>[];
 
   @override
   void initState() {
@@ -39,6 +34,14 @@ class _AddLocationPageState extends State<AddLocationPage> {
     httpError = false;
     newLocation = new Location();
     _formKey = GlobalKey<FormState>();
+    dropdownValue = 'Centre de dépistage';
+    _typeList = <String>[
+      'Centre ambulatoire',
+      'Centre de dépistage',
+      'Cabinet médical',
+      'Centre hospitalier',
+      'Urgences'
+    ];
   }
 
   buildBottomNavBar() {
@@ -62,11 +65,12 @@ class _AddLocationPageState extends State<AddLocationPage> {
           // TODO lock sse fail init ? and move logic in services
           SseService().initEventSource(payload.id);
           // TODO handle case fail link but location created
-          HttpService()
-              .linkDoctorToLocation(doctor.id, payload.id)
-              .then((payloadLink) {
+          Location location = new Location();
+          location.name = payload.name;
+          location.id = payload.id;
+          HttpService().linkDoctorToLocation(doctor.id, location).then((payloadLink) {
             if (payloadLink != null && payloadLink.status == "ok") {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     // TODO go doctor status, then kanban
@@ -175,8 +179,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
                                 dropdownValue = newValue;
                               });
                             },
-                            items: _typeList
-                                .map<DropdownMenuItem<String>>((String value) {
+                            items: _typeList.map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Text(value),
@@ -279,49 +282,45 @@ class _AddLocationPageState extends State<AddLocationPage> {
 
                                 newLocation.city = value;
 
-                                return null;
-                              })),
+                            return null;
+                          }
+                      )
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                  ),
+                  Text(
+                    "En cliquant sur le bouton ci-dessous j’accepte les conditions générales d’utilisation du service",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 5, 82, 136),
+                      fontSize: 12,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                  ),
+                  InkWell(
+                      child:
                       Text(
-                        "En cliquant sur le bouton ci-dessous j’accepte les conditions générales d’utilisation du service",
+                        "Voir les conditions générales d’utilisation du service.",
                         style: TextStyle(
+                          decoration: TextDecoration.underline,
                           color: Color.fromARGB(255, 5, 82, 136),
                           fontSize: 12,
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                      ),
-                      InkWell(
-                          child: Text(
-                            "Voir les conditions générales d’utilisation du service.",
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Color.fromARGB(255, 5, 82, 136),
-                              fontSize: 12,
-                            ),
-                          ),
-                          onTap: () => launch('http://azap.io/cgu')),
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: RaisedButton(
-                            color: AzapColor.accentColor,
-                            onPressed: createLocation,
-                            child: Text(
-                              'Valider',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontFamily: Theme.of(context)
-                                      .textTheme
-                                      .title
-                                      .fontFamily,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                      )
-                    ])))),
-        bottomNavigationBar: buildBottomNavBar());
+                      onTap: () => launch('http://azap.io/cgu')
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                  ),
+                  SizedBox(
+                      width: double.infinity,
+                      child: buildRegularButton("Valider", createLocation)
+                  ),
+                ])))
+        ),
+        bottomNavigationBar: buildBottomNavBar()
+    );
   }
 }

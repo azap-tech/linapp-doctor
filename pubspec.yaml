@@ -32,12 +32,6 @@ dependencies:
   dart_json_mapper_mobx: ^1.2.0
   async: ^2.4.0
   grouped_buttons: ^1.0.4
-  shared_preferences: ^0.5.2
-  flutter_stetho: ^0.5.2
-  bloc: ^0.14.1
-  flutter_bloc: ^0.15.1
-  equatable: ^0.2.0
-  get_it: ^1.0.3
   firebase_core: ^0.4.0+9
   url_launcher: ^5.4.2
   logger: ^0.8.3

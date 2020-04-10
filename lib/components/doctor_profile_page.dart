@@ -3,6 +3,7 @@ import 'package:azap_app/design_system/appbar.dart';
 import 'package:azap_app/design_system/azapColor.dart';
 import 'package:azap_app/design_system/error/snackbar.dart';
 import 'package:azap_app/design_system/form/checkbox.dart';
+import 'package:azap_app/design_system/ui_utils.dart';
 import 'package:azap_app/services/http.dart';
 import 'package:azap_app/stores/doctor.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
           // TODO move login on sms validation + send pincode sms ? or display
           HttpService().login(doctor.id, payload.pincode).then((payload) {
             if(payload != null && payload.status == "ok"){
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   // TODO go sms validation, then create place, then doctor status, then kanban
@@ -80,8 +81,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
 
     return Scaffold(
       appBar: buildAppBar(context),
-      backgroundColor: Color(0xFFF0F8FF),
-      body: 
+      body:
         SingleChildScrollView(
           child:
             Container(
@@ -122,27 +122,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                     child:
                       TextFormField(
                         textAlignVertical: TextAlignVertical.top,
-                        decoration: InputDecoration(
-                        helperText: ' ',
-                        filled: true,
-                        fillColor: Colors.white,
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color.fromARGB(255, 5, 82, 136), width: 2.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color.fromARGB(35, 5, 82, 136), width: 2.0),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color.fromARGB(50, 183, 28, 28), width: 2.0),
-                        ),
-                        focusedErrorBorder:  OutlineInputBorder(
-                          borderSide: BorderSide(color: Color.fromARGB(255, 183, 28, 28), width: 2.0),
-                        ),
-                        errorStyle: TextStyle(
-                          fontSize: 10,
-                          color: Color.fromARGB(255, 183, 28, 28)
-                        ),
-                      ),
+                        decoration: inputBorder(context),
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Veuillez entrer votre nom';
@@ -177,27 +157,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                     child:
                     TextFormField(
                       textAlignVertical: TextAlignVertical.top,
-                      decoration: InputDecoration(
-                        helperText: ' ',
-                        filled: true,
-                        fillColor: Colors.white,
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color.fromARGB(255, 5, 82, 136), width: 2.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color.fromARGB(35, 5, 82, 136), width: 2.0),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color.fromARGB(50, 183, 28, 28), width: 2.0),
-                        ),
-                        focusedErrorBorder:  OutlineInputBorder(
-                          borderSide: BorderSide(color: Color.fromARGB(255, 183, 28, 28), width: 2.0),
-                        ),
-                        errorStyle: TextStyle(
-                          fontSize: 10,
-                          color: Color.fromARGB(255, 183, 28, 28)
-                        ),
-                      ),
+                      decoration: inputBorder(context),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -241,27 +201,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
                       TextFormField(
                         textAlignVertical: TextAlignVertical.top,
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          helperText: ' ',
-                          filled: true,
-                          fillColor: Colors.white,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(255, 5, 82, 136), width: 2.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(35, 5, 82, 136), width: 2.0),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(50, 183, 28, 28), width: 2.0),
-                          ),
-                          focusedErrorBorder:  OutlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(255, 183, 28, 28), width: 2.0),
-                          ),
-                          errorStyle: TextStyle(
-                            fontSize: 10,
-                            color: Color.fromARGB(255, 183, 28, 28)
-                          ),
-                        ),
+                        decoration: inputBorder(context),
                         validator: (value) {
                           Pattern pattern = r'^((\+)33|0)[1-9](\d{2}){4}$';
                           RegExp regex = new RegExp(pattern);

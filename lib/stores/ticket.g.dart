@@ -128,23 +128,6 @@ mixin _$Ticket on _Ticket, Store {
     }, _$phoneAtom, name: '${_$phoneAtom.name}_set');
   }
 
-  final _$pathologyAtom = Atom(name: '_Ticket.pathology');
-
-  @override
-  String get pathology {
-    _$pathologyAtom.context.enforceReadPolicy(_$pathologyAtom);
-    _$pathologyAtom.reportObserved();
-    return super.pathology;
-  }
-
-  @override
-  set pathology(String value) {
-    _$pathologyAtom.context.conditionallyRunInAction(() {
-      super.pathology = value;
-      _$pathologyAtom.reportChanged();
-    }, _$pathologyAtom, name: '${_$pathologyAtom.name}_set');
-  }
-
   final _$canceledTimeAtom = Atom(name: '_Ticket.canceledTime');
 
   @override
@@ -245,7 +228,7 @@ mixin _$Ticket on _Ticket, Store {
   @override
   String toString() {
     final string =
-        'id: ${id.toString()},locationId: ${locationId.toString()},doctorId: ${doctorId.toString()},age: ${age.toString()},name: ${name.toString()},sex: ${sex.toString()},phone: ${phone.toString()},pathology: ${pathology.toString()},canceledTime: ${canceledTime.toString()},creationTime: ${creationTime.toString()},doneTime: ${doneTime.toString()},expectedTime: ${expectedTime.toString()},startedTime: ${startedTime.toString()}';
+        'id: ${id.toString()},locationId: ${locationId.toString()},doctorId: ${doctorId.toString()},age: ${age.toString()},name: ${name.toString()},sex: ${sex.toString()},phone: ${phone.toString()},canceledTime: ${canceledTime.toString()},creationTime: ${creationTime.toString()},doneTime: ${doneTime.toString()},expectedTime: ${expectedTime.toString()},startedTime: ${startedTime.toString()}';
     return '{$string}';
   }
 }

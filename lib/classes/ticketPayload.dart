@@ -5,4 +5,5 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 class TicketPayload {
   Ticket payload;
   String type = "";
+  String status = "";
 }
