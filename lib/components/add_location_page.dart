@@ -1,6 +1,9 @@
 import 'package:azap_app/components/kanban.dart';
+import 'package:azap_app/design_system/appbar.dart';
 import 'package:azap_app/design_system/azapColor.dart';
+import 'package:azap_app/design_system/decoration.dart';
 import 'package:azap_app/design_system/error/snackbar.dart';
+import 'package:azap_app/design_system/input_decoration.dart';
 import 'package:azap_app/main.dart';
 import 'package:azap_app/services/http.dart';
 import 'package:azap_app/services/sse.dart';
@@ -21,6 +24,14 @@ class _AddLocationPageState extends State<AddLocationPage> {
   bool httpError;
   Location newLocation;
   GlobalKey<FormState> _formKey;
+  var dropdownValue = '';
+  final _typeList = <String>[
+    'Centre ambulatoire',
+    'Centre de dépistage',
+    'Cabinet médical',
+    'Centre hospitalier',
+    'Urgences'
+  ];
 
   @override
   void initState() {
@@ -43,22 +54,23 @@ class _AddLocationPageState extends State<AddLocationPage> {
     }
   }
 
-  createLocation(){
+  createLocation() {
     // TODO loader and lock button on long http call
     if (_formKey.currentState.validate() && !httpError) {
-      HttpService().createLocation(newLocation).then((payload){
-        if(payload != null && payload.status == "ok"){
+      HttpService().createLocation(newLocation).then((payload) {
+        if (payload != null && payload.status == "ok") {
           // TODO lock sse fail init ? and move logic in services
           SseService().initEventSource(payload.id);
           // TODO handle case fail link but location created
-          HttpService().linkDoctorToLocation(doctor.id, payload.id).then((payloadLink) {
+          HttpService()
+              .linkDoctorToLocation(doctor.id, payload.id)
+              .then((payloadLink) {
             if (payloadLink != null && payloadLink.status == "ok") {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  // TODO go doctor status, then kanban
-                    builder: (context) => Kanban()
-                ),
+                    // TODO go doctor status, then kanban
+                    builder: (context) => Kanban()),
               );
             } else {
               setState(() {
@@ -77,314 +89,239 @@ class _AddLocationPageState extends State<AddLocationPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: AzapColor.mainColor,
-            title: Image.asset(
-                'assets/logo.png',
-                fit: BoxFit.contain,
-                height: 32
-            ),
-            centerTitle: true
-        ),
+        appBar: buildAppBar(context),
         backgroundColor: AzapColor.backgroundColor,
         body: SingleChildScrollView(
-            child:
-            Container(
-            padding: EdgeInsets.symmetric(horizontal: 38, vertical: 10),
-            child: Form(
-                key: _formKey,
-                child: Column(
-                    children: <Widget>[
-                  Text(
-                    'Créer un lieu de consultation',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: AzapColor.mainColor,
-                      fontSize: 25,
-                    ),
-                  ),
-                  Text(
-                    'Le lieu où vous allez exercer',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 15,
-                    ),
-                  ),
-                Padding(
-                  padding: EdgeInsets.all(5),
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      'Nom du lieu',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 5, 82, 136),
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.all(2),
-                ),
-                Container(
-                    height: 70,
-                    child:
-                    TextFormField(
-                        textAlignVertical: TextAlignVertical.top,
-                        decoration: InputDecoration(
-                          helperText: ' ',
-                          filled: true,
-                          fillColor: Colors.white,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(255, 5, 82, 136), width: 2.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(35, 5, 82, 136), width: 2.0),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(50, 183, 28, 28), width: 2.0),
-                          ),
-                          focusedErrorBorder:  OutlineInputBorder(
-                            borderSide: BorderSide(color: Color.fromARGB(255, 183, 28, 28), width: 2.0),
-                          ),
-                          errorStyle: TextStyle(
-                              fontSize: 10,
-                              color: Color.fromARGB(255, 183, 28, 28)
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Veuillez entrer un nom';
-                          }
-
-                          newLocation.name = value;
-
-                          return null;
-                        }
-                    )
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(5),
-                  ),
-                  Row(
-                    children: <Widget>[
+            child: Container(
+                padding: EdgeInsets.only(left: 38, right: 38, top: 10),
+                child: Form(
+                    key: _formKey,
+                    child: Column(children: <Widget>[
                       Text(
-                        'Adresse du lieu',
+                        'Créer un lieu de consultation',
+                        style: Theme.of(context).textTheme.display1,
+                      ),
+                      Text(
+                        'Le lieu où vous allez exercer',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                          color: Color.fromARGB(255, 5, 82, 136),
-                          fontSize: 18,
+                          color: Colors.grey,
+                          fontSize: 15,
                         ),
                       ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(2),
-                  ),
-                  Container(
-                      height: 70,
-                      child:
-                      TextFormField(
-                          textAlignVertical: TextAlignVertical.top,
-                          decoration: InputDecoration(
-                            helperText: ' ',
-                            filled: true,
-                            fillColor: Colors.white,
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(255, 5, 82, 136), width: 2.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(35, 5, 82, 136), width: 2.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(50, 183, 28, 28), width: 2.0),
-                            ),
-                            focusedErrorBorder:  OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(255, 183, 28, 28), width: 2.0),
-                            ),
-                            errorStyle: TextStyle(
-                                fontSize: 10,
-                                color: Color.fromARGB(255, 183, 28, 28)
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Veuillez entrer une adresse';
-                            }
-
-                            newLocation.address = value;
-
-                            return null;
-                          }
-                      )
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(5),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        'Code postal',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 5, 82, 136),
-                          fontSize: 18,
-                        ),
+                      Padding(
+                        padding: EdgeInsets.all(5),
                       ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(2),
-                  ),
-                  Container(
-                      height: 70,
-                      child:
-                      TextFormField(
-                          textAlignVertical: TextAlignVertical.top,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            helperText: ' ',
-                            filled: true,
-                            fillColor: Colors.white,
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(255, 5, 82, 136), width: 2.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(35, 5, 82, 136), width: 2.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(50, 183, 28, 28), width: 2.0),
-                            ),
-                            focusedErrorBorder:  OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(255, 183, 28, 28), width: 2.0),
-                            ),
-                            errorStyle: TextStyle(
-                                fontSize: 10,
-                                color: Color.fromARGB(255, 183, 28, 28)
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Nom du lieu',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 5, 82, 136),
+                              fontSize: 18,
                             ),
                           ),
-                          validator: (value) {
-                            Pattern pattern = r'^[0-9]{5,5}$';
-                            RegExp regex = new RegExp(pattern);
-
-                            if (value.isEmpty) {
-                              return 'Veuillez entrer un code postal';
-                            }
-
-                            if (!regex.hasMatch(value)) {
-                              return 'Veuillez entrer un code postal valide';
-                            }
-
-                            newLocation.zipCode = value;
-
-                            return null;
-                          }
-                      )
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(5),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        'Ville',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 5, 82, 136),
-                          fontSize: 18,
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(2),
-                  ),
-                  Container(
-                      height: 70,
-                      child:
-                      TextFormField(
-                          textAlignVertical: TextAlignVertical.top,
-                          decoration: InputDecoration(
-                            helperText: ' ',
-                            filled: true,
-                            fillColor: Colors.white,
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(255, 5, 82, 136), width: 2.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(35, 5, 82, 136), width: 2.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(50, 183, 28, 28), width: 2.0),
-                            ),
-                            focusedErrorBorder:  OutlineInputBorder(
-                              borderSide: BorderSide(color: Color.fromARGB(255, 183, 28, 28), width: 2.0),
-                            ),
-                            errorStyle: TextStyle(
-                                fontSize: 10,
-                                color: Color.fromARGB(255, 183, 28, 28)
+                      Padding(
+                        padding: EdgeInsets.all(2),
+                      ),
+                      Container(
+                          height: 70,
+                          child: TextFormField(
+                              textAlignVertical: TextAlignVertical.top,
+                              decoration: buildInputDecoration(),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Veuillez entrer un nom';
+                                }
+                                newLocation.name = value;
+                                return null;
+                              })),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Type de lieu',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 5, 82, 136),
+                              fontSize: 18,
                             ),
                           ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Veuillez entrer une ville';
-                            }
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(2),
+                      ),
+                      Container(
+                          height: 50,
+                          padding: EdgeInsets.symmetric(horizontal: 9),
+                          alignment: Alignment.centerRight,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: buildDecoration(),
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            value: dropdownValue,
+                            icon: Icon(Icons.arrow_downward),
+                            iconSize: 24,
+                            elevation: 16,
+                            underline: Container(
+                              height: 0,
+                            ),
+                            onChanged: (String newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                              });
+                            },
+                            items: _typeList
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Adresse du lieu',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 5, 82, 136),
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(2),
+                      ),
+                      Container(
+                          height: 70,
+                          child: TextFormField(
+                              textAlignVertical: TextAlignVertical.top,
+                              decoration: buildInputDecoration(),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Veuillez entrer une adresse';
+                                }
 
-                            newLocation.city = value;
+                                newLocation.address = value;
 
-                            return null;
-                          }
-                      )
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(5),
-                  ),
-                  Text(
-                    "En cliquant sur le bouton ci-dessous j’accepte les conditions générales d’utilisation du service",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 5, 82, 136),
-                      fontSize: 12,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(5),
-                  ),
-                  InkWell(
-                      child:
+                                return null;
+                              })),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Code postal',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 5, 82, 136),
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(2),
+                      ),
+                      Container(
+                          height: 70,
+                          child: TextFormField(
+                              textAlignVertical: TextAlignVertical.top,
+                              keyboardType: TextInputType.number,
+                              decoration: buildInputDecoration(),
+                              validator: (value) {
+                                Pattern pattern = r'^[0-9]{5,5}$';
+                                RegExp regex = new RegExp(pattern);
+
+                                if (value.isEmpty) {
+                                  return 'Veuillez entrer un code postal';
+                                }
+
+                                if (!regex.hasMatch(value)) {
+                                  return 'Veuillez entrer un code postal valide';
+                                }
+
+                                newLocation.zipCode = value;
+
+                                return null;
+                              })),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Ville',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 5, 82, 136),
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(2),
+                      ),
+                      Container(
+                          height: 70,
+                          child: TextFormField(
+                              textAlignVertical: TextAlignVertical.top,
+                              decoration: buildInputDecoration(),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Veuillez entrer une ville';
+                                }
+
+                                newLocation.city = value;
+
+                                return null;
+                              })),
                       Text(
-                        "Voir les conditions générales d’utilisation du service.",
+                        "En cliquant sur le bouton ci-dessous j’accepte les conditions générales d’utilisation du service",
                         style: TextStyle(
-                          decoration: TextDecoration.underline,
                           color: Color.fromARGB(255, 5, 82, 136),
                           fontSize: 12,
                         ),
                       ),
-                      onTap: () => launch('http://azap.io/cgu')
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(5),
-                  ),
-                  RaisedButton(
-                      padding: EdgeInsets.symmetric(vertical: 0, horizontal: (MediaQuery.of(context).size.width * 0.35)),
-                      color: AzapColor.accentColor,
-                      onPressed: createLocation,
-                      child:
-                      Text(
-                        'Valider',
-                        style: TextStyle(
-                            color: Colors.white
-                        ),
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                      ),
+                      InkWell(
+                          child: Text(
+                            "Voir les conditions générales d’utilisation du service.",
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Color.fromARGB(255, 5, 82, 136),
+                              fontSize: 12,
+                            ),
+                          ),
+                          onTap: () => launch('http://azap.io/cgu')),
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: RaisedButton(
+                            color: AzapColor.accentColor,
+                            onPressed: createLocation,
+                            child: Text(
+                              'Valider',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontFamily: Theme.of(context)
+                                      .textTheme
+                                      .title
+                                      .fontFamily,
+                                  fontWeight: FontWeight.bold),
+                            )),
                       )
-                  )
-                ])))
-        ),
-        bottomNavigationBar: buildBottomNavBar()
-    );
+                    ])))),
+        bottomNavigationBar: buildBottomNavBar());
   }
 }
