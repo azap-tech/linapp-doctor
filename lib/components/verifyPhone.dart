@@ -1,4 +1,5 @@
 import 'package:azap_app/components/codeValid.dart';
+import 'package:azap_app/design_system/appbar.dart';
 import 'package:azap_app/design_system/azapColor.dart';
 import 'package:flutter/material.dart';
 
@@ -33,15 +34,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-          backgroundColor: AzapColor.mainColor,
-          title: Image.asset(
-              'assets/logo.png',
-              fit: BoxFit.contain,
-              height: 32
-          ),
-        centerTitle: true
-      ),
+      appBar: buildAppBar(context),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(38.0),

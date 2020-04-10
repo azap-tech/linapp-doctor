@@ -1,4 +1,5 @@
 import 'package:azap_app/components/verifyPhone.dart';
+import 'package:azap_app/design_system/appbar.dart';
 import 'package:azap_app/design_system/azapColor.dart';
 import 'package:azap_app/design_system/error/snackbar.dart';
 import 'package:azap_app/design_system/form/checkbox.dart';
@@ -78,15 +79,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
-          backgroundColor: AzapColor.mainColor,
-          title: Image.asset(
-              'assets/logo.png',
-              fit: BoxFit.contain,
-              height: 32
-          ),
-          centerTitle: true
-      ),
+      appBar: buildAppBar(context),
       backgroundColor: Color(0xFFF0F8FF),
       body: 
         SingleChildScrollView(

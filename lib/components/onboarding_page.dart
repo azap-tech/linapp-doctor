@@ -1,4 +1,5 @@
 import 'package:azap_app/components/register_login_page.dart';
+import 'package:azap_app/design_system/appbar.dart';
 import 'package:azap_app/design_system/azapColor.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
@@ -36,15 +37,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     );
 
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: AzapColor.mainColor,
-            title: Image.asset(
-                'assets/logo.png',
-                fit: BoxFit.contain,
-                height: 32
-            ),
-            centerTitle: true
-        ),
+        appBar: buildAppBar(context),
         body: IntroductionScreen(
           key: introKey,
           pages: [

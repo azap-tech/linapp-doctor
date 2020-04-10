@@ -7,6 +7,7 @@ import 'package:dart_json_mapper/dart_json_mapper.dart' show JsonMapper;
 import 'package:dart_json_mapper_mobx/dart_json_mapper_mobx.dart'
     show mobXAdapter;
 import 'package:requests/requests.dart';
+import 'components/add_location_page.dart';
 import 'main.reflectable.dart' show initializeReflectable;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
       title: 'Azap',
       debugShowCheckedModeBanner: false,
       theme: themeData(),
-      home: handleLogin(),
+      home: AddLocationPage(),
     );
   }
 }
