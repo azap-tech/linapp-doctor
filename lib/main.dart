@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
       title: 'Azap',
       debugShowCheckedModeBanner: false,
       theme: themeData(),
-      home: AddLocationPage(),
+      home: handleLogin(),
     );
   }
 }
