@@ -22,7 +22,10 @@ Widget startWidget;
 
 Future<Widget> handleLogin() async {
   if(DotEnv().env['MODE_MOCK'] == 'false'){
-    /*var payload = await HttpService().getStatus();
+    // TODO logout button
+    //String hostname = Requests.getHostname("${DotEnv().env['BASE_URL']}/api/v2/me");
+    //Requests.clearStoredCookies(hostname);
+    var payload = await HttpService().getStatus();
     if(payload != null && payload.status == "ok" && doctor.locationId != null){
       SseService().initEventSource(doctor.locationId);
       // TODO go to doctor state
@@ -30,10 +33,11 @@ Future<Widget> handleLogin() async {
     } else if(payload != null && payload.status == "ok") {
       return AddLocationPage();
     } else if(sessionCookie.containsKey('actix-session')) {
-      return VerifyPhone();
-    } else {*/
+      // TODO relogin return VerifyPhone();
       return OnBoardingPage();
-    //}
+    } else {
+      return OnBoardingPage();
+    }
   }else {
     return OnBoardingPage();
   }

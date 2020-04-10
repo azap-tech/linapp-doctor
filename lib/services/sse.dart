@@ -6,6 +6,7 @@ import 'package:azap_app/stores/queue.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:eventsource/eventsource.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:logger/logger.dart';
 
 import '../main.dart';
 
@@ -13,6 +14,7 @@ class SseService {
   static final SseService _instance = SseService._internal();
   final _initEventSource = new AsyncMemoizer<EventSource>();
   static EventSource eventSource;
+  var logger = Logger();
 
   factory SseService() {
     return _instance;
@@ -27,8 +29,7 @@ class SseService {
         return await EventSource.connect("${DotEnv().env['BASE_URL']}/api/v1/location/events?token=${storeId}");
       });
       eventSource.listen((Event event) {
-        print("New event:");
-        print("  data: ${event.data}");
+        logger.i("New event data: ${event.data}");
         final genericPayload = JsonMapper.deserialize<GenericPayload>(event.data);
         switch(genericPayload.type) {
           case "newticket": {

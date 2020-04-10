@@ -119,7 +119,6 @@ class _KanbanState extends State<Kanban> {
     }
 
     return Scaffold(
-      backgroundColor: Color(0xFFEAF4FB),
       appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           centerTitle: true,

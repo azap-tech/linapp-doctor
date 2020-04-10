@@ -81,7 +81,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage> {
 
     return Scaffold(
       appBar: buildAppBar(context),
-      body: 
+      body:
         SingleChildScrollView(
           child:
             Container(

@@ -25,14 +25,8 @@ class _AddLocationPageState extends State<AddLocationPage> {
   bool httpError;
   Location newLocation;
   GlobalKey<FormState> _formKey;
-  var dropdownValue = '';
-  final _typeList = <String>[
-    'Centre ambulatoire',
-    'Centre de dépistage',
-    'Cabinet médical',
-    'Centre hospitalier',
-    'Urgences'
-  ];
+  var dropdownValue;
+  var _typeList = <String>[];
 
   @override
   void initState() {
@@ -40,6 +34,14 @@ class _AddLocationPageState extends State<AddLocationPage> {
     httpError = false;
     newLocation = new Location();
     _formKey = GlobalKey<FormState>();
+    dropdownValue = 'Centre de dépistage';
+    _typeList = <String>[
+      'Centre ambulatoire',
+      'Centre de dépistage',
+      'Cabinet médical',
+      'Centre hospitalier',
+      'Urgences'
+    ];
   }
 
   buildBottomNavBar() {
@@ -177,8 +179,7 @@ class _AddLocationPageState extends State<AddLocationPage> {
                                 dropdownValue = newValue;
                               });
                             },
-                            items: _typeList
-                                .map<DropdownMenuItem<String>>((String value) {
+                            items: _typeList.map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Text(value),
