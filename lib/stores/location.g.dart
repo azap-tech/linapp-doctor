@@ -94,10 +94,27 @@ mixin _$Location on _Location, Store {
     }, _$cityAtom, name: '${_$cityAtom.name}_set');
   }
 
+  final _$location_typeAtom = Atom(name: '_Location.location_type');
+
+  @override
+  String get location_type {
+    _$location_typeAtom.context.enforceReadPolicy(_$location_typeAtom);
+    _$location_typeAtom.reportObserved();
+    return super.location_type;
+  }
+
+  @override
+  set location_type(String value) {
+    _$location_typeAtom.context.conditionallyRunInAction(() {
+      super.location_type = value;
+      _$location_typeAtom.reportChanged();
+    }, _$location_typeAtom, name: '${_$location_typeAtom.name}_set');
+  }
+
   @override
   String toString() {
     final string =
-        'id: ${id.toString()},name: ${name.toString()},address: ${address.toString()},zipCode: ${zipCode.toString()},city: ${city.toString()}';
+        'id: ${id.toString()},name: ${name.toString()},address: ${address.toString()},zipCode: ${zipCode.toString()},city: ${city.toString()},location_type: ${location_type.toString()}';
     return '{$string}';
   }
 }

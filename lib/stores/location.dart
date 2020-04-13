@@ -23,4 +23,7 @@ abstract class _Location with Store {
 
   @observable
   String city;
+
+  @observable
+  String location_type;
 }
