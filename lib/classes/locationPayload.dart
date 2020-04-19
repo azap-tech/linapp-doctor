@@ -1,9 +1,9 @@
+import 'package:azap_app/stores/location.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 @jsonSerializable
 class LocationPayload {
-  int id;
-  String name;
+  Location payload;
   String status = "";
   String pincode = "";
 }

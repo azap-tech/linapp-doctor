@@ -1,3 +1,4 @@
+import 'package:azap_app/classes/locationTypes.dart';
 import 'package:azap_app/components/kanban.dart';
 import 'package:azap_app/design_system/appbar.dart';
 import 'package:azap_app/design_system/azapColor.dart';
@@ -25,22 +26,21 @@ class _AddLocationPageState extends State<AddLocationPage> {
   bool httpError;
   Location newLocation;
   GlobalKey<FormState> _formKey;
-  var dropdownValue;
-  var _typeList = <String>[];
+  var _typeList = <LocationTypes>[];
 
   @override
   void initState() {
     super.initState();
     httpError = false;
     newLocation = new Location();
+    newLocation.location_type = LocationType.toText(LocationTypes.DEPISTAGE);
     _formKey = GlobalKey<FormState>();
-    dropdownValue = 'Centre de dépistage';
-    _typeList = <String>[
-      'Centre ambulatoire',
-      'Centre de dépistage',
-      'Cabinet médical',
-      'Centre hospitalier',
-      'Urgences'
+    _typeList = <LocationTypes>[
+      LocationTypes.AMBULATOIRE,
+      LocationTypes.DEPISTAGE,
+      LocationTypes.MEDICAL,
+      LocationTypes.HOSPITALIER,
+      LocationTypes.URGENCES,
     ];
   }
 
@@ -63,12 +63,9 @@ class _AddLocationPageState extends State<AddLocationPage> {
       HttpService().createLocation(newLocation).then((payload) {
         if (payload != null && payload.status == "ok") {
           // TODO lock sse fail init ? and move logic in services
-          SseService().initEventSource(payload.id);
+          SseService().initEventSource(payload.payload.id);
           // TODO handle case fail link but location created
-          Location location = new Location();
-          location.name = payload.name;
-          location.id = payload.id;
-          HttpService().linkDoctorToLocation(doctor.id, location).then((payloadLink) {
+          HttpService().linkDoctorToLocation(doctor.id, payload.payload).then((payloadLink) {
             if (payloadLink != null && payloadLink.status == "ok") {
               Navigator.pushReplacement(
                 context,
@@ -165,24 +162,24 @@ class _AddLocationPageState extends State<AddLocationPage> {
                           alignment: Alignment.centerRight,
                           width: MediaQuery.of(context).size.width,
                           decoration: buildDecoration(),
-                          child: DropdownButton<String>(
+                          child: DropdownButton<LocationTypes>(
                             isExpanded: true,
-                            value: dropdownValue,
+                            value: LocationType.fromString(newLocation.location_type),
                             icon: Icon(Icons.arrow_downward),
                             iconSize: 24,
                             elevation: 16,
                             underline: Container(
                               height: 0,
                             ),
-                            onChanged: (String newValue) {
+                            onChanged: (LocationTypes newValue) {
                               setState(() {
-                                dropdownValue = newValue;
+                                newLocation.location_type = LocationType.toText(newValue);
                               });
                             },
-                            items: _typeList.map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
+                            items: _typeList.map<DropdownMenuItem<LocationTypes>>((LocationTypes value) {
+                              return DropdownMenuItem<LocationTypes>(
                                 value: value,
-                                child: Text(value),
+                                child: Text(LocationType.getLibelle(value)),
                               );
                             }).toList(),
                           )),
